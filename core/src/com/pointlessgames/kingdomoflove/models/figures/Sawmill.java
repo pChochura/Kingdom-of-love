@@ -20,7 +20,7 @@ public class Sawmill extends Structure {
 
 	private int[] cost = {75, 100, 150, 200, 275, 380, 450, 550};
 	private int[] capacity = {2, 4, 5, 6, 7, 8, 9, 10};
-	private int[] moneyProduction = {1, 2, 2, 3, 4, 5, 5, 6};
+	private int[] moneyProduction = {6, 8, 9, 11, 13, 15, 17, 20};
 
 	public Sawmill() {
 		super(new Texture("figures/sawmill.png"));

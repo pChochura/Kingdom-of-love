@@ -67,7 +67,7 @@ public class StartStoryStage extends Stage {
 		a.setColor(Colors.textColor.cpy().mul(1, 1, 1, 0));
 		a.addAction(Actions.sequence(Actions.delay(duration),
 				Actions.parallel(Actions.moveBy(0, 50, duration, Interpolation.exp5Out),
-				Actions.alpha(1, duration, Interpolation.exp5Out))));
+						Actions.alpha(1, duration, Interpolation.exp5Out))));
 
 		actors.add(a);
 
@@ -78,7 +78,7 @@ public class StartStoryStage extends Stage {
 		a.setY(Gdx.graphics.getHeight() - 1000 * ratio);
 		a.setColor(Colors.text2Color.cpy().mul(1, 1, 1, 0));
 		a.addAction(Actions.parallel(Actions.moveBy(0, 50, duration, Interpolation.exp5Out),
-						Actions.alpha(1, duration, Interpolation.exp5Out)));
+				Actions.alpha(1, duration, Interpolation.exp5Out)));
 
 		actors.add(a);
 
@@ -99,9 +99,11 @@ public class StartStoryStage extends Stage {
 		sP.begin();
 		sP.draw(TextureManager.background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		for(int i = 0; i < index && i < actors.size(); i++) {
-			font.getData().setScale(actors.get(i).getScaleX());
-			font.setColor(actors.get(i).getColor());
-			font.draw(sP, actors.get(i).getName(), actors.get(i).getX(), actors.get(i).getY(), Gdx.graphics.getWidth() - 400 * ratio, Align.center, true);
+			if(actors != null && !actors.isEmpty() && actors.get(i) != null) {
+				font.getData().setScale(actors.get(i).getScaleX());
+				font.setColor(actors.get(i).getColor());
+				font.draw(sP, actors.get(i).getName(), actors.get(i).getX(), actors.get(i).getY(), Gdx.graphics.getWidth() - 400 * ratio, Align.center, true);
+			}
 		}
 		sP.end();
 	}
@@ -114,7 +116,8 @@ public class StartStoryStage extends Stage {
 	@Override public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		if(index % 2 == 0)
 			for(int i = 0; i < index && i < actors.size(); i++)
-				actors.get(i).addAction(Actions.alpha(0, duration, Interpolation.exp5In));
+				if(actors != null && !actors.isEmpty() && actors.get(i) != null)
+					actors.get(i).addAction(Actions.alpha(0, duration, Interpolation.exp5In));
 		index++;
 		return true;
 	}

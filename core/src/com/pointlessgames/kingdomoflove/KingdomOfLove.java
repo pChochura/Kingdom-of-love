@@ -15,17 +15,17 @@ public class KingdomOfLove extends Game {
 		Settings.load();
 		setScreen(new MenuScreen().setOnStartListener(() -> {
 			if(Gdx.app.getPreferences("Stats").getBoolean("saved") || !Settings.historyOn) start();
-			else setScreen(new StoryScreen().setOnEndListener(() -> {
-				getScreen().dispose();
-				start();
-			}));
+			else setScreen(new StoryScreen().setOnEndListener(this::start));
 		}));
 	}
 
 	private void start() {
+		getScreen().dispose();
 		setScreen(new StartScreen().setOnEndListener(() -> {
 			getScreen().dispose();
-			setScreen(new EndScreen().setOnEndListener(this::create));
+			if(Settings.historyOn)
+				setScreen(new EndScreen().setOnEndListener(this::create));
+			else create();
 			Gdx.app.getPreferences("Stats").putBoolean("saved", false).flush();
 		}));
 	}

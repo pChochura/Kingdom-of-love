@@ -13,7 +13,7 @@ public class House extends Structure {
 
 	private int[] cost = {15, 35, 75, 115, 175, 245, 315, 400};
 	private int[] capacity = {3, 5, 6, 8, 9, 11, 12, 14};
-	private int[] moneyProduction = {1, 1, 2, 2, 3, 3, 4, 4};
+	private int[] moneyProduction = {5, 7, 9, 10, 12, 14, 15, 17};
 
 	public House() {
 		super(new Texture("figures/house.png"));

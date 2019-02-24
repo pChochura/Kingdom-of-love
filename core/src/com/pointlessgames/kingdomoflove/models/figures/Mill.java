@@ -20,7 +20,7 @@ public class Mill extends Structure {
 
 	private int[] cost = {175, 250, 350, 475, 575, 750, 875, 1000};
 	private int[] capacity = {2, 3, 4, 5, 6, 7, 8, 9};
-	private int[] moneyProduction = {3, 5, 5, 7, 7, 9, 10, 12};
+	private int[] moneyProduction = {10, 13, 18, 24, 30, 36, 44, 52};
 
 	public Mill() {
 		super(new Texture("figures/mill.png"));

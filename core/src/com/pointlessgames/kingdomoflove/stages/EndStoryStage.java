@@ -90,7 +90,7 @@ public class EndStoryStage extends Stage {
 		a.setColor(Colors.textColor.cpy().mul(1, 1, 1, 0));
 		a.addAction((Actions.sequence(Actions.delay(duration),
 				Actions.alpha(1, duration, Interpolation.exp5Out),
-				Actions.run(endListener))));
+				Actions.run(() -> endListener.run()))));
 
 		actors.add(a);
 	}
@@ -100,9 +100,11 @@ public class EndStoryStage extends Stage {
 			sP.begin();
 			sP.draw(TextureManager.background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			for(int i = 0; i < index && i < actors.size(); i++) {
-				font.getData().setScale(actors.get(i).getScaleX());
-				font.setColor(actors.get(i).getColor());
-				font.draw(sP, actors.get(i).getName(), actors.get(i).getX(), actors.get(i).getY(), Gdx.graphics.getWidth() - 400 * ratio, Align.center, true);
+				if(actors != null && !actors.isEmpty() && actors.get(i) != null) {
+					font.getData().setScale(actors.get(i).getScaleX());
+					font.setColor(actors.get(i).getColor());
+					font.draw(sP, actors.get(i).getName(), actors.get(i).getX(), actors.get(i).getY(), Gdx.graphics.getWidth() - 400 * ratio, Align.center, true);
+				}
 			}
 			sP.end();
 		}
@@ -110,13 +112,13 @@ public class EndStoryStage extends Stage {
 
 	@Override public void act(float delta) {
 		for(int i = 0; i < index && i < actors.size(); i++)
-			actors.get(i).act(delta);
+			if(actors != null && !actors.isEmpty() && actors.get(i) != null) actors.get(i).act(delta);
 	}
 
 	@Override public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		if(index % 2 == 0)
 			for(int i = 0; i < index && i < actors.size(); i++)
-				actors.get(i).addAction(Actions.alpha(0, duration, Interpolation.exp5In));
+				if(actors != null && !actors.isEmpty() && actors.get(i) != null) actors.get(i).addAction(Actions.alpha(0, duration, Interpolation.exp5In));
 		index++;
 		return true;
 	}
