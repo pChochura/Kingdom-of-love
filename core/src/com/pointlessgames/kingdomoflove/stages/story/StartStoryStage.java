@@ -1,4 +1,4 @@
-package com.pointlessgames.kingdomoflove.stages;
+package com.pointlessgames.kingdomoflove.stages.story;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;

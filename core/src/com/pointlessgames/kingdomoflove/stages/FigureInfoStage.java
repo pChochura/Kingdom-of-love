@@ -14,6 +14,7 @@ import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
+import com.pointlessgames.kingdomoflove.utils.GestureStage;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.TextureManager;
@@ -23,7 +24,7 @@ import java.util.Locale;
 import static com.pointlessgames.kingdomoflove.screens.StartScreen.font;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
-public class FigureInfoStage extends Stage {
+public class FigureInfoStage extends GestureStage {
 
 	private final float bottomBarHeight = 500 * ratio;
 	private final float textureSize = 350 * ratio;
@@ -116,7 +117,7 @@ public class FigureInfoStage extends Stage {
 		}
 	}
 
-	@Override public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+	@Override public boolean tapped(int screenX, int screenY) {
 		Vector2 pos = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
 		if(pos.y < bottomBarHeight) {
 			if(figure.isUpgradable() &&
@@ -125,6 +126,10 @@ public class FigureInfoStage extends Stage {
 				clickListener.onUpgradeClick();
 		} else clickListener.onCancelClick();
 		return true;
+	}
+
+	@Override public boolean dragged(Vector2 offset) {
+		return false;
 	}
 
 	@Override public boolean keyDown(int keyCode) {

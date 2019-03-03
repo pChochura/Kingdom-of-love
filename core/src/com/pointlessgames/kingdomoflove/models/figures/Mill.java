@@ -24,9 +24,13 @@ public class Mill extends Structure {
 
 	public Mill() {
 		super(new Texture("figures/mill.png"));
+		refreshSize();
+		setPos();
+	}
+
+	@Override public void refreshSize() {
 		height = tileSize;
 		width = height * texture.getTexture().getWidth() / texture.getTexture().getHeight();
-		setPos();
 	}
 
 	private int getMoneyProduction(Stats stats) {

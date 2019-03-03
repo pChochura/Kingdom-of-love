@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.models.figures.Conifer;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
@@ -27,6 +26,7 @@ import com.pointlessgames.kingdomoflove.models.figures.Well;
 import com.pointlessgames.kingdomoflove.models.figures.Wheat;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
+import com.pointlessgames.kingdomoflove.utils.GestureStage;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.SoundManager;
 import com.pointlessgames.kingdomoflove.utils.Stats;
@@ -39,13 +39,13 @@ import java.util.Locale;
 import static com.pointlessgames.kingdomoflove.screens.StartScreen.font;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
-public class PickFigureStage extends Stage {
+public class PickFigureStage extends GestureStage {
 
 	private final float bottomBarHeight = 650 * ratio;
 	private final float tileSize = 400 * ratio;
 	private final float tileSpace = 50 * ratio;
 	private boolean pickable = true;
-	private boolean dragging = false;
+	private boolean dragging;
 	private float offsetX = tileSpace;
 	private boolean hiding;
 	private float bottomBarY;
@@ -58,7 +58,6 @@ public class PickFigureStage extends Stage {
 	private Runnable onHideListener;
 	private ClickListener clickListener;
 	private ArrayList<Figure> figures;
-	private Vector2 startPos;
 
 	private Class[] categories = new Class[] {Structure.class, Plant.class};
 	private int selectedCategory;
@@ -91,6 +90,8 @@ public class PickFigureStage extends Stage {
 		setSelectedCategory(selectedCategory = 0);
 
 		setCategoriesTabs();
+
+		setOffset(new Vector2(offsetX, 0));
 	}
 
 	private void drawBottomBar() {
@@ -226,48 +227,53 @@ public class PickFigureStage extends Stage {
 		}
 	}
 
-	@Override public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(startPos != null)
-			startPos.set(screenX, Gdx.graphics.getHeight() - screenY);
-		else startPos = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
-		if(allTiles != null && !allTiles.isEmpty() &&
-				startPos.y < tileSpace + tileSize &&
-				startPos.y > tileSpace)
-			dragging = true;
-		startPos.add(-offsetX, 0);
+	@Override public boolean tapped(int screenX, int screenY) {
+		if(Gdx.graphics.getHeight() - screenY < bottomBarHeight) {
+			for(Actor a : allTiles)
+				if(pickable && a.hit(screenX - offsetX - a.getX(), Gdx.graphics.getHeight() - screenY - a.getY(), true) != null) {
+					clickListener.onFigureClick((Figure) a.getUserObject());
+					return true;
+				}
+			for(int i = 0; i < categoriesTabs.size(); i++) {
+				Actor a = categoriesTabs.get(i);
+				if(pickable && a.hit(screenX - a.getX(), Gdx.graphics.getHeight() - screenY - a.getY(), true) != null) {
+					offsetX = tileSpace;
+					setOffset(new Vector2(offsetX, 0));
+					setSelectedCategory(selectedCategory = i);
+					if(Settings.soundsOn)
+						SoundManager.select.play(0.5f);
+					return true;
+				}
+			}
+		} else clickListener.onCancelClick();
 		return true;
 	}
 
-	@Override public boolean touchDragged(int screenX, int screenY, int pointer) {
-		if(startPos != null && dragging) {
-			offsetX = MathUtils.clamp(-startPos.cpy().sub(screenX, Gdx.graphics.getHeight() - screenY).x, -((itemsInCategory - 2) * (tileSize + tileSpace) + tileSpace), tileSpace);
-			if(startPos.dst(screenX - offsetX, Gdx.graphics.getHeight() - screenY) > 5 * ratio) pickable = false;
+	@Override public boolean dragged(Vector2 offset) {
+		if(dragging) {
+			offsetX = MathUtils.clamp(offset.x, -((itemsInCategory - 2) * (tileSize + tileSpace) + tileSpace), tileSpace);
+			pickable = false;
 			return true;
 		}
 		return false;
 	}
 
+	@Override public boolean isDraggableWithOneFinger() {
+		return true;
+	}
+
 	@Override public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if(startPos != null && startPos.dst(screenX - offsetX, Gdx.graphics.getHeight() - screenY) < 5 * ratio) {
-			if(Gdx.graphics.getHeight() - screenY < bottomBarHeight) {
-				for(Actor a : allTiles)
-					if(pickable && a.hit(screenX - offsetX - a.getX(), Gdx.graphics.getHeight() - screenY - a.getY(), true) != null)
-						clickListener.onFigureClick((Figure) a.getUserObject());
-				for(int i = 0; i < categoriesTabs.size(); i++) {
-					Actor a = categoriesTabs.get(i);
-					if(pickable && a.hit(screenX - a.getX(), Gdx.graphics.getHeight() - screenY - a.getY(), true) != null) {
-						offsetX = tileSpace;
-						setSelectedCategory(selectedCategory = i);
-						if(Settings.soundsOn)
-							SoundManager.select.play(0.5f);
-					}
-				}
-			} else clickListener.onCancelClick();
-		}
-		startPos = null;
 		pickable = true;
 		dragging = false;
-		return true;
+		return super.touchUp(screenX, screenY, pointer, button);
+	}
+
+	@Override public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if(allTiles != null && !allTiles.isEmpty() &&
+				Gdx.graphics.getHeight() - screenY < tileSpace + tileSize &&
+				Gdx.graphics.getHeight() - screenY > tileSpace)
+			dragging = true;
+		return super.touchDown(screenX, screenY, pointer, button);
 	}
 
 	@Override public boolean keyDown(int keyCode) {

@@ -17,9 +17,13 @@ public class Conifer extends Plant {
 
 	public Conifer() {
 		super(new Texture("figures/conifer.png"));
+		refreshSize();
+		setPos();
+	}
+
+	@Override public void refreshSize() {
 		height = tileSize * 1.2f;
 		width = height * texture.getTexture().getWidth() / texture.getTexture().getHeight();
-		setPos();
 	}
 
 	@Override public void triggerAbility(Stats stats) {

@@ -1,4 +1,4 @@
-package com.pointlessgames.kingdomoflove.stages;
+package com.pointlessgames.kingdomoflove.stages.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;

@@ -22,11 +22,15 @@ public class Road extends Structure {
 
 	public Road() {
 		super(new Texture("figures/road.png"));
-		height = tileSize;
-		width = height;
+		refreshSize();
 		setPos();
 
 		texture = TextureManager.road[roadX = 0][roadY = 0];
+	}
+
+	@Override public void refreshSize() {
+		height = tileSize;
+		width = height;
 	}
 
 	@Override public void orientInSpace(Stats stats) {

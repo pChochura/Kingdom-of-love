@@ -21,9 +21,13 @@ public class Granary extends Structure {
 
 	public Granary() {
 		super(new Texture("figures/granary.png"));
+		refreshSize();
+		setPos();
+	}
+
+	@Override public void refreshSize() {
 		height = tileSize * 1.2f;
 		width = height * texture.getTexture().getWidth() / texture.getTexture().getHeight();
-		setPos();
 	}
 
 	@Override public int getCapacity() {

@@ -10,9 +10,13 @@ public class Monument extends Structure {
 
 	public Monument() {
 		super(new Texture("figures/monument.png"));
+		refreshSize();
+		setPos();
+	}
+
+	@Override public void refreshSize() {
 		height = tileSize * 1.5f;
 		width = height * texture.getTexture().getWidth() / texture.getTexture().getHeight();
-		setPos();
 	}
 
 	@Override public int getCapacity() {

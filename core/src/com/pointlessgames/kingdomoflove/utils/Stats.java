@@ -3,10 +3,13 @@ package com.pointlessgames.kingdomoflove.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
+import com.pointlessgames.kingdomoflove.models.figures.Mill;
 import com.pointlessgames.kingdomoflove.models.figures.Plant;
 import com.pointlessgames.kingdomoflove.models.figures.Road;
+import com.pointlessgames.kingdomoflove.models.figures.Sawmill;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
 
 import java.util.ArrayList;
@@ -18,8 +21,11 @@ public class Stats {
 	public float love = 50;
 	public ArrayList<Figure> figures;
 
+	public Vector2 mapOffset;
+
 	public Stats() {
 		this.figures = new ArrayList<>();
+		this.mapOffset = new Vector2();
 	}
 
 	public int getPopulation() {
@@ -99,5 +105,12 @@ public class Stats {
 
 			for(Figure f : figures) if(f instanceof Road) f.orientInSpace(this);
 		}
+	}
+
+	public boolean isTileAvailable(int x, int y) {
+		for(Figure f : figures)
+			if(Math.pow(f.getMapX() - x, 2) + Math.pow(f.getMapY() - y, 2) <= 2)
+				return true;
+		return false;
 	}
 }

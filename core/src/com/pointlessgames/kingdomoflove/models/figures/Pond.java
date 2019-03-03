@@ -16,9 +16,13 @@ public class Pond extends Structure {
 
 	public Pond() {
 		super(new Texture("figures/pond.png"));
+		refreshSize();
+		setPos();
+	}
+
+	@Override public void refreshSize() {
 		height = tileSize;
 		width = height * texture.getTexture().getWidth() / texture.getTexture().getHeight();
-		setPos();
 	}
 
 	private float getLoveProduction(Stats stats) {

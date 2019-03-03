@@ -29,9 +29,11 @@ public abstract class Plant extends Figure {
 	private void drawLifeBar(CustomShapeRenderer sR, float tileX, float tileY) {
 		sR.begin(ShapeRenderer.ShapeType.Filled);
 		sR.setColor(Colors.inactiveColor);
-		sR.roundedRect(tileX + 30 * ratio, tileY + 15 * ratio, tileSize - 45 * ratio, 30 * ratio, 5 * ratio);
+		float size = tileSize * 0.15f * ratio;
+		float halfSize = size * 0.5f;
+		sR.roundedRect(tileX + size, tileY + halfSize, tileSize - (size + halfSize), size, halfSize * 0.3f);
 		sR.setColor(Colors.loveColor);
-		sR.roundedRect(tileX + 30 * ratio, tileY + 15 * ratio, MathUtils.lerp(0, tileSize - 45 * ratio, getLife()), 30 * ratio, 5 * ratio);
+		sR.roundedRect(tileX + size, tileY + halfSize, MathUtils.lerp(0, tileSize - (size + halfSize), getLife()), size, halfSize * 0.3f);
 		sR.end();
 	}
 

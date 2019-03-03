@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
-import com.pointlessgames.kingdomoflove.stages.EndStoryStage;
+import com.pointlessgames.kingdomoflove.stages.story.EndStoryStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.SoundManager;

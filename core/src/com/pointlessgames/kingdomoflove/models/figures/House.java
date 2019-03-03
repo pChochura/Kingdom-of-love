@@ -17,9 +17,13 @@ public class House extends Structure {
 
 	public House() {
 		super(new Texture("figures/house.png"));
+		refreshSize();
+		setPos();
+	}
+
+	@Override public void refreshSize() {
 		height = tileSize * 1.2f;
 		width = height * texture.getTexture().getWidth() / texture.getTexture().getHeight();
-		setPos();
 	}
 
 	private int getMoneyProduction() {

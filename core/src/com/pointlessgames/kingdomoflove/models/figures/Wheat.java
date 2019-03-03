@@ -12,9 +12,13 @@ public class Wheat extends Plant {
 
 	public Wheat() {
 		super(new Texture("figures/wheat.png"));
+		refreshSize();
+		setPos();
+	}
+
+	@Override public void refreshSize() {
 		height = tileSize * 1.2f;
 		width = height * texture.getTexture().getWidth() / texture.getTexture().getHeight();
-		setPos();
 	}
 
 	@Override public void triggerAbility(Stats stats) {

@@ -1,4 +1,4 @@
-package com.pointlessgames.kingdomoflove.stages;
+package com.pointlessgames.kingdomoflove.stages.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
+import com.pointlessgames.kingdomoflove.utils.GestureStage;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.TextureManager;
 import com.pointlessgames.kingdomoflove.utils.Utils;
@@ -18,7 +19,7 @@ import java.util.Locale;
 import static com.pointlessgames.kingdomoflove.screens.StartScreen.font;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
-public class StartUIStage extends Stage {
+public class StartUIStage extends GestureStage {
 
 	private final float topBarHeight = 150 * ratio;
 
@@ -111,13 +112,17 @@ public class StartUIStage extends Stage {
 		drawStats();
 	}
 
-	@Override public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+	@Override public boolean tapped(int screenX, int screenY) {
 		Vector2 pos = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
 		if(pos.x >= Gdx.graphics.getWidth() - 350 * ratio && pos.y <= Gdx.graphics.getWidth() - 50 * ratio &&
 				pos.y >= 150 * ratio && pos.y <= 225 * ratio) {
 			buttonClickListener.nextDayButtonClicked();
 			return true;
 		}
+		return false;
+	}
+
+	@Override public boolean dragged(Vector2 offset) {
 		return false;
 	}
 

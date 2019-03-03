@@ -23,7 +23,7 @@ import com.pointlessgames.kingdomoflove.stages.BackgroundStage;
 import com.pointlessgames.kingdomoflove.stages.FigureInfoStage;
 import com.pointlessgames.kingdomoflove.stages.FiguresStage;
 import com.pointlessgames.kingdomoflove.stages.PickFigureStage;
-import com.pointlessgames.kingdomoflove.stages.StartUIStage;
+import com.pointlessgames.kingdomoflove.stages.ui.StartUIStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.SoundManager;

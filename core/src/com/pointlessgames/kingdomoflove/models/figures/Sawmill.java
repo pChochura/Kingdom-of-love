@@ -24,9 +24,13 @@ public class Sawmill extends Structure {
 
 	public Sawmill() {
 		super(new Texture("figures/sawmill.png"));
+		refreshSize();
+		setPos();
+	}
+
+	@Override public void refreshSize() {
 		height = tileSize * 1.2f;
 		width = height * texture.getTexture().getWidth() / texture.getTexture().getHeight();
-		setPos();
 	}
 
 	private int getMoneyProduction(Stats stats) {

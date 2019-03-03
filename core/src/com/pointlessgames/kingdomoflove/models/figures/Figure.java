@@ -33,10 +33,14 @@ public abstract class Figure extends Actor {
 
 	Figure(Texture texture) {
 		this.texture = new TextureRegion(texture);
-		height = tileSize;
-		width = height * texture.getWidth() / texture.getHeight();
+		refreshSize();
 
 		level = 1;
+	}
+
+	public void refreshSize() {
+		height = tileSize;
+		width = height * texture.getTexture().getWidth() / texture.getTexture().getHeight();
 	}
 
 	@Override public void act(float delta) {
@@ -73,13 +77,15 @@ public abstract class Figure extends Actor {
 	protected void drawLevel(SpriteBatch sP, CustomShapeRenderer sR, float tileX, float tileY) {
 		sR.begin(ShapeRenderer.ShapeType.Filled);
 		sR.setColor(Colors.loveColor);
-		sR.rect(tileX + 15 * ratio, tileY + 15 * ratio, 15 * ratio, 15 * ratio, 30 * ratio, 30 * ratio, getScaleX(), getScaleY(), 45);
+		float size = tileSize * 0.15f * ratio;
+		float halfSize = size * 0.5f;
+		sR.rect(tileX + halfSize, tileY + halfSize, halfSize, halfSize, size, size, getScaleX(), getScaleY(), 45);
 		sR.end();
 
 		sP.begin();
-		font.getData().setScale(0.2f);
+		font.getData().setScale(size / 175f);
 		font.setColor(Colors.text3Color);
-		font.draw(sP, String.valueOf(level), tileX + 15 * ratio, tileY + 35 * ratio, 30 * ratio, Align.center, false);
+		font.draw(sP, String.valueOf(level), tileX + halfSize, tileY + size * 7f / 6f, size, Align.center, false);
 		sP.end();
 	}
 

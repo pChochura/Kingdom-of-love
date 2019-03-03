@@ -17,9 +17,13 @@ public class Tree extends Plant {
 
 	public Tree() {
 		super(new Texture("figures/tree.png"));
+		refreshSize();
+		setPos();
+	}
+
+	@Override public void refreshSize() {
 		height = tileSize * 1.75f;
 		width = height * texture.getTexture().getWidth() / texture.getTexture().getHeight();
-		setPos();
 	}
 
 	@Override public void triggerAbility(Stats stats) {
