@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -25,6 +26,7 @@ import com.pointlessgames.kingdomoflove.stages.FiguresStage;
 import com.pointlessgames.kingdomoflove.stages.PickFigureStage;
 import com.pointlessgames.kingdomoflove.stages.ui.StartUIStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
+import com.pointlessgames.kingdomoflove.utils.GestureStage;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.SoundManager;
 import com.pointlessgames.kingdomoflove.utils.Stats;
@@ -46,7 +48,7 @@ public class StartScreen extends BaseScreen implements
 
 	private Runnable endListener;
 	private InputMultiplexer input;
-	private ArrayList<Stage> stages;
+	private ArrayList<GestureStage> stages;
 	private Stats stats;
 	private float duration = 2f;
 	private float time;
@@ -80,7 +82,7 @@ public class StartScreen extends BaseScreen implements
 		configureStages();
 
 		input = new InputMultiplexer();
-		for(int i = stages.size() - 1; i >= 0; i--) input.addProcessor(stages.get(i));
+		for(int i = stages.size() - 1; i >= 0; i--) input.addProcessor(new GestureDetector(stages.get(i)));
 		Gdx.input.setInputProcessor(input);
 
 		if(stats.figures.isEmpty()) {
@@ -138,10 +140,11 @@ public class StartScreen extends BaseScreen implements
 		if(Settings.soundsOn)
 			SoundManager.select.play(0.5f);
 		PickFigureStage pickFigureStage = new PickFigureStage(sP, sR, stats);
+		GestureDetector processor = new GestureDetector(pickFigureStage);
 		pickFigureStage.setClickListener(new PickFigureStage.ClickListener() {
 			@Override public void onCancelClick() {
 				pickFigureStage.hide(() -> {
-					input.removeProcessor(pickFigureStage);
+					input.removeProcessor(processor);
 					stages.remove(pickFigureStage);
 				});
 			}
@@ -156,7 +159,7 @@ public class StartScreen extends BaseScreen implements
 					f.addAction(Actions.scaleTo(1, 1, Settings.duration, new Interpolation.SwingOut(3f)));
 					stats.figures.add(f);
 					pickFigureStage.hide(() -> {
-						input.removeProcessor(pickFigureStage);
+						input.removeProcessor(processor);
 						stages.remove(pickFigureStage);
 					});
 
@@ -170,7 +173,7 @@ public class StartScreen extends BaseScreen implements
 			}
 		});
 
-		input.addProcessor(0, pickFigureStage);
+		input.addProcessor(0, processor);
 		stages.add(pickFigureStage);
 	}
 
@@ -179,10 +182,11 @@ public class StartScreen extends BaseScreen implements
 			SoundManager.select.play(0.5f);
 		FigureInfoStage figureInfoStage = new FigureInfoStage(sP, sR, stats);
 		figureInfoStage.setFigure(f);
+		GestureDetector processor = new GestureDetector(figureInfoStage);
 		figureInfoStage.setClickListener(new FigureInfoStage.ClickListener() {
 			@Override public void onCancelClick() {
 				figureInfoStage.hide(() -> {
-					input.removeProcessor(figureInfoStage);
+					input.removeProcessor(processor);
 					stages.remove(figureInfoStage);
 				});
 			}
@@ -196,7 +200,7 @@ public class StartScreen extends BaseScreen implements
 				} else if(Settings.soundsOn) SoundManager.selectError.play(0.5f);
 			}
 		});
-		input.addProcessor(0, figureInfoStage);
+		input.addProcessor(0, processor);
 		stages.add(figureInfoStage);
 	}
 

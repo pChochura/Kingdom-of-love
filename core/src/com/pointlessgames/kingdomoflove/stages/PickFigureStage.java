@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.models.figures.Conifer;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
@@ -44,8 +46,6 @@ public class PickFigureStage extends GestureStage {
 	private final float bottomBarHeight = 650 * ratio;
 	private final float tileSize = 400 * ratio;
 	private final float tileSpace = 50 * ratio;
-	private boolean pickable = true;
-	private boolean dragging;
 	private float offsetX = tileSpace;
 	private boolean hiding;
 	private float bottomBarY;
@@ -65,6 +65,8 @@ public class PickFigureStage extends GestureStage {
 
 	private ArrayList<Actor> allTiles;
 	private ArrayList<Actor> categoriesTabs;
+
+	private Actor flingActor;
 
 	public PickFigureStage(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
 		this.sP = sP;
@@ -90,8 +92,6 @@ public class PickFigureStage extends GestureStage {
 		setSelectedCategory(selectedCategory = 0);
 
 		setCategoriesTabs();
-
-		setOffset(new Vector2(offsetX, 0));
 	}
 
 	private void drawBottomBar() {
@@ -225,20 +225,24 @@ public class PickFigureStage extends GestureStage {
 			bottomBarY = 0;
 			if(hiding && onHideListener != null) onHideListener.run();
 		}
+
+		if(flingActor != null) {
+			offsetX = MathUtils.clamp(flingActor.getX(), -((itemsInCategory - 2) * (tileSize + tileSpace) + tileSpace), tileSpace);
+			flingActor.act(delta);
+		}
 	}
 
-	@Override public boolean tapped(int screenX, int screenY) {
-		if(Gdx.graphics.getHeight() - screenY < bottomBarHeight) {
+	@Override public boolean tap(float x, float y, int count, int button) {
+		if(Gdx.graphics.getHeight() - y < bottomBarHeight) {
 			for(Actor a : allTiles)
-				if(pickable && a.hit(screenX - offsetX - a.getX(), Gdx.graphics.getHeight() - screenY - a.getY(), true) != null) {
+				if(a.hit(x - offsetX - a.getX(), Gdx.graphics.getHeight() - y - a.getY(), true) != null) {
 					clickListener.onFigureClick((Figure) a.getUserObject());
 					return true;
 				}
 			for(int i = 0; i < categoriesTabs.size(); i++) {
 				Actor a = categoriesTabs.get(i);
-				if(pickable && a.hit(screenX - a.getX(), Gdx.graphics.getHeight() - screenY - a.getY(), true) != null) {
+				if(a.hit(x - a.getX(), Gdx.graphics.getHeight() - y - a.getY(), true) != null) {
 					offsetX = tileSpace;
-					setOffset(new Vector2(offsetX, 0));
 					setSelectedCategory(selectedCategory = i);
 					if(Settings.soundsOn)
 						SoundManager.select.play(0.5f);
@@ -249,31 +253,21 @@ public class PickFigureStage extends GestureStage {
 		return true;
 	}
 
-	@Override public boolean dragged(Vector2 offset) {
-		if(dragging) {
-			offsetX = MathUtils.clamp(offset.x, -((itemsInCategory - 2) * (tileSize + tileSpace) + tileSpace), tileSpace);
-			pickable = false;
-			return true;
-		}
-		return false;
-	}
-
-	@Override public boolean isDraggableWithOneFinger() {
+	@Override public boolean pan(float x, float y, float deltaX, float deltaY) {
+		offsetX = MathUtils.clamp(offsetX + deltaX, -((itemsInCategory - 2) * (tileSize + tileSpace) + tileSpace), tileSpace);
 		return true;
 	}
 
-	@Override public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		pickable = true;
-		dragging = false;
-		return super.touchUp(screenX, screenY, pointer, button);
-	}
-
-	@Override public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(allTiles != null && !allTiles.isEmpty() &&
-				Gdx.graphics.getHeight() - screenY < tileSpace + tileSize &&
-				Gdx.graphics.getHeight() - screenY > tileSpace)
-			dragging = true;
-		return super.touchDown(screenX, screenY, pointer, button);
+	@Override public boolean fling(float velocityX, float velocityY, int button) {
+		float deltaX = Settings.duration * velocityX;
+		if(flingActor == null)
+			flingActor = new Actor();
+		else flingActor.clearActions();
+		flingActor.setPosition(offsetX, 0);
+		flingActor.addAction(Actions.sequence(
+				Actions.moveBy(deltaX, 0, Settings.duration, Interpolation.fastSlow),
+				Actions.run(() -> flingActor = null)));
+		return true;
 	}
 
 	@Override public boolean keyDown(int keyCode) {

@@ -117,8 +117,8 @@ public class FigureInfoStage extends GestureStage {
 		}
 	}
 
-	@Override public boolean tapped(int screenX, int screenY) {
-		Vector2 pos = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+	@Override public boolean tap(float x, float y, int count, int button) {
+		Vector2 pos = new Vector2(x, Gdx.graphics.getHeight() - y);
 		if(pos.y < bottomBarHeight) {
 			if(figure.isUpgradable() &&
 					pos.x >= 2 * 75 * ratio + textureSize && pos.x <= 2 * 75 * ratio + textureSize + 350 * ratio &&
@@ -126,10 +126,6 @@ public class FigureInfoStage extends GestureStage {
 				clickListener.onUpgradeClick();
 		} else clickListener.onCancelClick();
 		return true;
-	}
-
-	@Override public boolean dragged(Vector2 offset) {
-		return false;
 	}
 
 	@Override public boolean keyDown(int keyCode) {

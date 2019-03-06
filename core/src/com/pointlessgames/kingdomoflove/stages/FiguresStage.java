@@ -68,10 +68,10 @@ public class FiguresStage extends GestureStage {
 		updateFigures(delta);
 	}
 
-	@Override public boolean tapped(int screenX, int screenY) {
+	@Override public boolean tap(float x, float y, int count, int button) {
 		float offsetX = (Gdx.graphics.getWidth() - WIDTH * tileSize) / 2 + stats.mapOffset.x;
 		float offsetY = (Gdx.graphics.getHeight() - HEIGHT * tileSize) / 2 + stats.mapOffset.y;
-		Vector2 pos = new Vector2(screenX, Gdx.graphics.getHeight() - screenY).sub(offsetX, offsetY);
+		Vector2 pos = new Vector2(x, Gdx.graphics.getHeight() - y).sub(offsetX, offsetY);
 
 		int mapX = (int) (pos.x / tileSize);
 		int mapY = (int) (pos.y / tileSize);
@@ -82,10 +82,6 @@ public class FiguresStage extends GestureStage {
 					return true;
 				}
 		}
-		return false;
-	}
-
-	@Override public boolean dragged(Vector2 offset) {
 		return false;
 	}
 

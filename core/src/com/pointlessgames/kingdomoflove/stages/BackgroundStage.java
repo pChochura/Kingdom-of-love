@@ -6,14 +6,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.collision.BoundingBox;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.GestureStage;
@@ -23,13 +21,10 @@ import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.TextureManager;
 import com.pointlessgames.kingdomoflove.utils.Utils;
 
-import java.util.Set;
-
 import static com.pointlessgames.kingdomoflove.utils.Settings.HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WIDTH;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WINDOW_HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WINDOW_WIDTH;
-import static com.pointlessgames.kingdomoflove.utils.Settings.scale;
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class BackgroundStage extends GestureStage {
@@ -58,7 +53,6 @@ public class BackgroundStage extends GestureStage {
 	private void drawMap() {
 		float offsetX = (Gdx.graphics.getWidth() - WIDTH * tileSize) / 2;
 		float offsetY = (Gdx.graphics.getHeight() - HEIGHT * tileSize) / 2;
-
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -66,10 +60,14 @@ public class BackgroundStage extends GestureStage {
 
 		for(int i = 0; i < WIDTH; i++) for(int j = 0; j < HEIGHT; j++) {
 			float[] vertices = {
-					stats.mapOffset.x + offsetX + i * tileSize + getOffset(i + WINDOW_WIDTH, j + WINDOW_HEIGHT + 4), stats.mapOffset.y + offsetY + j * tileSize + getOffset(i + WINDOW_WIDTH + 4, j + WINDOW_HEIGHT),
-					stats.mapOffset.x + offsetX + i * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 1, j + WINDOW_HEIGHT + 5), stats.mapOffset.y + offsetY + j * tileSize + getOffset(i + WINDOW_WIDTH + 5, j + WINDOW_HEIGHT + 1),
-					stats.mapOffset.x + offsetX + i * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 2, j + WINDOW_HEIGHT + 6), stats.mapOffset.y + offsetY + j * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 6, j + WINDOW_HEIGHT + 2),
-					stats.mapOffset.x + offsetX + i * tileSize + getOffset(i + WINDOW_WIDTH + 3, j + WINDOW_HEIGHT + 7), stats.mapOffset.y + offsetY + j * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 7, j + WINDOW_HEIGHT + 3)
+			/* x */	stats.mapOffset.x + offsetX + i * tileSize + getOffset(i + WINDOW_WIDTH, j + WINDOW_HEIGHT + 4),
+			/* y */	stats.mapOffset.y + offsetY + j * tileSize + getOffset(i + WINDOW_WIDTH + 4, j + WINDOW_HEIGHT),
+			/* x */	stats.mapOffset.x + offsetX + i * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 1, j + WINDOW_HEIGHT + 5),
+			/* y */	stats.mapOffset.y + offsetY + j * tileSize + getOffset(i + WINDOW_WIDTH + 5, j + WINDOW_HEIGHT + 1),
+			/* x */	stats.mapOffset.x + offsetX + i * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 2, j + WINDOW_HEIGHT + 6),
+			/* y */	stats.mapOffset.y + offsetY + j * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 6, j + WINDOW_HEIGHT + 2),
+			/* x */	stats.mapOffset.x + offsetX + i * tileSize + getOffset(i + WINDOW_WIDTH + 3, j + WINDOW_HEIGHT + 7),
+			/* y */	stats.mapOffset.y + offsetY + j * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 7, j + WINDOW_HEIGHT + 3)
 			};
 
 			Rectangle rect = new Polygon(vertices).getBoundingRectangle();
@@ -95,37 +93,6 @@ public class BackgroundStage extends GestureStage {
 		drawMap();
 	}
 
-	@Override public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		initialScale = Settings.scale;
-		return super.touchDown(screenX, screenY, pointer, button);
-	}
-
-	@Override public boolean tapped(int screenX, int screenY) {
-		float offsetX = (Gdx.graphics.getWidth() - WIDTH * tileSize) / 2 + stats.mapOffset.x;
-		float offsetY = (Gdx.graphics.getHeight() - HEIGHT * tileSize) / 2 + stats.mapOffset.y;
-		Vector2 pos = new Vector2(screenX, Gdx.graphics.getHeight() - screenY).sub(offsetX, offsetY);
-
-		int mapX = MathUtils.floor(pos.x / tileSize);
-		int mapY = MathUtils.floor(pos.y / tileSize);
-		if(mapX >= 0 && mapX < WIDTH && mapY >= 0 && mapY < HEIGHT && stats.isTileAvailable(mapX, mapY)) {
-			tileClickedListener.onEmptyTileClicked(mapX, mapY);
-			return true;
-		}
-		return false;
-	}
-
-	@Override public boolean dragged(Vector2 offset) {
-		stats.mapOffset.set(offset);
-		return true;
-	}
-
-	@Override
-	public boolean pinched(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-		Settings.scale = MathUtils.clamp(Utils.map(initialPointer1.dst(initialPointer2) - pointer1.dst(pointer2), 0, 500, initialScale, initialScale - 0.5f), 0.3f, 1.5f);
-		Settings.refreshTileSize(stats);
-		return true;
-	}
-
 	@Override public boolean keyDown(int keyCode) {
 		if(keyCode == Input.Keys.BACK) {
 			stats.save();
@@ -137,6 +104,46 @@ public class BackgroundStage extends GestureStage {
 	public BackgroundStage setOnTileClickedListener(OnTileClickedListener tileClickedListener) {
 		this.tileClickedListener = tileClickedListener;
 		return this;
+	}
+
+	@Override public boolean touchDown(float x, float y, int pointer, int button) {
+		initialScale = Settings.scale;
+		return false;
+	}
+
+	@Override public boolean tap(float x, float y, int count, int button) {
+		float offsetX = (Gdx.graphics.getWidth() - WIDTH * tileSize) / 2 + stats.mapOffset.x;
+		float offsetY = (Gdx.graphics.getHeight() - HEIGHT * tileSize) / 2 + stats.mapOffset.y;
+		Vector2 pos = new Vector2(x, Gdx.graphics.getHeight() - y).sub(offsetX, offsetY);
+
+		int mapX = MathUtils.floor(pos.x / tileSize);
+		int mapY = MathUtils.floor(pos.y / tileSize);
+		if(mapX >= 0 && mapX < WIDTH && mapY >= 0 && mapY < HEIGHT && stats.isTileAvailable(mapX, mapY)) {
+			tileClickedListener.onEmptyTileClicked(mapX, mapY);
+			return true;
+		}
+		return false;
+	}
+
+	@Override public boolean pan(float x, float y, float deltaX, float deltaY) {
+		stats.mapOffset.add(deltaX, -deltaY).limit(WIDTH * tileSize / 2);
+		return true;
+	}
+
+	@Override
+	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+		Vector2 initialPos = initialPointer1.cpy().add(initialPointer2).scl(0.5f).sub(Gdx.graphics.getWidth() / 2 + stats.mapOffset.x, Gdx.graphics.getHeight() / 2 + stats.mapOffset.y);
+
+		Vector2 beforeZoom = initialPos.cpy().scl(Settings.scale);
+
+		Settings.scale = MathUtils.clamp(Utils.map(initialPointer1.dst(initialPointer2) - pointer1.dst(pointer2), 0, 500, initialScale, initialScale - 0.5f), 0.3f, 1.5f);
+		Settings.refreshTileSize(stats);
+
+		Vector2 afterZoom = initialPos.cpy().scl(Settings.scale);
+
+		Vector2 sub = beforeZoom.cpy().sub(afterZoom);
+		stats.mapOffset.add(sub.x, -sub.y).limit(WIDTH * tileSize / 2);
+		return true;
 	}
 
 	public interface OnTileClickedListener {

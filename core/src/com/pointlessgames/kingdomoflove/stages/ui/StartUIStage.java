@@ -112,17 +112,13 @@ public class StartUIStage extends GestureStage {
 		drawStats();
 	}
 
-	@Override public boolean tapped(int screenX, int screenY) {
-		Vector2 pos = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+	@Override public boolean tap(float x, float y, int count, int button) {
+		Vector2 pos = new Vector2(x, Gdx.graphics.getHeight() - y);
 		if(pos.x >= Gdx.graphics.getWidth() - 350 * ratio && pos.y <= Gdx.graphics.getWidth() - 50 * ratio &&
 				pos.y >= 150 * ratio && pos.y <= 225 * ratio) {
 			buttonClickListener.nextDayButtonClicked();
 			return true;
 		}
-		return false;
-	}
-
-	@Override public boolean dragged(Vector2 offset) {
 		return false;
 	}
 
