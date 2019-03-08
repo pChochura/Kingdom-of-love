@@ -77,13 +77,13 @@ public abstract class Figure extends Actor {
 	protected void drawLevel(SpriteBatch sP, CustomShapeRenderer sR, float tileX, float tileY) {
 		sR.begin(ShapeRenderer.ShapeType.Filled);
 		sR.setColor(Colors.loveColor);
-		float size = tileSize * 0.15f * ratio;
+		float size = tileSize * 0.2f * ratio;
 		float halfSize = size * 0.5f;
 		sR.rect(tileX + halfSize, tileY + halfSize, halfSize, halfSize, size, size, getScaleX(), getScaleY(), 45);
 		sR.end();
 
 		sP.begin();
-		font.getData().setScale(size / 175f);
+		font.getData().setScale(size / 100f);
 		font.setColor(Colors.text3Color);
 		font.draw(sP, String.valueOf(level), tileX + halfSize, tileY + size * 7f / 6f, size, Align.center, false);
 		sP.end();

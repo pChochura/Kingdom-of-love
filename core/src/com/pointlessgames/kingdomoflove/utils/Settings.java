@@ -17,7 +17,7 @@ public class Settings {
 	public static final int WINDOW_WIDTH = 5;
 	public static final int WINDOW_HEIGHT = 7;
 
-	public static float scale = 1f;
+	public static float scale = 1.5f;
 	public static float tileSize = (Math.min((float) Gdx.graphics.getHeight() / (WINDOW_HEIGHT + 1), (float) Gdx.graphics.getWidth() / (WINDOW_WIDTH + 1))) * Settings.ratio * scale;
 
 	public static boolean soundsOn = true;

@@ -106,12 +106,10 @@ public class StartScreen extends BaseScreen implements
 		viewport.getCamera().update();
 
 		//Updating
-		for(Stage s : stages)
-			s.act(delta);
+		for(int i = 0; i < stages.size(); i++) stages.get(i).act(delta);
 
 		//Drawing
-		for(Stage s : stages)
-			s.draw();
+		for(int i = 0; i < stages.size(); i++) stages.get(i).draw();
 
 		if(time < duration) {
 			time += delta;
