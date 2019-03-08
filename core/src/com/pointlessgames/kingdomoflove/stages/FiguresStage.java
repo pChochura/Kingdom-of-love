@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
-import com.pointlessgames.kingdomoflove.utils.GestureStage;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 
 import java.util.Collections;
@@ -35,8 +34,9 @@ public class FiguresStage extends GestureStage {
 	private void sortFigures() {
 		Collections.sort(stats.figures, (f2, f1) -> {
 			if(f1.getMapY() > f2.getMapY()) return -1;
-			else if(f1.getMapY() == f2.getMapY() && f1.getMapX() > f2.getMapX()) return 1;
-			else return 0;
+			else if(f1.getMapY() == f2.getMapY())
+				return Integer.compare(f1.getMapX(), f2.getMapX());
+			return 0;
 		});
 	}
 

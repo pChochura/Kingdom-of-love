@@ -55,7 +55,7 @@ public abstract class Figure extends Actor {
 	public void draw(SpriteBatch sP, CustomShapeRenderer sR, float tileX, float tileY) {
 		drawTexture(sP, tileX, tileY);
 
-		if(hasLevels())drawLevel(sP, sR, tileX, tileY);
+		if(hasLevels()) drawLevel(sP, sR, tileX, tileY);
 
 		drawAbilityTip(sP, tileX, tileY);
 	}

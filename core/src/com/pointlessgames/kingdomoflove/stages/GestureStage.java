@@ -1,4 +1,4 @@
-package com.pointlessgames.kingdomoflove.utils;
+package com.pointlessgames.kingdomoflove.stages;
 
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;

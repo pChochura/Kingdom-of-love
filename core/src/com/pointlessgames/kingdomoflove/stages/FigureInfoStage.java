@@ -8,13 +8,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
-import com.pointlessgames.kingdomoflove.utils.GestureStage;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.TextureManager;
@@ -125,6 +123,11 @@ public class FigureInfoStage extends GestureStage {
 					pos.y >= bottomBarY + 50 * ratio && pos.y <= bottomBarY + 125 * ratio)
 				clickListener.onUpgradeClick();
 		} else clickListener.onCancelClick();
+		return true;
+	}
+
+	@Override
+	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
 		return true;
 	}
 

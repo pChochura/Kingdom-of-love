@@ -12,7 +12,7 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 public class Pond extends Structure {
 
 	private int[] cost = {225, 325, 425, 550, 725, 850, 975, 1150};
-	private float love = 1.5f;
+	private float love = -1.5f;
 
 	public Pond() {
 		super(new Texture("figures/pond.png"));
@@ -36,10 +36,10 @@ public class Pond extends Structure {
 
 	@Override public void triggerAbility(Stats stats) {
 		float love = getLoveProduction(stats);
-		stats.love -= love;
+		stats.love += love;
 
 		if(love > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", -love), TextureManager.love);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.love);
 	}
 
 	@Override public String getAbilityDescription() {

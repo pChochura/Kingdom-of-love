@@ -26,7 +26,7 @@ import com.pointlessgames.kingdomoflove.stages.FiguresStage;
 import com.pointlessgames.kingdomoflove.stages.PickFigureStage;
 import com.pointlessgames.kingdomoflove.stages.ui.StartUIStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
-import com.pointlessgames.kingdomoflove.utils.GestureStage;
+import com.pointlessgames.kingdomoflove.stages.GestureStage;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.SoundManager;
 import com.pointlessgames.kingdomoflove.utils.Stats;

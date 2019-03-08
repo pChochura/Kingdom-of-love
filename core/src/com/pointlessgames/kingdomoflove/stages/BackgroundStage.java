@@ -6,15 +6,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
-import com.pointlessgames.kingdomoflove.utils.GestureStage;
 import com.pointlessgames.kingdomoflove.utils.Noise;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
@@ -58,6 +55,7 @@ public class BackgroundStage extends GestureStage {
 
 		sR.begin(ShapeRenderer.ShapeType.Filled);
 
+		Polygon polygon = new Polygon();
 		for(int i = 0; i < WIDTH; i++) for(int j = 0; j < HEIGHT; j++) {
 			float[] vertices = {
 			/* x */	stats.mapOffset.x + offsetX + i * tileSize + getOffset(i + WINDOW_WIDTH, j + WINDOW_HEIGHT + 4),
@@ -70,8 +68,8 @@ public class BackgroundStage extends GestureStage {
 			/* y */	stats.mapOffset.y + offsetY + j * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 7, j + WINDOW_HEIGHT + 3)
 			};
 
-			Rectangle rect = new Polygon(vertices).getBoundingRectangle();
-			if(!rect.overlaps(screenRect)) continue;
+			polygon.setVertices(vertices);
+			if(!polygon.getBoundingRectangle().overlaps(screenRect)) continue;
 
 			Color color = Colors.tileColor.cpy().lerp(Colors.tile2Color, Math.abs(Noise.noise((float)i / WINDOW_WIDTH, (float)j / WINDOW_HEIGHT, 0)));
 			if(!stats.isTileAvailable(i, j)) color.a = 0.5f;
