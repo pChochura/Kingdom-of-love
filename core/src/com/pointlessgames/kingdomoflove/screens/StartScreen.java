@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -23,10 +22,11 @@ import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.stages.BackgroundStage;
 import com.pointlessgames.kingdomoflove.stages.FigureInfoStage;
 import com.pointlessgames.kingdomoflove.stages.FiguresStage;
+import com.pointlessgames.kingdomoflove.stages.GestureStage;
 import com.pointlessgames.kingdomoflove.stages.PickFigureStage;
 import com.pointlessgames.kingdomoflove.stages.ui.StartUIStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
-import com.pointlessgames.kingdomoflove.stages.GestureStage;
+import com.pointlessgames.kingdomoflove.utils.ScrollableGestureDetector;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.SoundManager;
 import com.pointlessgames.kingdomoflove.utils.Stats;
@@ -57,9 +57,6 @@ public class StartScreen extends BaseScreen implements
 		Vector2 worldSize = Settings.getWorldSize();
 		viewport = new StretchViewport(worldSize.x, worldSize.y, new OrthographicCamera(worldSize.x, worldSize.y));
 
-		TextureManager.loadTextures();
-		SoundManager.loadSounds();
-
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/arcon.ttf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		parameter.size = (int) (100 * ratio);
@@ -82,7 +79,7 @@ public class StartScreen extends BaseScreen implements
 		configureStages();
 
 		input = new InputMultiplexer();
-		for(int i = stages.size() - 1; i >= 0; i--) input.addProcessor(new GestureDetector(stages.get(i)));
+		for(int i = stages.size() - 1; i >= 0; i--) input.addProcessor(new ScrollableGestureDetector(stages.get(i)));
 		Gdx.input.setInputProcessor(input);
 
 		if(stats.figures.isEmpty()) {
@@ -117,7 +114,7 @@ public class StartScreen extends BaseScreen implements
 			Color c = sP.getColor().cpy();
 			sP.begin();
 			sP.setColor(Colors.bgColor.r, Colors.bgColor.g, Colors.bgColor.b, MathUtils.lerp(1, 0, percent));
-			sP.draw(TextureManager.background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			sP.draw(TextureManager.getInstance().background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			sP.end();
 			sP.setColor(c);
 		}
@@ -129,16 +126,13 @@ public class StartScreen extends BaseScreen implements
 
 		for(int i = stats.figures.size() - 1; i >= 0; i--)
 			stats.figures.get(i).dispose();
-
-		TextureManager.dispose();
-		SoundManager.dispose();
 	}
 
 	@Override public void onEmptyTileClicked(int mapX, int mapY) {
 		if(Settings.soundsOn)
-			SoundManager.select.play(0.5f);
+			SoundManager.getInstance().select.play(0.5f);
 		PickFigureStage pickFigureStage = new PickFigureStage(sP, sR, stats);
-		GestureDetector processor = new GestureDetector(pickFigureStage);
+		ScrollableGestureDetector processor = new ScrollableGestureDetector(pickFigureStage);
 		pickFigureStage.setClickListener(new PickFigureStage.ClickListener() {
 			@Override public void onCancelClick() {
 				pickFigureStage.hide(() -> {
@@ -166,8 +160,8 @@ public class StartScreen extends BaseScreen implements
 							figure.orientInSpace(stats);
 
 					if(Settings.soundsOn)
-						SoundManager.pickFigure.play(0.5f);
-				} else if(Settings.soundsOn) SoundManager.selectError.play(0.5f);
+						SoundManager.getInstance().pickFigure.play(0.5f);
+				} else if(Settings.soundsOn) SoundManager.getInstance().selectError.play(0.5f);
 			}
 		});
 
@@ -176,13 +170,15 @@ public class StartScreen extends BaseScreen implements
 	}
 
 	@Override public void onFigureClick(Figure f) {
+		stats.setCurrentFigure(f);
 		if(Settings.soundsOn)
-			SoundManager.select.play(0.5f);
+			SoundManager.getInstance().select.play(0.5f);
 		FigureInfoStage figureInfoStage = new FigureInfoStage(sP, sR, stats);
 		figureInfoStage.setFigure(f);
-		GestureDetector processor = new GestureDetector(figureInfoStage);
+		ScrollableGestureDetector processor = new ScrollableGestureDetector(figureInfoStage);
 		figureInfoStage.setClickListener(new FigureInfoStage.ClickListener() {
 			@Override public void onCancelClick() {
+				stats.setCurrentFigure(null);
 				figureInfoStage.hide(() -> {
 					input.removeProcessor(processor);
 					stages.remove(figureInfoStage);
@@ -194,8 +190,8 @@ public class StartScreen extends BaseScreen implements
 					stats.money -= f.getUpdateCost();
 					f.levelUp();
 					if(Settings.soundsOn)
-						SoundManager.upgrade.play(0.5f);
-				} else if(Settings.soundsOn) SoundManager.selectError.play(0.5f);
+						SoundManager.getInstance().upgrade.play(0.5f);
+				} else if(Settings.soundsOn) SoundManager.getInstance().selectError.play(0.5f);
 			}
 		});
 		input.addProcessor(0, processor);
@@ -204,7 +200,7 @@ public class StartScreen extends BaseScreen implements
 
 	@Override public void nextDayButtonClicked() {
 		if(Settings.soundsOn)
-			SoundManager.nextDay.play(0.5f);
+			SoundManager.getInstance().nextDay.play(0.5f);
 		stats.day++;
 		for(int i = stats.figures.size() - 1; i >= 0; i--)
 			stats.figures.get(i).triggerAbility(stats);

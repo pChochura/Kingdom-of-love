@@ -1,12 +1,11 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.TextureManager;
 
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
@@ -16,16 +15,15 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Road extends Structure {
 
-	public boolean checked;
-	private float love = 0.2f;
+	private float love = 0.5f;
 	private int roadY, roadX;
 
 	public Road() {
-		super(new Texture("figures/road.png"));
+		super(null);
 		refreshSize();
 		setPos();
 
-		texture = TextureManager.road[roadX = 0][roadY = 0];
+		texture = TextureManager.getInstance().road[roadX = 0][roadY = 0];
 	}
 
 	@Override public void refreshSize() {
@@ -96,12 +94,15 @@ public class Road extends Structure {
 			roadX = 2;
 		} else roadY = roadX = 3;
 
-		texture = TextureManager.road[roadX][roadY];
+		texture = TextureManager.getInstance().road[roadX][roadY];
 	}
 
-	@Override protected void drawTexture(SpriteBatch sP, float tileX, float tileY) {
+	@Override protected void drawTexture(SpriteBatch sP, float tileX, float tileY, float alpha) {
 		sP.begin();
-		sP.draw(TextureManager.road[roadX][roadY], tileX + getX(), tileY + getY(), width * getScaleX(), height * getScaleY());
+		Color color = sP.getColor();
+		sP.setColor(color.cpy().mul(1, 1, 1, alpha));
+		sP.draw(TextureManager.getInstance().road[roadX][roadY], tileX + getX(), tileY + getY(), width * getScaleX(), height * getScaleY());
+		sP.setColor(color);
 		sP.end();
 	}
 
@@ -112,13 +113,18 @@ public class Road extends Structure {
 	private float getLoveProduction(Stats stats) {
 		Structure[][] map = new Structure[WIDTH][HEIGHT];
 		for(Figure f : stats.figures)
-			if(f instanceof Structure) {
-				if(f instanceof Road) ((Road) f).checked = false;
+			if(f instanceof Structure && ((Structure) f).hasRoad()) {
 				map[f.getMapX()][f.getMapY()] = (Structure) f;
+				((Structure) f).checked = false;
 			}
-		Set<Structure> structures = checkForConnection(map, getMapX(), getMapY(), 0);
-		if(structures.size() <= 1) return 0;
-		return this.love * structures.size();
+		checked = true;
+		Set<Structure> structures = stats.getConnectedFigures(map, getMapX(), getMapY(), false);
+		checked = false;
+		int amount = 0;
+		for(Structure s : structures)
+			if(!(s instanceof Road)) amount++;
+		if(amount <= 1) return 0;
+		return this.love * amount;
 	}
 
 	@Override public void triggerAbility(Stats stats) {
@@ -127,38 +133,8 @@ public class Road extends Structure {
 			stats.love += love;
 
 			if(love > 0)
-				resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.love);
+				resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().love);
 		}
-	}
-
-	private Set<Structure> checkForConnection(Structure[][] map, int x, int y, int checkedDir) {
-		Set<Structure> structures = new HashSet<>();
-		if(checkedDir != 2 && x > 0 && map[x - 1][y] != null)
-			if(map[x - 1][y].hasRoad()) structures.add(map[x - 1][y]);
-			else if(map[x - 1][y] instanceof Road && !((Road) map[x - 1][y]).checked) {
-				((Road) map[x - 1][y]).checked = true;
-				structures.addAll(checkForConnection(map, x - 1, y, 1));
-			}
-		if(checkedDir != 1 && x < WIDTH - 1 && map[x + 1][y] != null)
-			if(map[x + 1][y].hasRoad()) structures.add(map[x + 1][y]);
-			else if(map[x + 1][y] instanceof Road && !((Road) map[x + 1][y]).checked) {
-				((Road) map[x + 1][y]).checked = true;
-				structures.addAll(checkForConnection(map, x + 1, y, 2));
-			}
-		if(checkedDir != 4 && y > 0 && map[x][y - 1] != null)
-			if(map[x][y - 1].hasRoad()) structures.add(map[x][y - 1]);
-			else if(map[x][y - 1] instanceof Road && !((Road) map[x][y - 1]).checked) {
-				((Road) map[x][y - 1]).checked = true;
-				structures.addAll(checkForConnection(map, x, y - 1, 3));
-			}
-		if(checkedDir != 3 && y < HEIGHT - 1 && map[x][y + 1] != null) {
-			if(map[x][y + 1].hasRoad()) structures.add(map[x][y + 1]);
-			else if(map[x][y + 1] instanceof Road && !((Road) map[x][y + 1]).checked) {
-				((Road) map[x][y + 1]).checked = true;
-				structures.addAll(checkForConnection(map, x, y + 1, 4));
-			}
-		}
-		return structures;
 	}
 
 	@Override public String getAbilityDescription() {
@@ -182,10 +158,6 @@ public class Road extends Structure {
 	}
 
 	@Override public boolean hasLevels() {
-		return false;
-	}
-
-	@Override public boolean hasRoad() {
 		return false;
 	}
 

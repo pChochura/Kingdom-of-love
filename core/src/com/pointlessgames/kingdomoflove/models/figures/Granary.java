@@ -1,6 +1,5 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.TextureManager;
@@ -17,10 +16,10 @@ public class Granary extends Structure {
 
 	private int[] cost = {350, 650, 1050, 1350, 1650, 1950, 2400, 2750};
 	private int[] capacity = {2, 3, 4, 4, 5, 5, 6, 6};
-	private float[] loveProduction = {1, 1.5f, 2, 2.5f, 3, 3.5f, 4, 4.5f};
+	private float[] loveProduction = {1, 1.2f, 1.5f, 1.8f, 2.1f, 2.5f, 2.9f, 3.5f};
 
 	public Granary() {
-		super(new Texture("figures/granary.png"));
+		super(TextureManager.getInstance().granary);
 		refreshSize();
 		setPos();
 	}
@@ -39,7 +38,7 @@ public class Granary extends Structure {
 		stats.love += love;
 
 		if(love > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.love);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().love);
 	}
 
 	private float getLoveProduction(Stats stats) {
@@ -51,10 +50,7 @@ public class Granary extends Structure {
 				map[f.getMapX()][f.getMapY()] = (Structure) f;
 
 		for(Figure f : stats.figures)
-			if(f instanceof Sawmill || f instanceof Mill) {
-				if(Math.pow(f.getMapX() - getMapX(), 2) + Math.pow(f.getMapY() - getMapY(), 2) <= 2)
-					structures.add((Structure) f);
-			} else if(f instanceof Road) {
+			if(f instanceof Road) {
 				if(Math.pow(f.getMapX() - getMapX(), 2) + Math.pow(f.getMapY() - getMapY(), 2) < 2)
 					structures.addAll(checkForConnection(map, f.getMapX(), f.getMapY(), 0));
 			}

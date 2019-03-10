@@ -1,6 +1,6 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
@@ -12,11 +12,11 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Conifer extends Plant {
 
-	private float[] love = new float[]{0.3f, 0.6f, 0.9f, 1.2f, 1.5f, 2f, 5f, 8f};
-	private int[] cost = {35, 55, 85, 105, 135, 165, 200, 225};
+	private float[] love = new float[]{0.1f, 0.25f, 0.35f, 0.5f, 0.65f, 0.8f, 1f, 1.2f};
+	private int[] cost = {50, 85, 120, 180, 230, 280, 350, 450};
 
 	public Conifer() {
-		super(new Texture("figures/conifer.png"));
+		super(TextureManager.getInstance().conifer);
 		refreshSize();
 		setPos();
 	}
@@ -31,7 +31,7 @@ public class Conifer extends Plant {
 		stats.love += love;
 
 		if(love > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.love);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().love);
 	}
 
 	@Override public String getAbilityDescription() {
@@ -63,8 +63,10 @@ public class Conifer extends Plant {
 		return 10;
 	}
 
-	@Override protected void drawTexture(SpriteBatch sP, float tileX, float tileY) {
+	@Override protected void drawTexture(SpriteBatch sP, float tileX, float tileY, float alpha) {
 		sP.begin();
+		Color color = sP.getColor();
+		sP.setColor(color.cpy().mul(1, 1, 1, alpha));
 		switch(getLevel()) {
 			case 1:
 				sP.draw(texture, tileX + getX(), tileY + getY(), getScaleX() * width, getScaleY() * height);
@@ -109,6 +111,7 @@ public class Conifer extends Plant {
 				sP.draw(texture, tileX + getX() + width / 6f, tileY + getY() - height / 6f, getScaleX() * width, getScaleY() * height);
 				break;
 		}
+		sP.setColor(color);
 		sP.end();
 	}
 }

@@ -1,10 +1,11 @@
 package com.pointlessgames.kingdomoflove.stages;
 
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.pointlessgames.kingdomoflove.utils.ScrollableGestureDetector;
 
-public class GestureStage extends Stage implements GestureDetector.GestureListener {
+public class GestureStage extends Stage implements ScrollableGestureDetector.GestureListener {
+
 	@Override public boolean touchDown(float x, float y, int pointer, int button) {
 		return false;
 	}
@@ -40,5 +41,9 @@ public class GestureStage extends Stage implements GestureDetector.GestureListen
 
 	@Override public void pinchStop() {
 
+	}
+
+	@Override public boolean scrolled(int amount) {
+		return super.scrolled(amount);
 	}
 }

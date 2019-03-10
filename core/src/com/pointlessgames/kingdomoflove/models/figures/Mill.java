@@ -1,6 +1,5 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Settings;
@@ -20,10 +19,10 @@ public class Mill extends Structure {
 
 	private int[] cost = {175, 250, 350, 475, 575, 750, 875, 1000};
 	private int[] capacity = {2, 3, 4, 5, 6, 7, 8, 9};
-	private int[] moneyProduction = {10, 13, 18, 24, 30, 36, 44, 52};
+	private int[] moneyProduction = {5, 7, 10, 13, 17, 21, 26, 35};
 
 	public Mill() {
-		super(new Texture("figures/mill.png"));
+		super(TextureManager.getInstance().mill);
 		refreshSize();
 		setPos();
 	}
@@ -60,7 +59,7 @@ public class Mill extends Structure {
 		stats.money += money;
 
 		if(money > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.money);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.getInstance().money);
 
 		if(wheat.size() > 0) {
 			Collections.sort(wheat, (w1, w2) -> (int) Math.signum(w1.getLife() - w2.getLife()));

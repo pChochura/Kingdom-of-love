@@ -15,6 +15,7 @@ import com.pointlessgames.kingdomoflove.models.figures.Conifer;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Granary;
 import com.pointlessgames.kingdomoflove.models.figures.House;
+import com.pointlessgames.kingdomoflove.models.figures.Library;
 import com.pointlessgames.kingdomoflove.models.figures.Mill;
 import com.pointlessgames.kingdomoflove.models.figures.Monument;
 import com.pointlessgames.kingdomoflove.models.figures.Plant;
@@ -83,6 +84,7 @@ public class PickFigureStage extends GestureStage {
 		figures.add(new Road());
 		figures.add(new Granary());
 		figures.add(new Conifer());
+		figures.add(new Library());
 
 		Collections.sort(figures, (f1, f2) -> f1.getCost() - f2.getCost());
 
@@ -196,11 +198,11 @@ public class PickFigureStage extends GestureStage {
 				sP.draw(figure.getTexture(), x + (tileSize - tileSize * 0.55f) / 2, y + (tileSize - tileSize * 0.55f) / 2, tileSize * 0.55f, tileSize * 0.55f);
 
 				//Money
-				sP.draw(TextureManager.money, x + tileSpace / 2, y + tileSpace / 2, 75 * ratio, 75 * ratio);
-				font.draw(sP, String.format(Locale.getDefault(), "%d", figure.getCost()), x + tileSpace / 2 + 75, y + tileSpace / 2 + 50 * ratio, 100 * ratio, Align.left, false);
+				sP.draw(TextureManager.getInstance().money, x + tileSpace / 2, y + tileSpace / 2, 75 * ratio, 75 * ratio);
+				font.draw(sP, String.format(Locale.getDefault(), "%d", figure.getCost()), x + tileSpace / 2 + 75 * ratio, y + tileSpace / 2 + 50 * ratio, 100 * ratio, Align.left, false);
 
 				//Love
-				sP.draw(TextureManager.love, x + tileSize - tileSpace / 2 - 75 * ratio, y + tileSpace / 2, 75 * ratio, 75 * ratio);
+				sP.draw(TextureManager.getInstance().love, x + tileSize - tileSpace / 2 - 75 * ratio, y + tileSpace / 2, 75 * ratio, 75 * ratio);
 				font.draw(sP, String.format(Locale.getDefault(), "%+d%%", figure.getLove()), x + tileSize - tileSpace / 2 - 175 * ratio, y + tileSpace / 2 + 50 * ratio, 100 * ratio, Align.right, false);
 
 				sP.end();
@@ -243,7 +245,7 @@ public class PickFigureStage extends GestureStage {
 					offsetX = tileSpace;
 					setSelectedCategory(selectedCategory = i);
 					if(Settings.soundsOn)
-						SoundManager.select.play(0.5f);
+						SoundManager.getInstance().select.play(0.5f);
 					return true;
 				}
 			}

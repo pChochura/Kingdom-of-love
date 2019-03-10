@@ -39,11 +39,13 @@ public class BackgroundStage extends GestureStage {
 		this.sR = sR;
 		this.stats = stats;
 		screenRect = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		stats.mapOffset.scl(0);
 	}
 
 	private void drawBackground() {
 		sP.begin();
-		sP.draw(TextureManager.background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		sP.setColor(Color.WHITE);
+		sP.draw(TextureManager.getInstance().background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		sP.end();
 	}
 
@@ -58,14 +60,14 @@ public class BackgroundStage extends GestureStage {
 		Polygon polygon = new Polygon();
 		for(int i = 0; i < WIDTH; i++) for(int j = 0; j < HEIGHT; j++) {
 			float[] vertices = {
-			/* x */	stats.mapOffset.x + offsetX + i * tileSize + getOffset(i + WINDOW_WIDTH, j + WINDOW_HEIGHT + 4),
-			/* y */	stats.mapOffset.y + offsetY + j * tileSize + getOffset(i + WINDOW_WIDTH + 4, j + WINDOW_HEIGHT),
-			/* x */	stats.mapOffset.x + offsetX + i * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 1, j + WINDOW_HEIGHT + 5),
-			/* y */	stats.mapOffset.y + offsetY + j * tileSize + getOffset(i + WINDOW_WIDTH + 5, j + WINDOW_HEIGHT + 1),
-			/* x */	stats.mapOffset.x + offsetX + i * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 2, j + WINDOW_HEIGHT + 6),
-			/* y */	stats.mapOffset.y + offsetY + j * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 6, j + WINDOW_HEIGHT + 2),
-			/* x */	stats.mapOffset.x + offsetX + i * tileSize + getOffset(i + WINDOW_WIDTH + 3, j + WINDOW_HEIGHT + 7),
-			/* y */	stats.mapOffset.y + offsetY + j * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 7, j + WINDOW_HEIGHT + 3)
+			/* x */ offsetX + stats.mapOffset.x + i * tileSize + getOffset(i + WINDOW_WIDTH, j + WINDOW_HEIGHT + 4),
+			/* y */ offsetY + stats.mapOffset.y + j * tileSize + getOffset(i + WINDOW_WIDTH + 4, j + WINDOW_HEIGHT),
+			/* x */ offsetX + stats.mapOffset.x + i * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 1, j + WINDOW_HEIGHT + 5),
+			/* y */ offsetY + stats.mapOffset.y + j * tileSize + getOffset(i + WINDOW_WIDTH + 5, j + WINDOW_HEIGHT + 1),
+			/* x */ offsetX + stats.mapOffset.x + i * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 2, j + WINDOW_HEIGHT + 6),
+			/* y */ offsetY + stats.mapOffset.y + j * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 6, j + WINDOW_HEIGHT + 2),
+			/* x */ offsetX + stats.mapOffset.x + i * tileSize + getOffset(i + WINDOW_WIDTH + 3, j + WINDOW_HEIGHT + 7),
+			/* y */ offsetY + stats.mapOffset.y + j * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 7, j + WINDOW_HEIGHT + 3)
 			};
 
 			polygon.setVertices(vertices);
@@ -141,6 +143,21 @@ public class BackgroundStage extends GestureStage {
 
 		Vector2 sub = beforeZoom.cpy().sub(afterZoom);
 		stats.mapOffset.add(sub.x, -sub.y).limit(WIDTH * tileSize / 2);
+		return true;
+	}
+
+	@Override public boolean scrolled(int amount) {
+		Vector2 initialPos = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()).sub(Gdx.graphics.getWidth() / 2 + stats.mapOffset.x, Gdx.graphics.getHeight() / 2 + stats.mapOffset.y);
+
+		Vector2 beforeZoom = initialPos.cpy().scl(Settings.scale);
+
+		Settings.scale = MathUtils.clamp(Settings.scale - 0.05f * amount, 0.3f, 1f);
+		Settings.refreshTileSize(stats);
+
+		Vector2 afterZoom = initialPos.cpy().scl(Settings.scale);
+
+		Vector2 sub = beforeZoom.sub(afterZoom);
+		stats.mapOffset.add(sub.x, sub.y).limit(WIDTH * tileSize / 2);
 		return true;
 	}
 

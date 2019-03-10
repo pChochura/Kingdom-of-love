@@ -1,15 +1,15 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.TextureManager;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Monument extends Structure {
 
 	public Monument() {
-		super(new Texture("figures/monument.png"));
+		super(TextureManager.getInstance().monument);
 		refreshSize();
 		setPos();
 	}
@@ -20,7 +20,7 @@ public class Monument extends Structure {
 	}
 
 	@Override public int getCapacity() {
-		return 1;
+		return 0;
 	}
 
 	@Override public void triggerAbility(Stats stats) {

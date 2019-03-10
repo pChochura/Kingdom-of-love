@@ -1,6 +1,7 @@
 package com.pointlessgames.kingdomoflove.stages.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -54,7 +55,8 @@ public class StartUIStage extends GestureStage {
 		font.getData().setScale(0.4f);
 		font.setColor(Colors.textColor);
 		font.draw(sP, String.format(Locale.getDefault(), "%d (%+d)", stats.money, stats.getMoneyProduction()), 135 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
-		sP.draw(TextureManager.money, 50 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
+		sP.setColor(Color.WHITE);
+		sP.draw(TextureManager.getInstance().money, 50 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
 		sP.end();
 	}
 
@@ -63,7 +65,8 @@ public class StartUIStage extends GestureStage {
 		font.getData().setScale(0.4f);
 		font.setColor(Colors.textColor);
 		font.draw(sP, String.valueOf(stats.getPopulation()), Gdx.graphics.getWidth() / 2 - 25 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
-		sP.draw(TextureManager.capacity, Gdx.graphics.getWidth() / 2 - 100 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
+		sP.setColor(Color.WHITE);
+		sP.draw(TextureManager.getInstance().capacity, Gdx.graphics.getWidth() / 2 - 100 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
 		sP.end();
 	}
 
@@ -82,7 +85,8 @@ public class StartUIStage extends GestureStage {
 		font.setColor(Colors.text3Color);
 		font.draw(sP, String.format(Locale.getDefault(), "%d (%+.1f)", MathUtils.round(stats.love), stats.getLoveProduction()),
 				Gdx.graphics.getWidth() - 350 * ratio + width / 2 - 25 * ratio, Gdx.graphics.getHeight() - 70 * ratio, 50 * ratio, Align.center, false);
-		sP.draw(TextureManager.love, Gdx.graphics.getWidth() - 125 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
+		sP.setColor(Color.WHITE);
+		sP.draw(TextureManager.getInstance().love, Gdx.graphics.getWidth() - 125 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
 		sP.end();
 	}
 
@@ -91,6 +95,7 @@ public class StartUIStage extends GestureStage {
 		font.getData().setScale(0.65f);
 		font.setColor(Colors.textColor);
 		font.draw(sP, String.format(Locale.getDefault(), "Day %d", stats.day), 0, Gdx.graphics.getHeight() - 1.5f * topBarHeight, Gdx.graphics.getWidth(), Align.center, false);
+		sP.setColor(Color.WHITE);
 		sP.end();
 	}
 
@@ -104,6 +109,7 @@ public class StartUIStage extends GestureStage {
 		font.getData().setScale(0.35f);
 		font.setColor(Colors.text3Color);
 		font.draw(sP, "Next day", Gdx.graphics.getWidth() - 350 * ratio, 200 * ratio, 300 * ratio, Align.center, false);
+		sP.setColor(Color.WHITE);
 		sP.end();
 	}
 

@@ -15,8 +15,6 @@ import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.stages.story.EndStoryStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
-import com.pointlessgames.kingdomoflove.utils.SoundManager;
-import com.pointlessgames.kingdomoflove.utils.TextureManager;
 
 import java.util.ArrayList;
 
@@ -47,9 +45,6 @@ public class EndScreen extends BaseScreen {
 
 		sR = new CustomShapeRenderer();
 		sP = new SpriteBatch();
-
-		TextureManager.loadTextures();
-		SoundManager.loadSounds();
 
 		sP.enableBlending();
 		sP.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -87,9 +82,6 @@ public class EndScreen extends BaseScreen {
 	@Override public void dispose() {
 		for(Stage s : stages)
 			s.dispose();
-
-		TextureManager.dispose();
-		SoundManager.dispose();
 	}
 
 	public EndScreen setOnEndListener(Runnable endListener) {

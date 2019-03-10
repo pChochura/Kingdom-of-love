@@ -1,6 +1,7 @@
 package com.pointlessgames.kingdomoflove.stages;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -50,7 +51,10 @@ public class FiguresStage extends GestureStage {
 			Rectangle rect = new Rectangle(x, y, f.getWidth(), f.getHeight());
 			if(!rect.overlaps(screenRect)) continue;
 
-			f.draw(sP, sR, x, y);
+			sP.setColor(Color.WHITE);
+			if(stats.selectedFigures == null || stats.selectedFigures.contains(f))
+				f.draw(sP, sR, x, y);
+			else f.draw(sP, sR, x, y, 0.3f);
 		}
 	}
 

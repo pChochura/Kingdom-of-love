@@ -6,26 +6,84 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
-import com.pointlessgames.kingdomoflove.models.figures.Mill;
 import com.pointlessgames.kingdomoflove.models.figures.Plant;
 import com.pointlessgames.kingdomoflove.models.figures.Road;
-import com.pointlessgames.kingdomoflove.models.figures.Sawmill;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.pointlessgames.kingdomoflove.utils.Settings.HEIGHT;
+import static com.pointlessgames.kingdomoflove.utils.Settings.WIDTH;
 
 public class Stats {
 
 	public int day = 1;
-	public int money = 150;
+	public int money = 50;
 	public float love = 50;
 	public ArrayList<Figure> figures;
+	public Set<Figure> selectedFigures;
 
 	public Vector2 mapOffset;
 
 	public Stats() {
 		this.figures = new ArrayList<>();
 		this.mapOffset = new Vector2();
+	}
+
+	public void setCurrentFigure(Figure figure) {
+		if(figure == null) {
+			selectedFigures = null;
+			return;
+		}
+		Structure[][] map = new Structure[WIDTH][HEIGHT];
+		for(Figure f : figures)
+			if(f instanceof Structure && ((Structure) f).hasRoad()) {
+				map[f.getMapX()][f.getMapY()] = (Structure) f;
+				((Structure) f).checked = false;
+			}
+		selectedFigures = new HashSet<>();
+		selectedFigures.add(figure);
+		if(figure instanceof Structure && ((Structure) figure).hasRoad()) {
+			((Structure) figure).checked = true;
+			selectedFigures.addAll(getConnectedFigures(map, figure.getMapX(), figure.getMapY(), !(figure instanceof Road)));
+		}
+	}
+
+	public Set<Structure> getConnectedFigures(Structure[][] map, int x, int y, boolean onlyRoad) {
+		Set<Structure> structures = new HashSet<>();
+		structures.add(map[x][y]);
+		if(x > 0 && map[x - 1][y] != null && !map[x - 1][y].checked) {
+			boolean isRoad = map[x - 1][y] instanceof Road;
+			if(!onlyRoad || isRoad) {
+				map[x - 1][y].checked = true;
+				structures.add(map[x - 1][y]);
+				structures.addAll(getConnectedFigures(map, x - 1, y, !isRoad));
+			}
+		} if(x < WIDTH - 1 && map[x + 1][y] != null && !map[x + 1][y].checked) {
+			boolean isRoad = map[x + 1][y] instanceof Road;
+			if(!onlyRoad || isRoad) {
+				map[x + 1][y].checked = true;
+				structures.add(map[x + 1][y]);
+				structures.addAll(getConnectedFigures(map, x + 1, y, !isRoad));
+			}
+		} if(y > 0 && map[x][y - 1] != null && !map[x][y - 1].checked) {
+			boolean isRoad = map[x][y - 1] instanceof Road;
+			if(!onlyRoad || isRoad) {
+				map[x][y - 1].checked = true;
+				structures.add(map[x][y - 1]);
+				structures.addAll(getConnectedFigures(map, x, y - 1, !isRoad));
+			}
+		} if(y < HEIGHT - 1 && map[x][y + 1] != null && !map[x][y + 1].checked) {
+			boolean isRoad = map[x][y + 1] instanceof Road;
+			if(!onlyRoad || isRoad) {
+				map[x][y + 1].checked = true;
+				structures.add(map[x][y + 1]);
+				structures.addAll(getConnectedFigures(map, x, y + 1, !isRoad));
+			}
+		}
+		return structures;
 	}
 
 	public int getPopulation() {

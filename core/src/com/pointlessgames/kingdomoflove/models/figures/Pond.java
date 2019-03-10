@@ -1,6 +1,5 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.TextureManager;
@@ -15,7 +14,7 @@ public class Pond extends Structure {
 	private float love = -1.5f;
 
 	public Pond() {
-		super(new Texture("figures/pond.png"));
+		super(TextureManager.getInstance().pond);
 		refreshSize();
 		setPos();
 	}
@@ -39,7 +38,7 @@ public class Pond extends Structure {
 		stats.love += love;
 
 		if(love > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.love);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", Math.abs(love)), TextureManager.getInstance().love);
 	}
 
 	@Override public String getAbilityDescription() {

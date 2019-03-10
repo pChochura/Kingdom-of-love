@@ -1,5 +1,7 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -7,7 +9,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 
-import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public abstract class Plant extends Figure {
@@ -20,21 +21,28 @@ public abstract class Plant extends Figure {
 	}
 
 	@Override public void draw(SpriteBatch sP, CustomShapeRenderer sR, float tileX, float tileY) {
-		drawTexture(sP, tileX, tileY);
-		drawLifeBar(sR, tileX, tileY);
-		if(hasLevels()) drawLevel(sP, sR, tileX, tileY);
-		drawAbilityTip(sP, tileX, tileY);
+		draw(sP, sR, tileX, tileY, 1);
 	}
 
-	private void drawLifeBar(CustomShapeRenderer sR, float tileX, float tileY) {
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(Colors.inactiveColor);
-		float size = tileSize * 0.15f * ratio;
+	@Override public void draw(SpriteBatch sP, CustomShapeRenderer sR, float tileX, float tileY, float alpha) {
+		drawTexture(sP, tileX, tileY, alpha);
+		drawLifeBar(sR, tileX, tileY, alpha);
+		if(hasLevels()) drawLevel(sP, sR, tileX, tileY, alpha);
+		drawAbilityTip(sP, tileX, tileY, alpha);
+	}
+
+	private void drawLifeBar(CustomShapeRenderer sR, float tileX, float tileY, float alpha) {
+		float size = tileSize * 0.2f;
 		float halfSize = size * 0.5f;
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		sR.begin(ShapeRenderer.ShapeType.Filled);
+		sR.setColor(Colors.inactiveColor.cpy().mul(1, 1, 1, alpha));
 		sR.roundedRect(tileX + size, tileY + halfSize, tileSize - (size + halfSize), size, halfSize * 0.3f);
-		sR.setColor(Colors.loveColor);
+		sR.setColor(Colors.loveColor.cpy().mul(1, 1, 1, alpha));
 		sR.roundedRect(tileX + size, tileY + halfSize, MathUtils.lerp(0, tileSize - (size + halfSize), getLife()), size, halfSize * 0.3f);
 		sR.end();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	public abstract int getMaxLife();

@@ -1,6 +1,5 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Settings;
@@ -20,10 +19,10 @@ public class Sawmill extends Structure {
 
 	private int[] cost = {75, 100, 150, 200, 275, 380, 450, 550};
 	private int[] capacity = {2, 4, 5, 6, 7, 8, 9, 10};
-	private int[] moneyProduction = {6, 8, 9, 11, 13, 15, 17, 20};
+	private int[] moneyProduction = {3, 5, 7, 10, 13, 15, 17, 20};
 
 	public Sawmill() {
-		super(new Texture("figures/sawmill.png"));
+		super(TextureManager.getInstance().sawmill);
 		refreshSize();
 		setPos();
 	}
@@ -55,7 +54,7 @@ public class Sawmill extends Structure {
 		stats.money += money;
 
 		if(money > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.money);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.getInstance().money);
 
 		if(trees.size() > 0) {
 			Collections.sort(trees, (t1, t2) -> (int) Math.signum(t1.getLife() - t2.getLife()));

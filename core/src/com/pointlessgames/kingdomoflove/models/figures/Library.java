@@ -4,14 +4,16 @@ import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.TextureManager;
 
+import java.util.Locale;
+
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
-public class Wheat extends Plant {
+public class Library extends Structure {
 
-	private int[] cost = {35, 75, 100, 125, 175, 225, 275, 350};
+	private float love = 0.1f;
 
-	public Wheat() {
-		super(TextureManager.getInstance().wheat);
+	public Library() {
+		super(TextureManager.getInstance().library);
 		refreshSize();
 		setPos();
 	}
@@ -21,41 +23,44 @@ public class Wheat extends Plant {
 		width = height * texture.getTexture().getWidth() / texture.getTexture().getHeight();
 	}
 
+	private float getLoveProduction(Stats stats) {
+		return love * stats.getPopulation();
+	}
+
+	@Override public int getCapacity() {
+		return 0;
+	}
+
 	@Override public void triggerAbility(Stats stats) {
-		int ponds = 0;
-		for(Figure f : stats.figures)
-			if(f instanceof Pond)
-				if(Math.pow(f.getMapX() - getMapX(), 2) + Math.pow(f.getMapY() - getMapY(), 2) < 2)
-					ponds += f.getLevel();
-		this.level = ponds + 1;
+		float love = getLoveProduction(stats);
+		stats.love += love;
+
+		if(love > 0)
+			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().love);
 	}
 
 	@Override public String getAbilityDescription() {
-		return "Increases own level if borders a pond.";
+		return String.format(Locale.getDefault(), "Daily increases love for every Kingdom inhabitant by %.1f%%.", love);
 	}
 
 	@Override public int getCost() {
-		return cost[getLevel() - 1];
+		return 300;
 	}
 
 	@Override public int getLove() {
-		return 2;
+		return 25;
 	}
 
 	@Override public Ability getAbility(Stats stats) {
-		return new Ability(Ability.ProductionType.NOTHING, 0);
+		return new Ability(Ability.ProductionType.LOVE, getLoveProduction(stats));
 	}
 
 	@Override public boolean isUpgradable() {
-		return false;
+		return true;
 	}
 
 	@Override protected void setPos() {
 		setX((tileSize - width * getScaleX()) / 2);
 		setY((tileSize - height * getScaleY()) / 2);
-	}
-
-	@Override public int getMaxLife() {
-		return 10;
 	}
 }

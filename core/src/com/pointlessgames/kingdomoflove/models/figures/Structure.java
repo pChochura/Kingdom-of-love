@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 
 public abstract class Structure extends Figure {
 
+	public boolean checked;
+
 	Structure(Texture texture) {
 		super(texture);
 	}

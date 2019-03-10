@@ -1,15 +1,15 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.TextureManager;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Well extends Structure {
 
 	public Well() {
-		super(new Texture("figures/well.png"));
+		super(TextureManager.getInstance().well);
 		refreshSize();
 		setPos();
 	}

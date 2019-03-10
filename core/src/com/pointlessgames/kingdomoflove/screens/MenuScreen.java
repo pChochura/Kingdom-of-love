@@ -12,11 +12,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
+import com.pointlessgames.kingdomoflove.stages.GestureStage;
 import com.pointlessgames.kingdomoflove.stages.ui.MenuUIStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
+import com.pointlessgames.kingdomoflove.utils.ScrollableGestureDetector;
 import com.pointlessgames.kingdomoflove.utils.Settings;
-import com.pointlessgames.kingdomoflove.utils.SoundManager;
-import com.pointlessgames.kingdomoflove.utils.TextureManager;
 
 import java.util.ArrayList;
 
@@ -30,7 +30,7 @@ public class MenuScreen extends BaseScreen {
 	private SpriteBatch sP;
 
 	private InputMultiplexer input;
-	private ArrayList<Stage> stages;
+	private ArrayList<GestureStage> stages;
 	private Runnable startListener;
 
 	@Override public void show() {
@@ -48,9 +48,6 @@ public class MenuScreen extends BaseScreen {
 		sR = new CustomShapeRenderer();
 		sP = new SpriteBatch();
 
-		TextureManager.loadTextures();
-		SoundManager.loadSounds();
-
 		sP.enableBlending();
 		sP.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		sR.setAutoShapeType(true);
@@ -60,13 +57,13 @@ public class MenuScreen extends BaseScreen {
 		configureStages();
 
 		input = new InputMultiplexer();
-		for(int i = stages.size() - 1; i >= 0; i--) input.addProcessor(stages.get(i));
+		for(int i = stages.size() - 1; i >= 0; i--) input.addProcessor(new ScrollableGestureDetector(stages.get(i)));
 		Gdx.input.setInputProcessor(input);
 	}
 
 	private void configureStages() {
 		stages = new ArrayList<>();
-		stages.add(new MenuUIStage(sP, sR).setOnStartListener(startListener));
+		stages.add(new MenuUIStage(sP, sR).setOnStartListener(() -> startListener.run()));
 	}
 
 	@Override public void render(float delta) {
@@ -87,9 +84,6 @@ public class MenuScreen extends BaseScreen {
 	@Override public void dispose() {
 		for(Stage s : stages)
 			s.dispose();
-
-		TextureManager.dispose();
-		SoundManager.dispose();
 	}
 
 	public MenuScreen setOnStartListener(Runnable startListener) {
