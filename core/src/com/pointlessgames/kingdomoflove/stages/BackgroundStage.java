@@ -52,9 +52,9 @@ public class BackgroundStage extends GestureStage {
 	private void drawMap() {
 		float offsetX = (Gdx.graphics.getWidth() - WIDTH * tileSize) / 2;
 		float offsetY = (Gdx.graphics.getHeight() - HEIGHT * tileSize) / 2;
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
+//		Gdx.gl.glEnable(GL20.GL_BLEND);
+//		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		sR.begin(ShapeRenderer.ShapeType.Filled);
 
 		Polygon polygon = new Polygon();
@@ -80,8 +80,7 @@ public class BackgroundStage extends GestureStage {
 		}
 
 		sR.end();
-
-		Gdx.gl.glDisable(GL20.GL_BLEND);
+//		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	private float getOffset(int x, int y) {

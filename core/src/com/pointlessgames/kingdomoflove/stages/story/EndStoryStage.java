@@ -4,10 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
+import com.pointlessgames.kingdomoflove.stages.GestureStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.TextureManager;
 
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import static com.pointlessgames.kingdomoflove.screens.EndScreen.font;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
-public class EndStoryStage extends Stage {
+public class EndStoryStage extends GestureStage {
 
 	private float duration = 2f;
 	private CustomShapeRenderer sR;
@@ -115,7 +115,7 @@ public class EndStoryStage extends Stage {
 			if(actors != null && !actors.isEmpty() && actors.get(i) != null) actors.get(i).act(delta);
 	}
 
-	@Override public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+	@Override public boolean tap(float x, float y, int count, int button) {
 		if(index % 2 == 0)
 			for(int i = 0; i < index && i < actors.size(); i++)
 				if(actors != null && !actors.isEmpty() && actors.get(i) != null) actors.get(i).addAction(Actions.alpha(0, duration, Interpolation.exp5In));

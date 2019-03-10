@@ -1,7 +1,5 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -32,17 +30,21 @@ public abstract class Plant extends Figure {
 	}
 
 	private void drawLifeBar(CustomShapeRenderer sR, float tileX, float tileY, float alpha) {
+//		if(alpha != 1) {
+//			Gdx.gl.glEnable(GL20.GL_BLEND);
+//			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+//		}
+
 		float size = tileSize * 0.2f;
 		float halfSize = size * 0.5f;
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		sR.begin(ShapeRenderer.ShapeType.Filled);
 		sR.setColor(Colors.inactiveColor.cpy().mul(1, 1, 1, alpha));
 		sR.roundedRect(tileX + size, tileY + halfSize, tileSize - (size + halfSize), size, halfSize * 0.3f);
 		sR.setColor(Colors.loveColor.cpy().mul(1, 1, 1, alpha));
 		sR.roundedRect(tileX + size, tileY + halfSize, MathUtils.lerp(0, tileSize - (size + halfSize), getLife()), size, halfSize * 0.3f);
 		sR.end();
-		Gdx.gl.glDisable(GL20.GL_BLEND);
+
+//		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	public abstract int getMaxLife();

@@ -1,21 +1,83 @@
 package com.pointlessgames.kingdomoflove.screens;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.pointlessgames.kingdomoflove.stages.GestureStage;
+import com.pointlessgames.kingdomoflove.utils.ScrollableGestureDetector;
 import com.pointlessgames.kingdomoflove.utils.Settings;
+
+import java.util.ArrayList;
 
 public class BaseScreen implements Screen {
 
-	BaseScreen() {
-		super();
+	private ArrayList<GestureStage> stages;
+	private StretchViewport viewport;
+
+	private float screenHeight;
+	private Color backgroundColor;
+	private InputMultiplexer inputMultiplexer;
+
+	BaseScreen(float screenHeight, Color backgroundColor) {
+		this.screenHeight = screenHeight;
+		this.backgroundColor = backgroundColor;
+
+		stages = new ArrayList<>();
+		inputMultiplexer = new InputMultiplexer();
+		Gdx.input.setInputProcessor(inputMultiplexer);
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		Gdx.input.setCatchBackKey(true);
 	}
 
-	@Override public void show() { }
-	@Override public void render(float delta) { }
+	public ScrollableGestureDetector addStage(GestureStage stage) {
+		stages.add(stage);
+		ScrollableGestureDetector processor = new ScrollableGestureDetector(stage);
+		inputMultiplexer.addProcessor(0, processor);
+		return processor;
+	}
+
+	public void removeStage(GestureStage stage, ScrollableGestureDetector gestureDetector) {
+		stages.remove(stage);
+		inputMultiplexer.removeProcessor(gestureDetector);
+	}
+
+	private void setScreenSize() {
+		float aspectRatio = (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+		viewport = new StretchViewport(screenHeight / aspectRatio, screenHeight, new OrthographicCamera(screenHeight / aspectRatio, screenHeight));
+		Settings.refreshRatio();
+	}
+
+	@Override public void show() {
+		setScreenSize();
+	}
+
+	@Override public void render(float delta) {
+		Gdx.gl.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		viewport.getCamera().update();
+
+		for(int i = 0; i < stages.size(); i++) stages.get(i).act(delta);
+
+		for(int i = 0; i < stages.size(); i++) stages.get(i).draw();
+	}
+
+	@Override public void resize(int width, int height) {
+		setScreenSize();
+	}
+
+	@Override public void dispose() {
+		for(Stage s : stages)
+			s.dispose();
+	}
+
 	@Override public void pause() { }
 	@Override public void resume() { }
 	@Override public void hide() { }
-	@Override public void dispose() { }
-	@Override public void resize(int width, int height) {
-		Settings.refreshRatio();
-	}
 }
