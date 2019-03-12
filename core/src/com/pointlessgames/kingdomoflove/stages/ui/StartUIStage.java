@@ -56,7 +56,7 @@ public class StartUIStage extends GestureStage {
 		font.setColor(Colors.textColor);
 		font.draw(sP, String.format(Locale.getDefault(), "%d (%+d)", stats.money, stats.getMoneyProduction()), 135 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
 		sP.setColor(Color.WHITE);
-		sP.draw(TextureManager.getInstance().money, 50 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), 50 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
 		sP.end();
 	}
 
@@ -66,7 +66,7 @@ public class StartUIStage extends GestureStage {
 		font.setColor(Colors.textColor);
 		font.draw(sP, String.valueOf(stats.getPopulation()), Gdx.graphics.getWidth() / 2 - 25 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
 		sP.setColor(Color.WHITE);
-		sP.draw(TextureManager.getInstance().capacity, Gdx.graphics.getWidth() / 2 - 100 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), Gdx.graphics.getWidth() / 2 - 100 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
 		sP.end();
 	}
 
@@ -86,7 +86,7 @@ public class StartUIStage extends GestureStage {
 		font.draw(sP, String.format(Locale.getDefault(), "%d (%+.1f)", MathUtils.round(stats.love), stats.getLoveProduction()),
 				Gdx.graphics.getWidth() - 350 * ratio + width / 2 - 25 * ratio, Gdx.graphics.getHeight() - 70 * ratio, 50 * ratio, Align.center, false);
 		sP.setColor(Color.WHITE);
-		sP.draw(TextureManager.getInstance().love, Gdx.graphics.getWidth() - 125 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOVE), Gdx.graphics.getWidth() - 125 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
 		sP.end();
 	}
 

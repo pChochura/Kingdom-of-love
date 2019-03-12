@@ -32,15 +32,6 @@ public class FiguresStage extends GestureStage {
 		screenRect = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
-	private void sortFigures() {
-		Collections.sort(stats.figures, (f2, f1) -> {
-			if(f1.getMapY() > f2.getMapY()) return -1;
-			else if(f1.getMapY() == f2.getMapY())
-				return Integer.compare(f1.getMapX(), f2.getMapX());
-			return 0;
-		});
-	}
-
 	private void drawFigures() {
 		float cx = (Gdx.graphics.getWidth() - WIDTH * tileSize) / 2 + stats.mapOffset.x;
 		float cy = (Gdx.graphics.getHeight() - HEIGHT * tileSize) / 2 + stats.mapOffset.y;
@@ -59,7 +50,6 @@ public class FiguresStage extends GestureStage {
 	}
 
 	@Override public void draw() {
-		sortFigures();
 		drawFigures();
 	}
 

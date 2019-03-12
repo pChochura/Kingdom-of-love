@@ -13,7 +13,7 @@ public class Library extends Structure {
 	private float love = 0.1f;
 
 	public Library() {
-		super(TextureManager.getInstance().library);
+		super(TextureManager.getInstance().getTexture(TextureManager.LIBRARY));
 		refreshSize();
 		setPos();
 	}
@@ -36,7 +36,7 @@ public class Library extends Structure {
 		stats.love += love;
 
 		if(love > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().love);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().getTexture(TextureManager.LOVE));
 	}
 
 	@Override public String getAbilityDescription() {

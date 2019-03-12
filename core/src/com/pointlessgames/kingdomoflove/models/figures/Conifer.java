@@ -16,7 +16,7 @@ public class Conifer extends Plant {
 	private int[] cost = {50, 85, 120, 180, 230, 280, 350, 450};
 
 	public Conifer() {
-		super(TextureManager.getInstance().conifer);
+		super(TextureManager.getInstance().getTexture(TextureManager.CONIFER));
 		refreshSize();
 		setPos();
 	}
@@ -31,7 +31,7 @@ public class Conifer extends Plant {
 		stats.love += love;
 
 		if(love > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().love);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().getTexture(TextureManager.LOVE));
 	}
 
 	@Override public String getAbilityDescription() {

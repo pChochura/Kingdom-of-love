@@ -22,7 +22,7 @@ public class Sawmill extends Structure {
 	private int[] moneyProduction = {3, 5, 7, 10, 13, 15, 17, 20};
 
 	public Sawmill() {
-		super(TextureManager.getInstance().sawmill);
+		super(TextureManager.getInstance().getTexture(TextureManager.SAWMILL));
 		refreshSize();
 		setPos();
 	}
@@ -54,7 +54,7 @@ public class Sawmill extends Structure {
 		stats.money += money;
 
 		if(money > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.getInstance().money);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.getInstance().getTexture(TextureManager.MONEY));
 
 		if(trees.size() > 0) {
 			Collections.sort(trees, (t1, t2) -> (int) Math.signum(t1.getLife() - t2.getLife()));

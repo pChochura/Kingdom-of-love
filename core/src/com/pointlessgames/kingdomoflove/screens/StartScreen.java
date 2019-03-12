@@ -79,7 +79,7 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 			Color c = sP.getColor().cpy();
 			sP.begin();
 			sP.setColor(Colors.bgColor.r, Colors.bgColor.g, Colors.bgColor.b, MathUtils.lerp(1, 0, percent));
-			sP.draw(TextureManager.getInstance().background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+			sP.draw(TextureManager.getInstance().getTexture(TextureManager.BACKGROUND), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			sP.setColor(Color.WHITE);
 			sP.end();
 			sP.setColor(c);
@@ -94,7 +94,7 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 
 	@Override public void onEmptyTileClicked(int mapX, int mapY) {
 		if(Settings.soundsOn)
-			SoundManager.getInstance().select.play(0.5f);
+			SoundManager.getInstance().getSound(SoundManager.SELECT).play(0.5f);
 		PickFigureStage pickFigureStage = new PickFigureStage(sP, sR, stats);
 		ScrollableGestureDetector gestureDetector = addStage(pickFigureStage);
 		pickFigureStage.setClickListener(new PickFigureStage.ClickListener() {
@@ -111,6 +111,7 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 					f.setScale(0);
 					f.addAction(Actions.scaleTo(1, 1, Settings.duration, new Interpolation.SwingOut(3f)));
 					stats.figures.add(f);
+					stats.sortFigures();
 					pickFigureStage.hide(() -> removeStage(pickFigureStage, gestureDetector));
 
 					for(Figure figure : stats.figures)
@@ -118,8 +119,8 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 							figure.orientInSpace(stats);
 
 					if(Settings.soundsOn)
-						SoundManager.getInstance().pickFigure.play(0.5f);
-				} else if(Settings.soundsOn) SoundManager.getInstance().selectError.play(0.5f);
+						SoundManager.getInstance().getSound(SoundManager.PICK_FIGURE).play(0.5f);
+				} else if(Settings.soundsOn) SoundManager.getInstance().getSound(SoundManager.SELECT_ERROR).play(0.5f);
 			}
 		});
 	}
@@ -127,7 +128,7 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 	@Override public void onFigureClick(Figure f) {
 		stats.setCurrentFigure(f);
 		if(Settings.soundsOn)
-			SoundManager.getInstance().select.play(0.5f);
+			SoundManager.getInstance().getSound(SoundManager.SELECT).play(0.5f);
 		FigureInfoStage figureInfoStage = new FigureInfoStage(sP, sR, stats);
 		figureInfoStage.setFigure(f);
 		ScrollableGestureDetector gestureDetector = addStage(figureInfoStage);
@@ -142,15 +143,15 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 					stats.money -= f.getUpdateCost();
 					f.levelUp();
 					if(Settings.soundsOn)
-						SoundManager.getInstance().upgrade.play(0.5f);
-				} else if(Settings.soundsOn) SoundManager.getInstance().selectError.play(0.5f);
+						SoundManager.getInstance().getSound(SoundManager.UPGRADE).play(0.5f);
+				} else if(Settings.soundsOn) SoundManager.getInstance().getSound(SoundManager.SELECT_ERROR).play(0.5f);
 			}
 		});
 	}
 
 	@Override public void nextDayButtonClicked() {
 		if(Settings.soundsOn)
-			SoundManager.getInstance().nextDay.play(0.5f);
+			SoundManager.getInstance().getSound(SoundManager.NEXT_DAY).play(0.5f);
 		stats.day++;
 		for(int i = stats.figures.size() - 1; i >= 0; i--)
 			stats.figures.get(i).triggerAbility(stats);

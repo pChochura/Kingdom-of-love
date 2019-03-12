@@ -19,7 +19,7 @@ public class Granary extends Structure {
 	private float[] loveProduction = {1, 1.2f, 1.5f, 1.8f, 2.1f, 2.5f, 2.9f, 3.5f};
 
 	public Granary() {
-		super(TextureManager.getInstance().granary);
+		super(TextureManager.getInstance().getTexture(TextureManager.GRANARY));
 		refreshSize();
 		setPos();
 	}
@@ -38,7 +38,7 @@ public class Granary extends Structure {
 		stats.love += love;
 
 		if(love > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().love);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().getTexture(TextureManager.LOVE));
 	}
 
 	private float getLoveProduction(Stats stats) {
@@ -49,45 +49,13 @@ public class Granary extends Structure {
 			if(f instanceof Structure)
 				map[f.getMapX()][f.getMapY()] = (Structure) f;
 
-		for(Figure f : stats.figures)
-			if(f instanceof Road) {
-				if(Math.pow(f.getMapX() - getMapX(), 2) + Math.pow(f.getMapY() - getMapY(), 2) < 2)
-					structures.addAll(checkForConnection(map, f.getMapX(), f.getMapY(), 0));
-			}
+		stats.getConnectedFigures(map, getMapX(), getMapY(), true);
+		int amount = 0;
+		for(Structure s : structures)
+			if(s instanceof Sawmill || s instanceof Mill) amount++;
 
-		return structures.size() * loveProduction[getLevel() - 1];
+		return amount * loveProduction[getLevel() - 1];
 	}
-
-	private Set<Structure> checkForConnection(Structure[][] map, int x, int y, int checkedDir) {
-		Set<Structure> structures = new HashSet<>();
-		if(checkedDir != 2 && x > 0 && map[x - 1][y] != null)
-			if(map[x - 1][y] instanceof Mill || map[x - 1][y] instanceof Sawmill) structures.add(map[x - 1][y]);
-			else if(map[x - 1][y] instanceof Road && !((Road) map[x - 1][y]).checked) {
-				((Road) map[x - 1][y]).checked = true;
-				structures.addAll(checkForConnection(map, x - 1, y, 1));
-			}
-		if(checkedDir != 1 && x < WIDTH - 1 && map[x + 1][y] != null)
-			if(map[x + 1][y] instanceof Mill || map[x + 1][y] instanceof Sawmill) structures.add(map[x + 1][y]);
-			else if(map[x + 1][y] instanceof Road && !((Road) map[x + 1][y]).checked ) {
-				((Road) map[x + 1][y]).checked = true;
-				structures.addAll(checkForConnection(map, x + 1, y, 2));
-			}
-		if(checkedDir != 4 && y > 0 && map[x][y - 1] != null)
-			if(map[x][y - 1] instanceof Mill || map[x][y - 1] instanceof Sawmill) structures.add(map[x][y - 1]);
-			else if(map[x][y - 1] instanceof Road && !((Road) map[x][y - 1]).checked) {
-				((Road) map[x][y - 1]).checked = true;
-				structures.addAll(checkForConnection(map, x, y - 1, 3));
-			}
-		if(checkedDir != 3 && y < HEIGHT - 1 && map[x][y + 1] != null) {
-			if(map[x][y + 1] instanceof Mill || map[x][y + 1] instanceof Sawmill) structures.add(map[x][y + 1]);
-			else if(map[x][y + 1] instanceof Road && !((Road) map[x][y + 1]).checked) {
-				((Road) map[x][y + 1]).checked = true;
-				structures.addAll(checkForConnection(map, x, y + 1, 4));
-			}
-		}
-		return structures;
-	}
-
 
 	@Override public String getAbilityDescription() {
 		return String.format(Locale.getDefault(), "Daily increases love by %.1f%% for every connected sawmill or mill.", loveProduction[getLevel() - 1]);

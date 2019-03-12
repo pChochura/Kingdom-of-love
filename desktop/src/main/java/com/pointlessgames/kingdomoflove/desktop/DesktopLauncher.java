@@ -22,6 +22,7 @@ public class DesktopLauncher {
         configuration.height = 800;
         configuration.samples = 16;
         configuration.resizable = false;
+//        configuration.fullscreen = true; //TODO add pause screen
         configuration.addIcon("images/logo.png", FileType.Internal);
         return configuration;
     }

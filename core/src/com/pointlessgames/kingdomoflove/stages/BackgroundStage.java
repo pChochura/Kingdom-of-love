@@ -11,12 +11,15 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
+import com.pointlessgames.kingdomoflove.screens.StartScreen;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Noise;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.TextureManager;
 import com.pointlessgames.kingdomoflove.utils.Utils;
+
+import java.util.Locale;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WIDTH;
@@ -45,7 +48,7 @@ public class BackgroundStage extends GestureStage {
 	private void drawBackground() {
 		sP.begin();
 		sP.setColor(Color.WHITE);
-		sP.draw(TextureManager.getInstance().background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.BACKGROUND), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		sP.end();
 	}
 
@@ -53,8 +56,8 @@ public class BackgroundStage extends GestureStage {
 		float offsetX = (Gdx.graphics.getWidth() - WIDTH * tileSize) / 2;
 		float offsetY = (Gdx.graphics.getHeight() - HEIGHT * tileSize) / 2;
 
-//		Gdx.gl.glEnable(GL20.GL_BLEND);
-//		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		Gdx.gl.glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		sR.begin(ShapeRenderer.ShapeType.Filled);
 
 		Polygon polygon = new Polygon();
@@ -80,7 +83,7 @@ public class BackgroundStage extends GestureStage {
 		}
 
 		sR.end();
-//		Gdx.gl.glDisable(GL20.GL_BLEND);
+		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	private float getOffset(int x, int y) {

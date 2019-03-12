@@ -6,11 +6,32 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class TextureManager {
 
-	private static TextureManager instance = new TextureManager();
+	private final static TextureManager instance = new TextureManager();
+
+	public final static String BACKGROUND = "images/background.png";
+	public final static String LOGO = "images/logo.png";
+	public final static String MONEY = "icons/money.png";
+	public final static String LOVE = "icons/love.png";
+	public final static String CAPACITY = "icons/capacity.png";
+	public final static String ARROW = "icons/arrow.png";
+	public final static String SOUNDS_ON = "icons/sounds_on.png";
+	public final static String SOUNDS_OFF = "icons/sounds_off.png";
+	public final static String HISTORY_ON = "icons/history_on.png";
+	public final static String HISTORY_OFF = "icons/history_off.png";
+	public final static String CONIFER = "figures/conifer.png";
+	public final static String GRANARY = "figures/granary.png";
+	public final static String HOUSE = "figures/house.png";
+	public final static String LIBRARY = "figures/library.png";
+	public final static String MILL = "figures/mill.png";
+	public final static String MONUMENT = "figures/monument.png";
+	public final static String POND = "figures/pond.png";
+	public final static String SAWMILL = "figures/sawmill.png";
+	public final static String TREE = "figures/tree.png";
+	public final static String WELL = "figures/well.png";
+	public final static String WHEAT = "figures/wheat.png";
+	public final static String ROAD = "figures/road.png";
 
 	public AssetManager am = new AssetManager();
-	public Texture background, money, love, capacity, arrow, soundsOn, soundsOff, historyOn, historyOff, logo;
-	public Texture conifer, granary, house, library, mill, monument, pond, sawmill, tree, well, wheat;
 	public TextureRegion[][] road;
 
 	public static TextureManager getInstance() {
@@ -18,78 +39,40 @@ public class TextureManager {
 	}
 
 	public void loadTextures() {
-		am.load("images/background.png", Texture.class);
-		am.load("images/logo.png", Texture.class);
-		am.load("icons/money.png", Texture.class);
-		am.load("icons/love.png", Texture.class);
-		am.load("icons/capacity.png", Texture.class);
-		am.load("icons/arrow.png", Texture.class);
-		am.load("icons/sounds_on.png", Texture.class);
-		am.load("icons/sounds_off.png", Texture.class);
-		am.load("icons/history_on.png", Texture.class);
-		am.load("icons/history_off.png", Texture.class);
-		am.load("figures/road.png", Texture.class);
-		am.load("figures/conifer.png", Texture.class);
-		am.load("figures/granary.png", Texture.class);
-		am.load("figures/house.png", Texture.class);
-		am.load("figures/library.png", Texture.class);
-		am.load("figures/mill.png", Texture.class);
-		am.load("figures/monument.png", Texture.class);
-		am.load("figures/pond.png", Texture.class);
-		am.load("figures/sawmill.png", Texture.class);
-		am.load("figures/tree.png", Texture.class);
-		am.load("figures/well.png", Texture.class);
-		am.load("figures/wheat.png", Texture.class);
+		am.load(BACKGROUND, Texture.class);
+		am.load(LOGO, Texture.class);
+		am.load(MONEY, Texture.class);
+		am.load(LOVE, Texture.class);
+		am.load(CAPACITY, Texture.class);
+		am.load(ARROW, Texture.class);
+		am.load(SOUNDS_ON, Texture.class);
+		am.load(SOUNDS_OFF, Texture.class);
+		am.load(HISTORY_ON, Texture.class);
+		am.load(HISTORY_OFF, Texture.class);
+		am.load(CONIFER, Texture.class);
+		am.load(GRANARY, Texture.class);
+		am.load(HOUSE, Texture.class);
+		am.load(LIBRARY, Texture.class);
+		am.load(MILL, Texture.class);
+		am.load(MONUMENT, Texture.class);
+		am.load(POND, Texture.class);
+		am.load(SAWMILL, Texture.class);
+		am.load(TREE, Texture.class);
+		am.load(WELL, Texture.class);
+		am.load(WHEAT, Texture.class);
+		am.load(ROAD, Texture.class);
 	}
 
 	public void getTextures() {
-		background = am.get("images/background.png");
-		money = am.get("icons/money.png");
-		love = am.get("icons/love.png");
-		capacity = am.get("icons/capacity.png");
-		arrow = am.get("icons/arrow.png");
-		soundsOn = am.get("icons/sounds_on.png");
-		soundsOff = am.get("icons/sounds_off.png");
-		historyOn = am.get("icons/history_on.png");
-		historyOff = am.get("icons/history_off.png");
-		logo = am.get("images/logo.png");
-		road = TextureRegion.split(am.get("figures/road.png"), 128, 128);
-		conifer = am.get("figures/conifer.png");
-		granary = am.get("figures/granary.png");
-		house = am.get("figures/house.png");
-		library = am.get("figures/library.png");
-		mill = am.get("figures/mill.png");
-		monument = am.get("figures/monument.png");
-		pond = am.get("figures/pond.png");
-		sawmill = am.get("figures/sawmill.png");
-		tree = am.get("figures/tree.png");
-		well = am.get("figures/well.png");
-		wheat = am.get("figures/wheat.png");
+		road = TextureRegion.split(am.get(ROAD), 128, 128);
+	}
+
+	public Texture getTexture(String name) {
+		return am.get(name);
 	}
 
 	public void dispose() {
 		am.dispose();
-		background.dispose();
-		money.dispose();
-		love.dispose();
-		capacity.dispose();
-		arrow.dispose();
-		soundsOn.dispose();
-		soundsOff.dispose();
-		historyOn.dispose();
-		historyOff.dispose();
-		logo.dispose();
-		conifer.dispose();
-		granary.dispose();
-		house.dispose();
-		library.dispose();
-		mill.dispose();
-		monument.dispose();
-		pond.dispose();
-		sawmill.dispose();
-		tree.dispose();
-		well.dispose();
-		wheat.dispose();
 		for(TextureRegion[] t1 : road) for(TextureRegion t2 : t1) t2.getTexture().dispose();
 	}
 }

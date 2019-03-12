@@ -75,7 +75,7 @@ public class FigureInfoStage extends GestureStage {
 			if(capacity != 0) {
 				font.getData().setScale(0.3f);
 				font.setColor(Colors.text2Color);
-				sP.draw(TextureManager.getInstance().capacity, 2 * 75 * ratio + textureSize, bottomBarHeight - 210 * ratio + bottomBarY - height, 75 * ratio, 75 * ratio);
+				sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), 2 * 75 * ratio + textureSize, bottomBarHeight - 210 * ratio + bottomBarY - height, 75 * ratio, 75 * ratio);
 				font.getData().setScale(0.4f);
 				font.draw(sP, String.valueOf(capacity), 2 * 75 * ratio + textureSize + 80 * ratio, bottomBarHeight - 155 * ratio + bottomBarY - height, 
 						Gdx.graphics.getWidth() - 3 * 75 * ratio + textureSize, Align.left, true);

@@ -11,6 +11,7 @@ import com.pointlessgames.kingdomoflove.models.figures.Road;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,6 +31,15 @@ public class Stats {
 	public Stats() {
 		this.figures = new ArrayList<>();
 		this.mapOffset = new Vector2();
+	}
+
+	public void sortFigures() {
+		Collections.sort(figures, (f2, f1) -> {
+			if(f1.getMapY() > f2.getMapY()) return -1;
+			else if(f1.getMapY() == f2.getMapY())
+				return Integer.compare(f1.getMapX(), f2.getMapX());
+			return 0;
+		});
 	}
 
 	public void setCurrentFigure(Figure figure) {

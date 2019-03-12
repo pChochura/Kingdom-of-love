@@ -133,7 +133,7 @@ public class Road extends Structure {
 			stats.love += love;
 
 			if(love > 0)
-				resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().love);
+				resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().getTexture(TextureManager.LOVE));
 		}
 	}
 

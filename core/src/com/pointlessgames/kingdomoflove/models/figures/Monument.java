@@ -9,7 +9,7 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 public class Monument extends Structure {
 
 	public Monument() {
-		super(TextureManager.getInstance().monument);
+		super(TextureManager.getInstance().getTexture(TextureManager.MONUMENT));
 		refreshSize();
 		setPos();
 	}

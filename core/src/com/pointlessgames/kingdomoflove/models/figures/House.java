@@ -15,7 +15,7 @@ public class House extends Structure {
 	private int[] moneyProduction = {5, 7, 9, 10, 12, 14, 15, 17};
 
 	public House() {
-		super(TextureManager.getInstance().house);
+		super(TextureManager.getInstance().getTexture(TextureManager.HOUSE));
 		refreshSize();
 		setPos();
 	}
@@ -34,7 +34,7 @@ public class House extends Structure {
 		stats.money += money;
 
 		if(money > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.getInstance().money);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.getInstance().getTexture(TextureManager.MONEY));
 	}
 
 	@Override public String getAbilityDescription() {

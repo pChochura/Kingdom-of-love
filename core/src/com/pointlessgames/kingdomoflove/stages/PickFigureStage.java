@@ -198,11 +198,11 @@ public class PickFigureStage extends GestureStage {
 				sP.draw(figure.getTexture(), x + (tileSize - tileSize * 0.55f) / 2, y + (tileSize - tileSize * 0.55f) / 2, tileSize * 0.55f, tileSize * 0.55f);
 
 				//Money
-				sP.draw(TextureManager.getInstance().money, x + tileSpace / 2, y + tileSpace / 2, 75 * ratio, 75 * ratio);
+				sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), x + tileSpace / 2, y + tileSpace / 2, 75 * ratio, 75 * ratio);
 				font.draw(sP, String.format(Locale.getDefault(), "%d", figure.getCost()), x + tileSpace / 2 + 75 * ratio, y + tileSpace / 2 + 50 * ratio, 100 * ratio, Align.left, false);
 
 				//Love
-				sP.draw(TextureManager.getInstance().love, x + tileSize - tileSpace / 2 - 75 * ratio, y + tileSpace / 2, 75 * ratio, 75 * ratio);
+				sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOVE), x + tileSize - tileSpace / 2 - 75 * ratio, y + tileSpace / 2, 75 * ratio, 75 * ratio);
 				font.draw(sP, String.format(Locale.getDefault(), "%+d%%", figure.getLove()), x + tileSize - tileSpace / 2 - 175 * ratio, y + tileSpace / 2 + 50 * ratio, 100 * ratio, Align.right, false);
 
 				sP.end();
@@ -245,7 +245,7 @@ public class PickFigureStage extends GestureStage {
 					offsetX = tileSpace;
 					setSelectedCategory(selectedCategory = i);
 					if(Settings.soundsOn)
-						SoundManager.getInstance().select.play(0.5f);
+						SoundManager.getInstance().getSound(SoundManager.SELECT).play(0.5f);
 					return true;
 				}
 			}

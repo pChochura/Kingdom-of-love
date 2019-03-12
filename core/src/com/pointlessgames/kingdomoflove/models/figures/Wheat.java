@@ -11,7 +11,7 @@ public class Wheat extends Plant {
 	private int[] cost = {35, 75, 100, 125, 175, 225, 275, 350};
 
 	public Wheat() {
-		super(TextureManager.getInstance().wheat);
+		super(TextureManager.getInstance().getTexture(TextureManager.WHEAT));
 		refreshSize();
 		setPos();
 	}

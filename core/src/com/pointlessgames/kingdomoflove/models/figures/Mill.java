@@ -22,7 +22,7 @@ public class Mill extends Structure {
 	private int[] moneyProduction = {5, 7, 10, 13, 17, 21, 26, 35};
 
 	public Mill() {
-		super(TextureManager.getInstance().mill);
+		super(TextureManager.getInstance().getTexture(TextureManager.MILL));
 		refreshSize();
 		setPos();
 	}
@@ -59,7 +59,7 @@ public class Mill extends Structure {
 		stats.money += money;
 
 		if(money > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.getInstance().money);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.getInstance().getTexture(TextureManager.MONEY));
 
 		if(wheat.size() > 0) {
 			Collections.sort(wheat, (w1, w2) -> (int) Math.signum(w1.getLife() - w2.getLife()));

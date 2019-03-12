@@ -9,7 +9,7 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 public class Well extends Structure {
 
 	public Well() {
-		super(TextureManager.getInstance().well);
+		super(TextureManager.getInstance().getTexture(TextureManager.WELL));
 		refreshSize();
 		setPos();
 	}

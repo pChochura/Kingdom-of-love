@@ -16,7 +16,7 @@ public class Tree extends Plant {
 	private int[] cost = {10, 25, 45, 75, 100, 135, 175, 225};
 
 	public Tree() {
-		super(TextureManager.getInstance().tree);
+		super(TextureManager.getInstance().getTexture(TextureManager.TREE));
 		refreshSize();
 		setPos();
 	}
@@ -31,7 +31,7 @@ public class Tree extends Plant {
 		stats.love += love;
 
 		if(love > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().love);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().getTexture(TextureManager.LOVE));
 	}
 
 	@Override public String getAbilityDescription() {

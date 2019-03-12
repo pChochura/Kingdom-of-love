@@ -5,36 +5,33 @@ import com.badlogic.gdx.audio.Sound;
 
 public class SoundManager {
 
-	private static SoundManager instance = new SoundManager();
+	private final static SoundManager instance = new SoundManager();
+
+	public final static String SELECT = "sounds/select.wav";
+	public final static String SELECT_ERROR = "sounds/selectError.wav";
+	public final static String PICK_FIGURE = "sounds/pickFigure.wav";
+	public final static String UPGRADE = "sounds/upgrade.wav";
+	public final static String NEXT_DAY = "sounds/nextDay.wav";
+
 	public AssetManager am = new AssetManager();
-	public Sound select, selectError, pickFigure, upgrade, nextDay;
 
 	public static SoundManager getInstance() {
 		return instance;
 	}
 
 	public void loadSounds() {
-		am.load("sounds/select.wav", Sound.class);
-		am.load("sounds/selectError.wav", Sound.class);
-		am.load("sounds/pickFigure.wav", Sound.class);
-		am.load("sounds/upgrade.wav", Sound.class);
-		am.load("sounds/nextDay.wav", Sound.class);
+		am.load(SELECT, Sound.class);
+		am.load(SELECT_ERROR, Sound.class);
+		am.load(PICK_FIGURE, Sound.class);
+		am.load(UPGRADE, Sound.class);
+		am.load(NEXT_DAY, Sound.class);
 	}
 
-	public void getSounds() {
-		select = am.get("sounds/select.wav");
-		selectError = am.get("sounds/selectError.wav");
-		pickFigure = am.get("sounds/pickFigure.wav");
-		upgrade = am.get("sounds/upgrade.wav");
-		nextDay = am.get("sounds/nextDay.wav");
+	public Sound getSound(String name) {
+		return am.get(name);
 	}
 
 	public void dispose() {
-		select.dispose();
-		selectError.dispose();
-		pickFigure.dispose();
-		upgrade.dispose();
-		nextDay.dispose();
 		am.dispose();
 	}
 }

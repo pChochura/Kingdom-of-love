@@ -51,7 +51,7 @@ public class MenuUIStage extends GestureStage {
 	private void drawBackground() {
 		sP.begin();
 		sP.setColor(Color.WHITE);
-		sP.draw(TextureManager.getInstance().background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.BACKGROUND), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		sP.end();
 	}
 
@@ -61,16 +61,16 @@ public class MenuUIStage extends GestureStage {
 		font.setColor(Colors.textColor);
 		font.draw(sP, Settings.APP_NAME, 0, Gdx.graphics.getHeight() - 750 * ratio, Gdx.graphics.getWidth(), Align.center, true);
 		sP.setColor(Color.WHITE);
-		sP.draw(TextureManager.getInstance().logo, Gdx.graphics.getWidth() / 2 - 256 * ratio, Gdx.graphics.getHeight() - 750 * ratio, 512 * ratio, 512 * ratio);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOGO), Gdx.graphics.getWidth() / 2 - 256 * ratio, Gdx.graphics.getHeight() - 750 * ratio, 512 * ratio, 512 * ratio);
 		sP.end();
 	}
 
 	private void drawButtons() {
 		sP.begin();
 		sP.setColor(Colors.buttonColor);
-		sP.draw(TextureManager.getInstance().arrow, startActor.getX(), startActor.getY(), startActor.getWidth(), startActor.getHeight());
-		sP.draw(Settings.soundsOn ? TextureManager.getInstance().soundsOn : TextureManager.getInstance().soundsOff, soundsActor.getX(), soundsActor.getY(), soundsActor.getWidth(), soundsActor.getHeight());
-		sP.draw(Settings.historyOn ? TextureManager.getInstance().historyOn : TextureManager.getInstance().historyOff, historyActor.getX(), historyActor.getY(), historyActor.getWidth(), historyActor.getHeight());
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.ARROW), startActor.getX(), startActor.getY(), startActor.getWidth(), startActor.getHeight());
+		sP.draw(Settings.soundsOn ? TextureManager.getInstance().getTexture(TextureManager.SOUNDS_ON) : TextureManager.getInstance().getTexture(TextureManager.SOUNDS_OFF), soundsActor.getX(), soundsActor.getY(), soundsActor.getWidth(), soundsActor.getHeight());
+		sP.draw(Settings.historyOn ? TextureManager.getInstance().getTexture(TextureManager.HISTORY_ON) : TextureManager.getInstance().getTexture(TextureManager.HISTORY_OFF), historyActor.getX(), historyActor.getY(), historyActor.getWidth(), historyActor.getHeight());
 		sP.setColor(Color.WHITE);
 		sP.end();
 	}
@@ -86,15 +86,15 @@ public class MenuUIStage extends GestureStage {
 			Settings.soundsOn = !Settings.soundsOn;
 			Settings.save();
 			if(Settings.soundsOn)
-				SoundManager.getInstance().select.play(0.5f);
+				SoundManager.getInstance().getSound(SoundManager.SELECT).play(0.5f);
 		} else if(historyActor.hit(x - historyActor.getX(), Gdx.graphics.getHeight() -  y - historyActor.getY(), true) != null) {
 			Settings.historyOn = !Settings.historyOn;
 			Settings.save();
 			if(Settings.soundsOn)
-				SoundManager.getInstance().select.play(0.5f);
+				SoundManager.getInstance().getSound(SoundManager.SELECT).play(0.5f);
 		} else if(startActor.hit(x - startActor.getX(), Gdx.graphics.getHeight() - y - startActor.getY(), true) != null) {
 			if(Settings.soundsOn)
-				SoundManager.getInstance().select.play(0.5f);
+				SoundManager.getInstance().getSound(SoundManager.SELECT).play(0.5f);
 			startListener.run();
 		}
 		return true;

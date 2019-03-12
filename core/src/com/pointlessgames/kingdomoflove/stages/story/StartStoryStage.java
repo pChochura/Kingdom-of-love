@@ -97,7 +97,7 @@ public class StartStoryStage extends GestureStage {
 
 	@Override public void draw() {
 		sP.begin();
-		sP.draw(TextureManager.getInstance().background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.BACKGROUND), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		for(int i = 0; i < index && i < actors.size(); i++) {
 			if(actors != null && !actors.isEmpty() && actors.get(i) != null) {
 				font.getData().setScale(actors.get(i).getScaleX());

@@ -14,7 +14,7 @@ public class Pond extends Structure {
 	private float love = -1.5f;
 
 	public Pond() {
-		super(TextureManager.getInstance().pond);
+		super(TextureManager.getInstance().getTexture(TextureManager.POND));
 		refreshSize();
 		setPos();
 	}
@@ -38,7 +38,7 @@ public class Pond extends Structure {
 		stats.love += love;
 
 		if(love > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", Math.abs(love)), TextureManager.getInstance().love);
+			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", Math.abs(love)), TextureManager.getInstance().getTexture(TextureManager.LOVE));
 	}
 
 	@Override public String getAbilityDescription() {

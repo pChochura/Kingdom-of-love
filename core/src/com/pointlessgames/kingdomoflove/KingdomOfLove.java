@@ -35,7 +35,6 @@ public class KingdomOfLove extends Game {
 			if(TextureManager.getInstance().am.update() && SoundManager.getInstance().am.update()) {
 				loaded = true;
 				TextureManager.getInstance().getTextures();
-				SoundManager.getInstance().getSounds();
 				setScreen(new MenuScreen().setOnStartListener(() -> {
 					if(Gdx.app.getPreferences("Stats").getBoolean("saved") || !Settings.historyOn)
 						start();

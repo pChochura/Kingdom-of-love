@@ -1,6 +1,8 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -79,10 +81,10 @@ public abstract class Figure extends Actor {
 	}
 
 	protected void drawLevel(SpriteBatch sP, CustomShapeRenderer sR, float tileX, float tileY, float alpha) {
-//		if(alpha != 1) {
-//			Gdx.gl.glEnable(GL20.GL_BLEND);
-//			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-//		}
+		if(alpha != 1) {
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		}
 
 		sR.begin(ShapeRenderer.ShapeType.Filled);
 		sR.setColor(Colors.loveColor.cpy().mul(1, 1, 1, alpha));
@@ -98,7 +100,7 @@ public abstract class Figure extends Actor {
 		font.setColor(Color.WHITE);
 		sP.end();
 
-//		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
+		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	protected void drawTexture(SpriteBatch sP, float tileX, float tileY, float alpha) {
