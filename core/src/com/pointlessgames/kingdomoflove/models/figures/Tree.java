@@ -12,13 +12,15 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Tree extends Plant {
 
-	private float[] love = new float[]{0.0f, 0.1f, 0.3f, 0.5f, 0.8f, 1.1f, 1.4f, 1.7f};
-	private int[] cost = {10, 25, 45, 75, 100, 135, 175, 225};
+	private float[] love = {0.1f, 0.2f, 0.3f, 0.4f, 0.6f, 0.8f, 1.0f, 1.2f};
+	private int[] cost = {10, 25, 55, 110, 220, 350, 600, 850};
+	private int maxLife = 5;
 
 	public Tree() {
 		super(TextureManager.getInstance().getTexture(TextureManager.TREE));
 		refreshSize();
 		setPos();
+		setLife(getMaxLife());
 	}
 
 	@Override public void refreshSize() {
@@ -59,8 +61,17 @@ public class Tree extends Plant {
 		setY((tileSize - height * getScaleY()) / 2 + tileSize / 4);
 	}
 
+	@Override public boolean canUpgrade(Stats stats) {
+		int maxLevel = 1;
+		for(Figure figure : stats.figures)
+			if(figure instanceof Sawmill && Math.pow(figure.getMapX() - getMapX(), 2) + Math.pow(figure.getMapY() - getMapY(), 2) <= 2)
+				maxLevel = Math.max(figure.getLevel(), maxLevel);
+
+		return stats.money >= getUpgradeCost() && getLevel() < maxLevel;
+	}
+
 	@Override public int getMaxLife() {
-		return 5;
+		return maxLife + getLevel() - 1;
 	}
 
 	@Override protected void drawTexture(SpriteBatch sP, float tileX, float tileY, float alpha) {

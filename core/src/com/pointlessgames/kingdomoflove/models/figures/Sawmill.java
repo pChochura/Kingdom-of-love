@@ -17,7 +17,7 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Sawmill extends Structure {
 
-	private int[] cost = {75, 100, 150, 200, 275, 380, 450, 550};
+	private int[] cost = {75, 150, 350, 650, 950, 1450, 1850, 2100};
 	private int[] capacity = {2, 4, 5, 6, 7, 8, 9, 10};
 	private int[] moneyProduction = {3, 5, 7, 10, 13, 15, 17, 20};
 
@@ -41,7 +41,7 @@ public class Sawmill extends Structure {
 		int treeLevels = 0;
 		for(Figure f : stats.figures)
 			if(f instanceof Tree || f instanceof Conifer)
-				if(Math.pow(f.getMapX() - getMapX(), 2) + Math.pow(f.getMapY() - getMapY(), 2) <= 2) {
+				if(Math.pow(f.getMapX() - getMapX(), 2) + Math.pow(f.getMapY() - getMapY(), 2) <= 2 && ((Plant) f).getLife() > 0) {
 					trees.add((Plant) f);
 					treeLevels += f.getLevel();
 				}

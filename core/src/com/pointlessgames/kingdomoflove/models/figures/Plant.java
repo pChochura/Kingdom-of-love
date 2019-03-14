@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
+import com.pointlessgames.kingdomoflove.utils.Stats;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
@@ -17,7 +18,6 @@ public abstract class Plant extends Figure {
 
 	Plant(Texture texture) {
 		super(texture);
-		life = getMaxLife();
 	}
 
 	@Override public void draw(SpriteBatch sP, CustomShapeRenderer sR, float tileX, float tileY) {
@@ -47,6 +47,16 @@ public abstract class Plant extends Figure {
 		sR.end();
 
 		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
+	}
+
+	@Override public void levelUp() {
+		float life = getLife();
+		super.levelUp();
+		setLife(MathUtils.ceil(life * getMaxLife()));
+	}
+
+	@Override public boolean canUpgrade(Stats stats) {
+		return true;
 	}
 
 	public abstract int getMaxLife();

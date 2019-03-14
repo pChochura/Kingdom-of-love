@@ -35,11 +35,7 @@ public class KingdomOfLove extends Game {
 			if(TextureManager.getInstance().am.update() && SoundManager.getInstance().am.update()) {
 				loaded = true;
 				TextureManager.getInstance().getTextures();
-				setScreen(new MenuScreen().setOnStartListener(() -> {
-					if(Gdx.app.getPreferences("Stats").getBoolean("saved") || !Settings.historyOn)
-						start();
-					else setScreen(new StoryScreen().setOnEndListener(this::start));
-				}));
+				restart();
 			}
 
 			Gdx.gl.glClearColor(Colors.bgColor.r, Colors.bgColor.g, Colors.bgColor.b, Colors.bgColor.a);
@@ -58,13 +54,21 @@ public class KingdomOfLove extends Game {
 		super.render();
 	}
 
+	private void restart() {
+		setScreen(new MenuScreen().setOnStartListener(() -> {
+			if(Gdx.app.getPreferences("Stats").getBoolean("saved") || !Settings.historyOn)
+				start();
+			else setScreen(new StoryScreen().setOnEndListener(this::start));
+		}));
+	}
+
 	private void start() {
 		getScreen().dispose();
 		setScreen(new StartScreen().setOnEndListener(() -> {
 			getScreen().dispose();
 			if(Settings.historyOn)
 				setScreen(new EndScreen().setOnEndListener(this::create));
-			else create();
+			else restart();
 			Gdx.app.getPreferences("Stats").putBoolean("saved", false).flush();
 		}));
 	}

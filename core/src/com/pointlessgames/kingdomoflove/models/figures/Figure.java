@@ -70,11 +70,11 @@ public abstract class Figure extends Actor {
 	protected void drawAbilityTip(SpriteBatch sP, float tileX, float tileY, float alpha) {
 		if(abilityTip != null) {
 			sP.begin();
-			font.getData().setScale(0.3f);
+			font.getData().setScale(0.35f);
 			font.setColor(abilityTip.getColor().cpy().mul(1, 1, 1, alpha));
-			font.draw(sP, abilityTip.getName(), tileX + tileSize - 25 * ratio + abilityTip.getX(), tileY + tileSize - 50 * ratio + abilityTip.getY(), 30 * ratio, Align.center, false);
+			font.draw(sP, abilityTip.getName(), tileX + tileSize - 27 * ratio + abilityTip.getX(), tileY + tileSize - 60 * ratio + abilityTip.getY(), 35 * ratio, Align.center, false);
 			sP.setColor(new Color(1, 1, 1, abilityTip.getColor().a * alpha));
-			sP.draw(((Texture) abilityTip.getUserObject()), tileX + tileSize - 25 * ratio + abilityTip.getX(), tileY + tileSize - 50 * ratio + abilityTip.getY(), 30 * ratio, 30 * ratio);
+			sP.draw(((Texture) abilityTip.getUserObject()), tileX + tileSize - 27 * ratio + abilityTip.getX(), tileY + tileSize - 60 * ratio + abilityTip.getY(), 35 * ratio, 35 * ratio);
 			sP.setColor(Color.WHITE);
 			sP.end();
 		}
@@ -136,7 +136,7 @@ public abstract class Figure extends Actor {
 		level++;
 	}
 
-	public int getUpdateCost() {
+	public int getUpgradeCost() {
 		level++;
 		int cost = getCost();
 		level--;
@@ -156,7 +156,7 @@ public abstract class Figure extends Actor {
 	}
 
 	public void dispose() {
-		texture.getTexture().dispose();
+		//Dispose useless files
 	}
 
 	public abstract void triggerAbility(Stats stats);
@@ -176,6 +176,8 @@ public abstract class Figure extends Actor {
 	public abstract boolean isUpgradable();
 
 	protected abstract void setPos();
+
+	public abstract boolean canUpgrade(Stats stats);
 
 	public boolean hasLevels() {
 		return true;

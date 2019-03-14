@@ -217,11 +217,15 @@ public class ScrollableGestureDetector extends InputAdapter {
 			tracker.update(x, y, time);
 			handled = listener.fling(tracker.getVelocityX(), tracker.getVelocityY(), button) || handled;
 		}
-		return handled;
+		return listener.touchUp(x, y, pointer, button) || handled;
 	}
 
 	@Override public boolean scrolled(int amount) {
 		return listener.scrolled(amount);
+	}
+
+	@Override public boolean keyDown(int keycode) {
+		return listener.keyDown(keycode);
 	}
 
 	/** No further gesture events will be triggered for the current touch, if any. */
@@ -331,6 +335,10 @@ public class ScrollableGestureDetector extends InputAdapter {
 		public void pinchStop ();
 
 		public boolean scrolled(int amount);
+
+		public boolean keyDown(int keyCode);
+
+		boolean touchUp(float x, float y, int pointer, int button);
 	}
 
 	/** Derrive from this if you only want to implement a subset of {@link GestureDetector.GestureListener}.
@@ -381,6 +389,14 @@ public class ScrollableGestureDetector extends InputAdapter {
 		}
 
 		@Override public boolean scrolled(int amount) {
+			return false;
+		}
+
+		@Override public boolean keyDown(int keyCode) {
+			return false;
+		}
+
+		@Override public boolean touchUp(float x, float y, int pointer, int button) {
 			return false;
 		}
 	}

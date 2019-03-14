@@ -2,11 +2,12 @@ package com.pointlessgames.kingdomoflove.utils;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class TextureManager {
 
-	private final static TextureManager instance = new TextureManager();
+	private static TextureManager instance = new TextureManager();
 
 	public final static String BACKGROUND = "images/background.png";
 	public final static String LOGO = "images/logo.png";
@@ -18,6 +19,9 @@ public class TextureManager {
 	public final static String SOUNDS_OFF = "icons/sounds_off.png";
 	public final static String HISTORY_ON = "icons/history_on.png";
 	public final static String HISTORY_OFF = "icons/history_off.png";
+	public final static String UPGRADE = "icons/upgrade.png";
+	public final static String INFO = "icons/info.png";
+	public final static String DESTROY = "icons/destroy.png";
 	public final static String CONIFER = "figures/conifer.png";
 	public final static String GRANARY = "figures/granary.png";
 	public final static String HOUSE = "figures/house.png";
@@ -35,7 +39,7 @@ public class TextureManager {
 	public TextureRegion[][] road;
 
 	public static TextureManager getInstance() {
-		return instance;
+		return instance == null ? instance = new TextureManager() : instance;
 	}
 
 	public void loadTextures() {
@@ -49,6 +53,9 @@ public class TextureManager {
 		am.load(SOUNDS_OFF, Texture.class);
 		am.load(HISTORY_ON, Texture.class);
 		am.load(HISTORY_OFF, Texture.class);
+		am.load(UPGRADE, Texture.class);
+		am.load(INFO, Texture.class);
+		am.load(DESTROY, Texture.class);
 		am.load(CONIFER, Texture.class);
 		am.load(GRANARY, Texture.class);
 		am.load(HOUSE, Texture.class);
@@ -72,6 +79,7 @@ public class TextureManager {
 	}
 
 	public void dispose() {
+		instance = null;
 		am.dispose();
 		for(TextureRegion[] t1 : road) for(TextureRegion t2 : t1) t2.getTexture().dispose();
 	}

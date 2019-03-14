@@ -17,7 +17,7 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Mill extends Structure {
 
-	private int[] cost = {175, 250, 350, 475, 575, 750, 875, 1000};
+	private int[] cost = {175, 450, 950, 1250, 1750, 2250, 2850, 3100};
 	private int[] capacity = {2, 3, 4, 5, 6, 7, 8, 9};
 	private int[] moneyProduction = {5, 7, 10, 13, 17, 21, 26, 35};
 
@@ -41,7 +41,7 @@ public class Mill extends Structure {
 		int wheatLevel = 0, ponds = 0, wells = 0;
 		for(Figure f : stats.figures) {
 			if(Math.pow(f.getMapX() - getMapX(), 2) + Math.pow(f.getMapY() - getMapY(), 2) <= 2) {
-				if(f instanceof Wheat) {
+				if(f instanceof Wheat && ((Plant) f).getLife() > 0) {
 					wheatLevel += f.getLevel();
 					wheat.add((Plant) f);
 				} if(f instanceof Pond)

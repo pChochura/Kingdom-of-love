@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 
 public class SoundManager {
 
-	private final static SoundManager instance = new SoundManager();
+	private static SoundManager instance = new SoundManager();
 
 	public final static String SELECT = "sounds/select.wav";
 	public final static String SELECT_ERROR = "sounds/selectError.wav";
@@ -16,7 +16,7 @@ public class SoundManager {
 	public AssetManager am = new AssetManager();
 
 	public static SoundManager getInstance() {
-		return instance;
+		return instance == null ? instance = new SoundManager() : instance;
 	}
 
 	public void loadSounds() {
@@ -32,6 +32,7 @@ public class SoundManager {
 	}
 
 	public void dispose() {
+		instance = null;
 		am.dispose();
 	}
 }

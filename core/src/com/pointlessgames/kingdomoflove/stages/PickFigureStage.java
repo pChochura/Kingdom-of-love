@@ -72,6 +72,8 @@ public class PickFigureStage extends GestureStage {
 		this.sR = sR;
 		this.stats = stats;
 
+		touchInterruption = false;
+
 		figures = new ArrayList<>();
 		figures.add(new House());
 		figures.add(new Sawmill());
@@ -271,15 +273,10 @@ public class PickFigureStage extends GestureStage {
 	}
 
 	@Override public boolean keyDown(int keyCode) {
-		if(keyCode == Input.Keys.BACK) {
+		if(keyCode == Input.Keys.BACK || keyCode == Input.Keys.ESCAPE) {
 			clickListener.onCancelClick();
 			return true;
 		} else return false;
-	}
-
-	@Override
-	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-		return true;
 	}
 
 	public void hide(Runnable onHideListener) {

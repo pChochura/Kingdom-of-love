@@ -1,9 +1,12 @@
 package com.pointlessgames.kingdomoflove.renderers;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ShortArray;
+
+import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
 public class CustomShapeRenderer extends ShapeRenderer {
 
@@ -59,7 +62,7 @@ public class CustomShapeRenderer extends ShapeRenderer {
 		}
 	}
 
-	public void roundedRect(float x, float y, float width, float height, float radius){
+	public void roundedRect(float x, float y, float width, float height, float radius) {
 		// Central rectangle
 		super.rect(x + radius, y + radius, width - 2*radius, height - 2*radius);
 
@@ -74,5 +77,40 @@ public class CustomShapeRenderer extends ShapeRenderer {
 		super.arc(x + width - radius, y + radius, radius, 270f, 90f);
 		super.arc(x + width - radius, y + height - radius, radius, 0f, 90f);
 		super.arc(x + radius, y + height - radius, radius, 90f, 90f);
+	}
+
+	public void cutRect(float x, float y, float width, float height, float angle, Color innerColor, Color borderColor, float borderThickness) {
+		setColor(innerColor);
+		float offsetX = (float)(Math.tan(angle) * width / 2);
+		float borderOffset = 2 * borderThickness;
+
+		super.rect(x + offsetX + borderOffset, y + borderOffset, width - 2 * offsetX - borderOffset * 2, height - borderOffset * 2);
+
+		super.triangle(x + borderOffset + borderThickness, y + height / 2, x + offsetX + borderOffset, y + borderOffset, x + offsetX + borderOffset, y + height - borderOffset);
+		super.triangle(x + width - borderOffset - borderThickness, y + height / 2, x + width - offsetX - borderOffset, y + borderOffset, x + width - offsetX - borderOffset, y + height - borderOffset);
+
+		if(borderColor != null) {
+			setColor(borderColor);
+			super.rectLine(x + width - offsetX - borderThickness, y, x + offsetX + borderThickness, y, borderThickness);
+			super.rectLine(x + offsetX + borderThickness, y, x, y + height / 2, borderThickness);
+			super.rectLine(x, y + height / 2, x + offsetX + borderThickness, y + height, borderThickness);
+			super.rectLine(x + offsetX + borderThickness, y + height, x + width - offsetX - borderThickness, y + height, borderThickness);
+			super.rectLine(x + width - offsetX - borderThickness, y + height, x + width, y + height / 2, borderThickness);
+			super.rectLine(x + width, y + height / 2, x + width - offsetX - borderThickness, y, borderThickness);
+		}
+	}
+
+	public void cutRect(float x, float y, float width, float height, float angle, float borderThickness) {
+		cutRect(x, y, width, height, angle, getColor(), getColor(), borderThickness);
+	}
+
+	public void rect(float x, float y, float width, float height, float borderThickness) {
+		float borderOffset = 2 * borderThickness;
+		super.rect(x + borderOffset, y + borderOffset, width - borderOffset * 2, height - borderOffset * 2);
+
+		super.rectLine(x, y, x + width, y, borderThickness);
+		super.rectLine(x + width, y, x + width, y + height, borderThickness);
+		super.rectLine(x + width, y + height, x, y + height, borderThickness);
+		super.rectLine(x, y + height, x, y, borderThickness);
 	}
 }

@@ -63,4 +63,8 @@ public class Library extends Structure {
 		setX((tileSize - width * getScaleX()) / 2);
 		setY((tileSize - height * getScaleY()) / 2);
 	}
+
+	@Override public boolean canUpgrade(Stats stats) {
+		return false;
+	}
 }

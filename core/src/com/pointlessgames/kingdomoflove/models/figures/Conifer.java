@@ -12,13 +12,15 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Conifer extends Plant {
 
-	private float[] love = new float[]{0.1f, 0.25f, 0.35f, 0.5f, 0.65f, 0.8f, 1f, 1.2f};
-	private int[] cost = {50, 85, 120, 180, 230, 280, 350, 450};
+	private float[] love = {0.2f, 0.3f, 0.4f, 0.6f, 0.8f, 1.1f, 1.3f, 1.5f};
+	private int[] cost = {65, 130, 180, 275, 375, 650, 850, 1100};
+	private int maxLife = 10;
 
 	public Conifer() {
 		super(TextureManager.getInstance().getTexture(TextureManager.CONIFER));
 		refreshSize();
 		setPos();
+		setLife(getMaxLife());
 	}
 
 	@Override public void refreshSize() {
@@ -59,8 +61,17 @@ public class Conifer extends Plant {
 		setY((tileSize - height * getScaleY()) / 2 + tileSize / 4);
 	}
 
+	@Override public boolean canUpgrade(Stats stats) {
+		int maxLevel = 1;
+		for(Figure figure : stats.figures)
+			if(figure instanceof Sawmill && Math.pow(figure.getMapX() - getMapX(), 2) + Math.pow(figure.getMapY() - getMapY(), 2) <= 2)
+				maxLevel = Math.max(figure.getLevel(), maxLevel);
+
+		return stats.money >= getUpgradeCost() && getLevel() < maxLevel;
+	}
+
 	@Override public int getMaxLife() {
-		return 10;
+		return maxLife;
 	}
 
 	@Override protected void drawTexture(SpriteBatch sP, float tileX, float tileY, float alpha) {

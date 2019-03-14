@@ -22,12 +22,15 @@ public class Wheat extends Plant {
 	}
 
 	@Override public void triggerAbility(Stats stats) {
-		int ponds = 0;
-		for(Figure f : stats.figures)
-			if(f instanceof Pond)
+		int ponds = 0, maxLevel = 1;
+		for(Figure f : stats.figures) {
+			if(f instanceof Pond) {
 				if(Math.pow(f.getMapX() - getMapX(), 2) + Math.pow(f.getMapY() - getMapY(), 2) < 2)
 					ponds += f.getLevel();
-		this.level = ponds + 1;
+			} else if(f instanceof Mill)
+				maxLevel = Math.max(maxLevel, f.getLevel());
+		}
+		this.level = Math.min(maxLevel, ponds + 1);
 	}
 
 	@Override public String getAbilityDescription() {

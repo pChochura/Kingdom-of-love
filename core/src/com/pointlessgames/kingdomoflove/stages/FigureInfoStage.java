@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
+import com.pointlessgames.kingdomoflove.actors.Button;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
 import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
@@ -26,6 +28,7 @@ public class FigureInfoStage extends GestureStage {
 
 	private final float bottomBarHeight = 500 * ratio;
 	private final float textureSize = 350 * ratio;
+	private final float offsetX = 2 * 75 * ratio + textureSize;
 	private boolean hiding;
 	private float bottomBarY;
 	private float time;
@@ -42,6 +45,8 @@ public class FigureInfoStage extends GestureStage {
 		this.sP = sP;
 		this.sR = sR;
 		this.stats = stats;
+
+		touchInterruption = false;
 	}
 
 	private void drawBottomBar() {
@@ -60,22 +65,22 @@ public class FigureInfoStage extends GestureStage {
 		//Title
 		font.getData().setScale(0.5f);
 		font.setColor(Colors.textColor);
-		font.draw(sP, String.format(Locale.getDefault(), "%s (lvl. %d)", figure.getName(), figure.getLevel()), 
-				2 * 75 * ratio + textureSize, bottomBarHeight - 75 * ratio + bottomBarY, 100 * ratio, Align.left, false);
+		font.draw(sP, String.format(Locale.getDefault(), "%s (lvl. %d)", figure.getName(), figure.getLevel()),
+				offsetX, bottomBarHeight - 75 * ratio + bottomBarY, 100 * ratio, Align.left, false);
 
 		//Ability description
 		font.getData().setScale(0.3f);
 		font.setColor(Colors.text2Color);
-		font.draw(sP, figure.getAbilityDescription(), 2 * 75 * ratio + textureSize, bottomBarHeight - 135 * ratio + bottomBarY, 500 * ratio, Align.left, true);
+		font.draw(sP, figure.getAbilityDescription(), offsetX, bottomBarHeight - 135 * ratio + bottomBarY, Gdx.graphics.getWidth() - offsetX - 50 * ratio, Align.left, true);
 
-		float height = new GlyphLayout(font, figure.getAbilityDescription(), Colors.text2Color, 500 * ratio, Align.left, true).height;
+		float height = new GlyphLayout(font, figure.getAbilityDescription(), Colors.text2Color, Gdx.graphics.getWidth() - offsetX - 50 * ratio, Align.left, true).height;
 
 		if(figure instanceof Structure) {
 			int capacity = ((Structure) figure).getCapacity();
 			if(capacity != 0) {
 				font.getData().setScale(0.3f);
 				font.setColor(Colors.text2Color);
-				sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), 2 * 75 * ratio + textureSize, bottomBarHeight - 210 * ratio + bottomBarY - height, 75 * ratio, 75 * ratio);
+				sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), offsetX, bottomBarHeight - 210 * ratio + bottomBarY - height, 75 * ratio, 75 * ratio);
 				font.getData().setScale(0.4f);
 				font.draw(sP, String.valueOf(capacity), 2 * 75 * ratio + textureSize + 80 * ratio, bottomBarHeight - 155 * ratio + bottomBarY - height, 
 						Gdx.graphics.getWidth() - 3 * 75 * ratio + textureSize, Align.left, true);
@@ -83,20 +88,6 @@ public class FigureInfoStage extends GestureStage {
 		}
 
 		sP.end();
-
-		if(figure.isUpgradable()) {
-			//Update button
-			sR.begin(ShapeRenderer.ShapeType.Filled);
-			sR.setColor(Colors.loveColor.cpy().mul(stats.money >= figure.getUpdateCost() ? 1 : 0.4f));
-			sR.roundedRect(2 * 75 * ratio + textureSize, bottomBarY + 50 * ratio, 350 * ratio, 75 * ratio, 25 * ratio);
-			sR.end();
-
-			sP.begin();
-			font.getData().setScale(0.4f);
-			font.setColor(Colors.text3Color);
-			font.draw(sP, String.format(Locale.getDefault(), "Upgrade (%d$)", figure.getUpdateCost()), 2 * 75 * ratio + textureSize, bottomBarY + 100 * ratio, 350 * ratio, Align.center, false);
-			sP.end();
-		}
 	}
 
 	@Override public void draw() {
@@ -117,22 +108,12 @@ public class FigureInfoStage extends GestureStage {
 
 	@Override public boolean tap(float x, float y, int count, int button) {
 		Vector2 pos = new Vector2(x, Gdx.graphics.getHeight() - y);
-		if(pos.y < bottomBarHeight) {
-			if(figure.isUpgradable() &&
-					pos.x >= 2 * 75 * ratio + textureSize && pos.x <= 2 * 75 * ratio + textureSize + 350 * ratio &&
-					pos.y >= bottomBarY + 50 * ratio && pos.y <= bottomBarY + 125 * ratio)
-				clickListener.onUpgradeClick();
-		} else clickListener.onCancelClick();
-		return true;
-	}
-
-	@Override
-	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+		if(pos.y > bottomBarHeight) clickListener.onCancelClick();
 		return true;
 	}
 
 	@Override public boolean keyDown(int keyCode) {
-		if(keyCode == Input.Keys.BACK) {
+		if(keyCode == Input.Keys.BACK || keyCode == Input.Keys.ESCAPE) {
 			clickListener.onCancelClick();
 			return true;
 		} else return false;
@@ -154,6 +135,5 @@ public class FigureInfoStage extends GestureStage {
 
 	public interface ClickListener {
 		void onCancelClick();
-		void onUpgradeClick();
 	}
 }

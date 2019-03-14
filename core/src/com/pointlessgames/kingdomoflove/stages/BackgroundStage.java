@@ -96,7 +96,7 @@ public class BackgroundStage extends GestureStage {
 	}
 
 	@Override public boolean keyDown(int keyCode) {
-		if(keyCode == Input.Keys.BACK) {
+		if(keyCode == Input.Keys.BACK || keyCode == Input.Keys.ESCAPE) {
 			stats.save();
 			Gdx.app.exit();
 		}

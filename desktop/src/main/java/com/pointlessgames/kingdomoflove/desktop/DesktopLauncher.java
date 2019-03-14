@@ -20,9 +20,9 @@ public class DesktopLauncher {
         configuration.title = "KingdomOfLove";
         configuration.width = 480;
         configuration.height = 800;
-        configuration.samples = 16;
+        configuration.samples = 64;
         configuration.resizable = false;
-//        configuration.fullscreen = true; //TODO add pause screen
+        configuration.fullscreen = true;
         configuration.addIcon("images/logo.png", FileType.Internal);
         return configuration;
     }

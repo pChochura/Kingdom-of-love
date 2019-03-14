@@ -6,6 +6,8 @@ import com.pointlessgames.kingdomoflove.utils.ScrollableGestureDetector;
 
 public class GestureStage extends Stage implements ScrollableGestureDetector.GestureListener {
 
+	public boolean touchInterruption = true;
+
 	@Override public boolean touchDown(float x, float y, int pointer, int button) {
 		return false;
 	}
@@ -45,5 +47,9 @@ public class GestureStage extends Stage implements ScrollableGestureDetector.Ges
 
 	@Override public boolean scrolled(int amount) {
 		return super.scrolled(amount);
+	}
+
+	@Override public boolean touchUp(float x, float y, int pointer, int button) {
+		return false;
 	}
 }

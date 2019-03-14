@@ -79,6 +79,24 @@ public class FiguresStage extends GestureStage {
 		return false;
 	}
 
+	@Override public boolean longPress(float x, float y) {
+		float offsetX = (Gdx.graphics.getWidth() - WIDTH * tileSize) / 2 + stats.mapOffset.x;
+		float offsetY = (Gdx.graphics.getHeight() - HEIGHT * tileSize) / 2 + stats.mapOffset.y;
+		Vector2 pos = new Vector2(x, Gdx.graphics.getHeight() - y).sub(offsetX, offsetY);
+
+		int mapX = (int) (pos.x / tileSize);
+		int mapY = (int) (pos.y / tileSize);
+		if(mapX >= 0 && mapX < WIDTH && mapY >= 0 && mapY < HEIGHT) {
+			for(Figure f : stats.figures)
+				if(f.getMapX() == mapX && f.getMapY() == mapY) {
+//					figureClickListener.onFigureClick(f);
+//					Gdx.app.log("LOG!", "long pressed!");
+					return true;
+				}
+		}
+		return false;
+	}
+
 	public FiguresStage setOnFigureClickedListener(OnFigureClickListener figureClickListener) {
 		this.figureClickListener = figureClickListener;
 		return this;
