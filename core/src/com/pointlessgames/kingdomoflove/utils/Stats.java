@@ -55,7 +55,7 @@ public class Stats {
 			}
 		selectedFigures = new HashSet<>();
 		selectedFigures.add(figure);
-		if(figure instanceof Structure && ((Structure) figure).hasRoad()) {
+		if(figures.contains(figure) && figure instanceof Structure && ((Structure) figure).hasRoad()) {
 			((Structure) figure).checked = true;
 			selectedFigures.addAll(getConnectedFigures(map, figure.getMapX(), figure.getMapY(), !(figure instanceof Road)));
 		}

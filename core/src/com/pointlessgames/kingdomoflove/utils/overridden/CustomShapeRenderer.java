@@ -1,12 +1,10 @@
-package com.pointlessgames.kingdomoflove.renderers;
+package com.pointlessgames.kingdomoflove.utils.overridden;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.EarClippingTriangulator;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ShortArray;
-
-import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
 public class CustomShapeRenderer extends ShapeRenderer {
 

@@ -1,4 +1,4 @@
-package com.pointlessgames.kingdomoflove.utils;
+package com.pointlessgames.kingdomoflove.utils.overridden;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;

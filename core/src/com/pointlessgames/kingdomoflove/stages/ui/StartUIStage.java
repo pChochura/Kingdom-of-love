@@ -4,19 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.actors.Button;
-import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
+import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
-import com.pointlessgames.kingdomoflove.stages.GestureStage;
-import com.pointlessgames.kingdomoflove.utils.Settings;
+import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Stats;
-import com.pointlessgames.kingdomoflove.utils.TextureManager;
+import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 import com.pointlessgames.kingdomoflove.utils.Utils;
 
 import java.util.Locale;
@@ -24,7 +20,7 @@ import java.util.Locale;
 import static com.pointlessgames.kingdomoflove.screens.StartScreen.font;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
-public class StartUIStage extends GestureStage {
+public class StartUIStage extends BaseStage {
 
 	private final float topBarHeight = 150 * ratio;
 
@@ -74,14 +70,14 @@ public class StartUIStage extends GestureStage {
 		sP.begin();
 		font.getData().setScale(0.4f);
 		font.setColor(Colors.textColor);
-		font.draw(sP, String.valueOf(stats.getPopulation()), Gdx.graphics.getWidth() / 2 - 25 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
+		font.draw(sP, String.valueOf(Gdx.graphics.getFramesPerSecond()), Gdx.graphics.getWidth() / 2 - 25 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
 		sP.setColor(Color.WHITE);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), Gdx.graphics.getWidth() / 2 - 100 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
 		sP.end();
 	}
 
 	private void drawLove() {
-		float loveBarWidth = Math.max(Gdx.graphics.getWidth() / 4 - 200 * ratio, 200 * ratio);
+		float loveBarWidth = Math.max(Gdx.graphics.getWidth() / 4 - 200, 200) * ratio;
 		sR.begin(ShapeRenderer.ShapeType.Filled);
 		sR.setColor(Colors.inactiveColor);
 		sR.roundedRect(Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio, Gdx.graphics.getHeight() - 100 * ratio, loveBarWidth, 50 * ratio, 25 * ratio);
@@ -94,8 +90,8 @@ public class StartUIStage extends GestureStage {
 		sP.begin();
 		font.getData().setScale(0.25f);
 		font.setColor(Colors.text3Color);
-		font.draw(sP, String.format(Locale.getDefault(), "%d (%+.1f)", MathUtils.round(stats.love), stats.getLoveProduction()),
-				Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio + width / 2 - 25 * ratio, Gdx.graphics.getHeight() - 70 * ratio, 50 * ratio, Align.center, false);
+		font.draw(sP, String.format(Locale.getDefault(), "%d%% (%+.1f%%)", MathUtils.round(stats.love), stats.getLoveProduction()),
+				Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio, Gdx.graphics.getHeight() - 70 * ratio, loveBarWidth, Align.center, false);
 		sP.setColor(Color.WHITE);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOVE), Gdx.graphics.getWidth() - 125 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
 		sP.end();
@@ -134,7 +130,7 @@ public class StartUIStage extends GestureStage {
 
 	@Override public boolean tap(float x, float y, int count, int button) {
 		Vector2 pos = new Vector2(x, Gdx.graphics.getHeight() - y);
-		buttonNextDay.touchUp(x, y);
+		buttonNextDay.touchUp();
 		if(buttonNextDay.hit(pos.x - buttonNextDay.getX(), pos.y - buttonNextDay.getY(), true) != null) {
 			buttonClickListener.nextDayButtonClicked();
 			return true;
@@ -143,13 +139,13 @@ public class StartUIStage extends GestureStage {
 	}
 
 	@Override public boolean pan(float x, float y, float deltaX, float deltaY) {
-		buttonNextDay.touchUp(x, y);
+		buttonNextDay.touchUp();
 		return false;
 	}
 
 	@Override
 	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-		buttonNextDay.touchUp(0, 0);
+		buttonNextDay.touchUp();
 		return super.pinch(initialPointer1, initialPointer2, pointer1, pointer2);
 	}
 
@@ -160,7 +156,7 @@ public class StartUIStage extends GestureStage {
 	}
 
 	@Override public boolean touchUp(float x, float y, int pointer, int button) {
-		buttonNextDay.touchUp(x, y);
+		buttonNextDay.touchUp();
 		return false;
 	}
 

@@ -10,16 +10,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
-import com.pointlessgames.kingdomoflove.screens.StartScreen;
+import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Noise;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
-import com.pointlessgames.kingdomoflove.utils.TextureManager;
+import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 import com.pointlessgames.kingdomoflove.utils.Utils;
-
-import java.util.Locale;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WIDTH;
@@ -27,7 +24,7 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.WINDOW_HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WINDOW_WIDTH;
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
-public class BackgroundStage extends GestureStage {
+public class BackgroundStage extends BaseStage {
 
 	private OnTileClickedListener tileClickedListener;
 	private CustomShapeRenderer sR;
@@ -42,7 +39,7 @@ public class BackgroundStage extends GestureStage {
 		this.sR = sR;
 		this.stats = stats;
 		screenRect = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		stats.mapOffset.scl(0);
+		stats.mapOffset.set(0, 0);
 	}
 
 	private void drawBackground() {

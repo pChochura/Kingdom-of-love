@@ -1,4 +1,4 @@
-package com.pointlessgames.kingdomoflove.stages;
+package com.pointlessgames.kingdomoflove.stages.dialogs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -9,8 +9,10 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
+import com.pointlessgames.kingdomoflove.actors.Button;
 import com.pointlessgames.kingdomoflove.models.figures.Conifer;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Granary;
@@ -26,12 +28,13 @@ import com.pointlessgames.kingdomoflove.models.figures.Structure;
 import com.pointlessgames.kingdomoflove.models.figures.Tree;
 import com.pointlessgames.kingdomoflove.models.figures.Well;
 import com.pointlessgames.kingdomoflove.models.figures.Wheat;
-import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
+import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
+import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
-import com.pointlessgames.kingdomoflove.utils.SoundManager;
+import com.pointlessgames.kingdomoflove.utils.managers.SoundManager;
 import com.pointlessgames.kingdomoflove.utils.Stats;
-import com.pointlessgames.kingdomoflove.utils.TextureManager;
+import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +43,7 @@ import java.util.Locale;
 import static com.pointlessgames.kingdomoflove.screens.StartScreen.font;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
-public class PickFigureStage extends GestureStage {
+public class PickFigureStage extends BaseStage {
 
 	private final float bottomBarHeight = 650 * ratio;
 	private final float tileSize = 400 * ratio;
@@ -59,11 +62,10 @@ public class PickFigureStage extends GestureStage {
 	private ArrayList<Figure> figures;
 
 	private Class[] categories = new Class[] {Structure.class, Plant.class};
-	private int selectedCategory;
 	private int itemsInCategory;
 
-	private ArrayList<Actor> allTiles;
-	private ArrayList<Actor> categoriesTabs;
+	private ArrayList<Button> allTiles;
+	private ArrayList<Button> categoriesTabs;
 
 	private Actor flingActor;
 
@@ -91,9 +93,9 @@ public class PickFigureStage extends GestureStage {
 		Collections.sort(figures, (f1, f2) -> f1.getCost() - f2.getCost());
 
 		setAllTiles();
-		setSelectedCategory(selectedCategory = 0);
-
 		setCategoriesTabs();
+
+		setSelectedCategory(0);
 	}
 
 	private void drawBottomBar() {
@@ -111,7 +113,7 @@ public class PickFigureStage extends GestureStage {
 		float height = bottomBarHeight - y - tileSpace;
 		float width = new GlyphLayout(font, "All").width + tileSpace * 2;
 
-		Actor a = new Actor();
+		Button a = new Button(Colors.buttonColor, Colors.tileColor);
 		a.setName("All");
 		a.setWidth(width);
 		a.setHeight(height);
@@ -124,7 +126,7 @@ public class PickFigureStage extends GestureStage {
 		for(Class category : categories) {
 			String name = category.getSimpleName();
 			width = new GlyphLayout(font, name).width + tileSpace * 2;
-			Actor a2 = new Actor();
+			Button a2 = new Button(Colors.textColor, Colors.tileColor);
 			a2.setName(name);
 			a2.setWidth(width);
 			a2.setHeight(height);
@@ -138,16 +140,15 @@ public class PickFigureStage extends GestureStage {
 
 	private void drawCategoriesTabs() {
 		for(int i = 0; i < categoriesTabs.size(); i++) {
-			Actor a = categoriesTabs.get(i);
-			font.getData().setScale(0.4f);
-			font.setColor(selectedCategory == i ? Colors.tileColor : Colors.textColor);
-
+			Button a = categoriesTabs.get(i);
 			sR.begin(ShapeRenderer.ShapeType.Filled);
-			sR.setColor(selectedCategory == i ? Colors.textColor : Colors.tileColor);
-			sR.roundedRect(a.getX(), a.getY() + bottomBarY, a.getWidth(), a.getHeight(), 25 * ratio);
+			sR.setColor(a.getColor());
+			sR.rect(a.getX(), a.getY() + bottomBarY, a.getWidth(), a.getHeight(), 4 * ratio);
 			sR.end();
 
 			sP.begin();
+			font.getData().setScale(0.4f);
+			font.setColor(a.isSelected() ? Colors.textColor : Colors.tileColor);
 			font.draw(sP, a.getName(), a.getX(), a.getY() + bottomBarY + a.getHeight() / 1.5f, a.getWidth(), Align.center, false);
 			sP.end();
 		}
@@ -156,7 +157,7 @@ public class PickFigureStage extends GestureStage {
 	private void setSelectedCategory(int category) {
 		float x = 0;
 		itemsInCategory = 0;
-		for(Actor a : allTiles) {
+		for(Button a : allTiles) {
 			if(category == 0 || categories[category - 1].isInstance(a.getUserObject())) {
 				a.setVisible(true);
 				a.setX(x);
@@ -167,26 +168,31 @@ public class PickFigureStage extends GestureStage {
 				itemsInCategory++;
 			} else a.setVisible(false);
 		}
+		for(int i = 0; i < categoriesTabs.size(); i++) {
+			categoriesTabs.get(i).setSelected(i == category);
+			categoriesTabs.get(i).touchUp();
+		}
 	}
 
 	private void setAllTiles() {
 		allTiles = new ArrayList<>();
 		for(Figure f : figures) {
-			Actor a = new Actor();
-			a.setUserObject(f);
-			allTiles.add(a);
+			Button b = new Button(Colors.tileColor, Colors.tile2Color, Colors.tile2Color);
+			b.setTouchable(stats.money >= f.getCost() ? Touchable.enabled : Touchable.disabled);
+			b.setUserObject(f);
+			allTiles.add(b);
 		}
 	}
 
 	private void drawFigureCards() {
-		for(Actor a : allTiles) {
-			if(a.isVisible() && a.getX() + offsetX > -a.getWidth() && a.getX() + offsetX < Gdx.graphics.getWidth()) {
-				Figure figure = ((Figure) a.getUserObject());
-				float x = a.getX() + offsetX;
-				float y = a.getY() + bottomBarY;
+		for(Button b : allTiles) {
+			if(b.isVisible() && b.getX() + offsetX > -b.getWidth() && b.getX() + offsetX < Gdx.graphics.getWidth()) {
+				Figure figure = ((Figure) b.getUserObject());
+				float x = b.getX() + offsetX;
+				float y = b.getY() + bottomBarY;
 				sR.begin(ShapeRenderer.ShapeType.Filled);
-				sR.setColor(stats.money >= figure.getCost() ? Colors.tileColor : Colors.tile2Color);
-				sR.roundedRect(x, y, tileSize, tileSize, 25 * ratio);
+				sR.setColor(b.getColor());
+				sR.rect(x, y, tileSize, tileSize, 4 * ratio);
 				sR.end();
 
 				sP.begin();
@@ -219,6 +225,11 @@ public class PickFigureStage extends GestureStage {
 	}
 
 	@Override public void act(float delta) {
+		for(Button b : categoriesTabs)
+			b.act(delta);
+		for(Button b : allTiles)
+			b.act(delta);
+
 		if(hiding && time > 0 || !hiding && time < Settings.duration) {
 			time += hiding ? -delta : delta;
 			float percent = hiding ? Interpolation.exp5In.apply(time / Settings.duration) : Interpolation.exp5Out.apply(time / Settings.duration);
@@ -235,19 +246,21 @@ public class PickFigureStage extends GestureStage {
 	}
 
 	@Override public boolean tap(float x, float y, int count, int button) {
+		for(Button b : categoriesTabs)
+			b.touchUp();
+		for(Button b : allTiles)
+			b.touchUp();
 		if(Gdx.graphics.getHeight() - y < bottomBarHeight) {
-			for(Actor a : allTiles)
-				if(a.hit(x - offsetX - a.getX(), Gdx.graphics.getHeight() - y - a.getY(), true) != null) {
-					clickListener.onFigureClick((Figure) a.getUserObject());
+			for(Button b : allTiles)
+				if(b.hit(x - offsetX - b.getX(), Gdx.graphics.getHeight() - y - b.getY(), true) != null) {
+					clickListener.onFigureClick((Figure) b.getUserObject());
 					return true;
 				}
 			for(int i = 0; i < categoriesTabs.size(); i++) {
-				Actor a = categoriesTabs.get(i);
-				if(a.hit(x - a.getX(), Gdx.graphics.getHeight() - y - a.getY(), true) != null) {
+				Button b = categoriesTabs.get(i);
+				if(b.hit(x - b.getX(), Gdx.graphics.getHeight() - y - b.getY(), true) != null) {
 					offsetX = tileSpace;
-					setSelectedCategory(selectedCategory = i);
-					if(Settings.soundsOn)
-						SoundManager.getInstance().getSound(SoundManager.SELECT).play(0.5f);
+					setSelectedCategory(i);
 					return true;
 				}
 			}
@@ -256,11 +269,46 @@ public class PickFigureStage extends GestureStage {
 	}
 
 	@Override public boolean pan(float x, float y, float deltaX, float deltaY) {
+		for(Button b : categoriesTabs)
+			b.touchUp();
+		for(Button b : allTiles)
+			b.touchUp();
+
 		offsetX = MathUtils.clamp(offsetX + deltaX, -((itemsInCategory - 2) * (tileSize + tileSpace) + tileSpace), tileSpace);
 		return true;
 	}
 
+	@Override
+	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+		for(Button b : categoriesTabs)
+			b.touchUp();
+		for(Button b : allTiles)
+			b.touchUp();
+		return super.pinch(initialPointer1, initialPointer2, pointer1, pointer2);
+	}
+
+	@Override public boolean touchDown(float x, float y, int pointer, int button) {
+		for(Button b : categoriesTabs)
+			b.touchDown(x, Gdx.graphics.getHeight() - y);
+		for(Button b : allTiles)
+			b.touchDown(x - offsetX, Gdx.graphics.getHeight() - y);
+		return super.touchDown(x, y, pointer, button);
+	}
+
+	@Override public boolean touchUp(float x, float y, int pointer, int button) {
+		for(Button b : categoriesTabs)
+			b.touchUp();
+		for(Button b : allTiles)
+			b.touchUp();
+		return super.touchUp(x, y, pointer, button);
+	}
+
 	@Override public boolean fling(float velocityX, float velocityY, int button) {
+		for(Button b : categoriesTabs)
+			b.touchUp();
+		for(Button b : allTiles)
+			b.touchUp();
+
 		float deltaX = Settings.duration * velocityX;
 		if(flingActor == null)
 			flingActor = new Actor();

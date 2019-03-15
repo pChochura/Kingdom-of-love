@@ -1,28 +1,32 @@
 package com.pointlessgames.kingdomoflove.stages;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.actors.Button;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
-import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
+import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
+import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
-import com.pointlessgames.kingdomoflove.utils.TextureManager;
+import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WIDTH;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
-public class ContextMenuFigure extends GestureStage {
+public class FigureMenuStage extends BaseStage {
 
+	private Runnable onHideListener;
 	private CustomShapeRenderer sR;
 	private SpriteBatch sP;
 	private Stats stats;
@@ -30,13 +34,16 @@ public class ContextMenuFigure extends GestureStage {
 	private ClickListener clickListener;
 
 	private Vector2 pos;
-	private Figure figure;
 
 	private Button buttonUpgrade;
 	private Button buttonInfo;
 	private Button buttonDestroy;
 
-	public ContextMenuFigure(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
+	private boolean hiding;
+	private float time;
+	private float alpha;
+
+	public FigureMenuStage(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
 		this.sR = sR;
 		this.sP = sP;
 		this.stats = stats;
@@ -44,6 +51,8 @@ public class ContextMenuFigure extends GestureStage {
 		buttonUpgrade = new Button(Colors.buttonColor, Colors.tile2Color, Colors.inactiveColor);
 		buttonInfo = new Button(Colors.buttonColor, Colors.tile2Color);
 		buttonDestroy = new Button(Colors.buttonColor, Colors.tile2Color, Colors.inactiveColor);
+
+		buttonDestroy.setTouchable(Touchable.disabled); //TODO add ability to destroy
 
 		float buttonSize = 100 * ratio;
 		buttonUpgrade.setSize(buttonSize, buttonSize);
@@ -61,38 +70,41 @@ public class ContextMenuFigure extends GestureStage {
 	}
 
 	private void drawButtons() {
+		if(alpha != 1) {
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		}
+
 		sR.begin(ShapeRenderer.ShapeType.Filled);
 
-//		if(figure.isUpgradable()) {
-			sR.setColor(buttonUpgrade.getColor());
-			sR.rect(buttonUpgrade.getX(), buttonUpgrade.getY(), buttonUpgrade.getWidth(), buttonUpgrade.getHeight(), 4 * ratio);
-//		}
+		sR.setColor(buttonUpgrade.getColor().cpy().mul(1, 1, 1, alpha));
+		sR.rect(buttonUpgrade.getX(), buttonUpgrade.getY(), buttonUpgrade.getWidth(), buttonUpgrade.getHeight(), 4 * ratio);
 
-		sR.setColor(buttonInfo.getColor());
+		sR.setColor(buttonInfo.getColor().cpy().mul(1, 1, 1, alpha));
 		sR.rect(buttonInfo.getX(), buttonInfo.getY(), buttonInfo.getWidth(), buttonInfo.getHeight(), 4 * ratio);
 
-		sR.setColor(buttonDestroy.getColor());
+		sR.setColor(buttonDestroy.getColor().cpy().mul(1, 1, 1, alpha));
 		sR.rect(buttonDestroy.getX(), buttonDestroy.getY(), buttonDestroy.getWidth(), buttonDestroy.getHeight(), 4 * ratio);
 
 		sR.end();
+
+		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
 
 		sP.begin();
 
 		Texture texture;
 
-//		if(figure.isUpgradable()) {
-			sP.setColor(Colors.barColor);
-			texture = TextureManager.getInstance().getTexture(TextureManager.UPGRADE);
-			sP.draw(texture, buttonUpgrade.getX(), buttonUpgrade.getY(), buttonUpgrade.getWidth() * 0.5f, buttonUpgrade.getHeight() * 0.5f,
-					buttonUpgrade.getWidth(), buttonUpgrade.getHeight(), 0.65f, 0.65f, 0, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
-//		}
+		sP.setColor(Colors.barColor.cpy().mul(1, 1, 1, alpha * alpha));
+		texture = TextureManager.getInstance().getTexture(TextureManager.UPGRADE);
+		sP.draw(texture, buttonUpgrade.getX(), buttonUpgrade.getY(), buttonUpgrade.getWidth() * 0.5f, buttonUpgrade.getHeight() * 0.5f,
+				buttonUpgrade.getWidth(), buttonUpgrade.getHeight(), 0.65f, 0.65f, 0, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
 
-		sP.setColor(Colors.bgColor);
+		sP.setColor(Colors.bgColor.cpy().mul(1, 1, 1, alpha * alpha));
 		texture = TextureManager.getInstance().getTexture(TextureManager.INFO);
 		sP.draw(texture, buttonInfo.getX(), buttonInfo.getY(), buttonInfo.getWidth() * 0.5f, buttonInfo.getHeight() * 0.5f,
 				buttonInfo.getWidth(), buttonInfo.getHeight(), 0.65f, 0.65f, 0, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
 
-		sP.setColor(Colors.loveColor);
+		sP.setColor(Colors.loveColor.cpy().mul(1, 1, 1, alpha * alpha));
 		texture = TextureManager.getInstance().getTexture(TextureManager.DESTROY);
 		sP.draw(texture, buttonDestroy.getX(), buttonDestroy.getY(), buttonDestroy.getWidth() * 0.5f, buttonDestroy.getHeight() * 0.5f,
 				buttonDestroy.getWidth(), buttonDestroy.getHeight(), 0.65f, 0.65f, 0, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
@@ -102,42 +114,51 @@ public class ContextMenuFigure extends GestureStage {
 	}
 
 	@Override public void draw() {
-		setButtonsPosition();
 		drawButtons();
 	}
 
 	@Override public void act(float delta) {
+		setButtonsPosition();
+
 		buttonUpgrade.act(delta);
 		buttonInfo.act(delta);
 		buttonDestroy.act(delta);
+
+		if(hiding && time > 0 || !hiding && time < Settings.duration) {
+			time += hiding ? -delta : delta;
+			alpha = hiding ? Interpolation.exp5In.apply(time / Settings.duration) : Interpolation.exp5Out.apply(time / Settings.duration);
+		} else if(hiding && onHideListener != null) onHideListener.run();
 	}
 
 	@Override public boolean tap(float x, float y, int count, int button) {
-		buttonUpgrade.touchUp(x, y);
-		buttonInfo.touchUp(x, y);
-		buttonDestroy.touchUp(x, y);
-		if(buttonUpgrade.hit(x - buttonUpgrade.getX(), Gdx.graphics.getHeight() - y - buttonUpgrade.getY(), true) != null)
-			clickListener.onUpgradeClick();
-		else if(buttonInfo.hit(x - buttonInfo.getX(), Gdx.graphics.getHeight() - y - buttonInfo.getY(), true) != null)
-			clickListener.onInfoClick();
-		else if(buttonDestroy.hit(x - buttonDestroy.getX(), Gdx.graphics.getHeight() - y - buttonDestroy.getY(), true) != null)
-			clickListener.onDestroyClick();
-		else clickListener.onCancelClick();
+		buttonUpgrade.touchUp();
+		buttonInfo.touchUp();
+		buttonDestroy.touchUp();
+		if(buttonUpgrade.hit(x - buttonUpgrade.getX(), Gdx.graphics.getHeight() - y - buttonUpgrade.getY(), false) != null) {
+			if(buttonUpgrade.isTouchable())
+				clickListener.onUpgradeClick();
+		} else if(buttonInfo.hit(x - buttonInfo.getX(), Gdx.graphics.getHeight() - y - buttonInfo.getY(), false) != null) {
+			if(buttonInfo.isTouchable())
+				clickListener.onInfoClick();
+		} else if(buttonDestroy.hit(x - buttonDestroy.getX(), Gdx.graphics.getHeight() - y - buttonDestroy.getY(), false) != null) {
+			if(buttonDestroy.isTouchable())
+				clickListener.onDestroyClick();
+		} else clickListener.onCancelClick();
 		return true;
 	}
 
 	@Override public boolean pan(float x, float y, float deltaX, float deltaY) {
-		buttonUpgrade.touchUp(x, y);
-		buttonInfo.touchUp(x, y);
-		buttonDestroy.touchUp(x, y);
+		buttonUpgrade.touchUp();
+		buttonInfo.touchUp();
+		buttonDestroy.touchUp();
 		return super.pan(x, y, deltaX, deltaY);
 	}
 
 	@Override
 	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-		buttonUpgrade.touchUp(0, 0);
-		buttonInfo.touchUp(0, 0);
-		buttonDestroy.touchUp(0, 0);
+		buttonUpgrade.touchUp();
+		buttonInfo.touchUp();
+		buttonDestroy.touchUp();
 		return super.pinch(initialPointer1, initialPointer2, pointer1, pointer2);
 	}
 
@@ -149,19 +170,30 @@ public class ContextMenuFigure extends GestureStage {
 	}
 
 	@Override public boolean touchUp(float x, float y, int pointer, int button) {
-		buttonUpgrade.touchUp(x, y);
-		buttonInfo.touchUp(x, y);
-		buttonDestroy.touchUp(x, y);
+		buttonUpgrade.touchUp();
+		buttonInfo.touchUp();
+		buttonDestroy.touchUp();
 		return super.touchUp(x, y, pointer, button);
 	}
 
+	@Override public boolean keyDown(int keyCode) {
+		if(keyCode == Input.Keys.BACK || keyCode == Input.Keys.ESCAPE) {
+			clickListener.onCancelClick();
+			return true;
+		} else return false;
+	}
+
+	public void hide(Runnable onHideListener) {
+		hiding = true;
+		this.onHideListener = onHideListener;
+	}
+
 	public void setFigure(Figure figure) {
-		this.figure = figure;
 		this.pos = new Vector2(figure.getMapX(), figure.getMapY());
 		buttonUpgrade.setTouchable(figure.isUpgradable() ? Touchable.enabled : Touchable.disabled);
 	}
 
-	public ContextMenuFigure setClickListener(ClickListener clickListener) {
+	public FigureMenuStage setClickListener(ClickListener clickListener) {
 		this.clickListener = clickListener;
 		return this;
 	}

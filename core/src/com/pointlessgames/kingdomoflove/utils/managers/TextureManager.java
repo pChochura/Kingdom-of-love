@@ -1,8 +1,7 @@
-package com.pointlessgames.kingdomoflove.utils;
+package com.pointlessgames.kingdomoflove.utils.managers;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class TextureManager {
@@ -14,14 +13,13 @@ public class TextureManager {
 	public final static String MONEY = "icons/money.png";
 	public final static String LOVE = "icons/love.png";
 	public final static String CAPACITY = "icons/capacity.png";
-	public final static String ARROW = "icons/arrow.png";
 	public final static String SOUNDS_ON = "icons/sounds_on.png";
 	public final static String SOUNDS_OFF = "icons/sounds_off.png";
-	public final static String HISTORY_ON = "icons/history_on.png";
-	public final static String HISTORY_OFF = "icons/history_off.png";
 	public final static String UPGRADE = "icons/upgrade.png";
 	public final static String INFO = "icons/info.png";
-	public final static String DESTROY = "icons/destroy.png";
+	public final static String DESTROY = "icons/cancel.png";
+	public final static String CANCEL = "icons/cancel.png";
+	public final static String CONFIRM = "icons/confirm.png";
 	public final static String CONIFER = "figures/conifer.png";
 	public final static String GRANARY = "figures/granary.png";
 	public final static String HOUSE = "figures/house.png";
@@ -33,7 +31,8 @@ public class TextureManager {
 	public final static String TREE = "figures/tree.png";
 	public final static String WELL = "figures/well.png";
 	public final static String WHEAT = "figures/wheat.png";
-	public final static String ROAD = "figures/road.png";
+
+	private final static String ROAD = "figures/road.png";
 
 	public AssetManager am = new AssetManager();
 	public TextureRegion[][] road;
@@ -48,14 +47,13 @@ public class TextureManager {
 		am.load(MONEY, Texture.class);
 		am.load(LOVE, Texture.class);
 		am.load(CAPACITY, Texture.class);
-		am.load(ARROW, Texture.class);
 		am.load(SOUNDS_ON, Texture.class);
 		am.load(SOUNDS_OFF, Texture.class);
-		am.load(HISTORY_ON, Texture.class);
-		am.load(HISTORY_OFF, Texture.class);
 		am.load(UPGRADE, Texture.class);
 		am.load(INFO, Texture.class);
 		am.load(DESTROY, Texture.class);
+		am.load(CANCEL, Texture.class);
+		am.load(CONFIRM, Texture.class);
 		am.load(CONIFER, Texture.class);
 		am.load(GRANARY, Texture.class);
 		am.load(HOUSE, Texture.class);

@@ -1,4 +1,4 @@
-package com.pointlessgames.kingdomoflove.stages;
+package com.pointlessgames.kingdomoflove.stages.dialogs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,18 +16,19 @@ import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.actors.Button;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
-import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
+import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
+import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
-import com.pointlessgames.kingdomoflove.utils.TextureManager;
+import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.Locale;
 
 import static com.pointlessgames.kingdomoflove.screens.StartScreen.font;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
-public class UpgradeInfoStage extends GestureStage {
+public class UpgradeFigureStage extends BaseStage {
 
 	private Runnable onHideListener;
 	private ClickListener clickListener;
@@ -43,7 +44,7 @@ public class UpgradeInfoStage extends GestureStage {
 	private float alpha;
 	private boolean hiding;
 
-	public UpgradeInfoStage(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
+	public UpgradeFigureStage(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
 		this.sP = sP;
 		this.sR = sR;
 		this.stats = stats;
@@ -54,9 +55,11 @@ public class UpgradeInfoStage extends GestureStage {
 		dialog.setSize(900 * ratio, 1200 * ratio);
 		dialog.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, Align.center);
 
-		buttonUpgrade = new Button(Colors.tileColor, Colors.tile2Color, Colors.inactiveColor);
+		buttonUpgrade = new Button(Colors.buttonColor, Colors.tile2Color, Colors.inactiveColor);
 		buttonUpgrade.setSize(500 * ratio, 100 * ratio);
 		buttonUpgrade.setPosition(Gdx.graphics.getWidth() / 2, dialog.getY(), Align.center);
+
+		//TODO remake whole stage
 	}
 
 	private void drawBackground() {
@@ -103,10 +106,10 @@ public class UpgradeInfoStage extends GestureStage {
 		if(figure instanceof Structure) {
 			int capacity = ((Structure) figure).getCapacity();
 			if(capacity != 0) {
-				sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + 50 * ratio, y -= (font.getCapHeight() + offset + height + 150 * ratio), 150 * ratio, 150 * ratio);
+				sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + 50 * ratio, y -= (font.getCapHeight() + offset + height + 100 * ratio), 100 * ratio, 100 * ratio);
 
 				font.getData().setScale(0.6f);
-				font.draw(sP, String.valueOf(capacity), dialog.getX() + 50 * ratio + 150 * ratio, y + font.getCapHeight() / 2 + 75 * ratio, 150 * ratio, Align.left, true);
+				font.draw(sP, String.valueOf(capacity), dialog.getX() + 50 * ratio + 100 * ratio, y + font.getCapHeight() / 2 + 50 * ratio, 100 * ratio, Align.left, true);
 			}
 		}
 
@@ -120,14 +123,14 @@ public class UpgradeInfoStage extends GestureStage {
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		}
-		
+
 		sR.begin(ShapeRenderer.ShapeType.Filled);
 		sR.setColor(buttonUpgrade.getColor().cpy().mul(1, 1, 1, alpha));
 		sR.cutRect(buttonUpgrade.getX(), buttonUpgrade.getY(), buttonUpgrade.getWidth(), buttonUpgrade.getHeight(), MathUtils.PI / 18, 4 * ratio);
 		sR.end();
 
 		font.getData().setScale(0.45f);
-		font.setColor(Colors.buttonColor.cpy().mul(1, 1, 1, alpha * alpha));
+		font.setColor(Colors.tile2Color.cpy().mul(1, 1, 1, alpha * alpha));
 		sP.begin();
 		font.draw(sP, String.format(Locale.getDefault(), "Upgrade (%d$)", figure.getCost()),
 				buttonUpgrade.getX(), buttonUpgrade.getY() + font.getCapHeight() / 2 + buttonUpgrade.getHeight() / 2, buttonUpgrade.getWidth(), Align.center, false);
@@ -152,7 +155,7 @@ public class UpgradeInfoStage extends GestureStage {
 	}
 
 	@Override public boolean tap(float x, float y, int count, int button) {
-		buttonUpgrade.touchUp(x, y);
+		buttonUpgrade.touchUp();
 		Vector2 pos = new Vector2(x, Gdx.graphics.getHeight() - y);
 		if(buttonUpgrade.hit(pos.x - buttonUpgrade.getX(), pos.y - buttonUpgrade.getY(), true) != null) {
 			clickListener.onUpgradeClick();
@@ -164,13 +167,13 @@ public class UpgradeInfoStage extends GestureStage {
 	}
 
 	@Override public boolean pan(float x, float y, float deltaX, float deltaY) {
-		buttonUpgrade.touchUp(x, y);
+		buttonUpgrade.touchUp();
 		return super.pan(x, y, deltaX, deltaY);
 	}
 
 	@Override
 	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-		buttonUpgrade.touchUp(0, 0);
+		buttonUpgrade.touchUp();
 		return super.pinch(initialPointer1, initialPointer2, pointer1, pointer2);
 	}
 
@@ -180,7 +183,7 @@ public class UpgradeInfoStage extends GestureStage {
 	}
 
 	@Override public boolean touchUp(float x, float y, int pointer, int button) {
-		buttonUpgrade.touchUp(x, y);
+		buttonUpgrade.touchUp();
 		return super.touchUp(x, y, pointer, button);
 	}
 
@@ -199,10 +202,9 @@ public class UpgradeInfoStage extends GestureStage {
 	public void setFigure(Figure figure) {
 		this.figure = figure;
 		buttonUpgrade.setTouchable(figure.canUpgrade(stats) ? Touchable.enabled : Touchable.disabled);
-		figure.setLevel(figure.getLevel() + 1);
 	}
 
-	public UpgradeInfoStage setClickListener(ClickListener clickListener) {
+	public UpgradeFigureStage setClickListener(ClickListener clickListener) {
 		this.clickListener = clickListener;
 		return this;
 	}

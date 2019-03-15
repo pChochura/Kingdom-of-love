@@ -6,16 +6,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
-import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
+import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Stats;
-
-import java.util.Collections;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WIDTH;
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
-public class FiguresStage extends GestureStage {
+public class FiguresStage extends BaseStage {
 
 	private OnFigureClickListener figureClickListener;
 	private CustomShapeRenderer sR;

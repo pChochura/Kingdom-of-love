@@ -11,20 +11,20 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Monument;
 import com.pointlessgames.kingdomoflove.models.figures.Road;
-import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
+import com.pointlessgames.kingdomoflove.stages.PickFigureMenuStage;
+import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.stages.BackgroundStage;
-import com.pointlessgames.kingdomoflove.stages.ContextMenuFigure;
-import com.pointlessgames.kingdomoflove.stages.FigureInfoStage;
+import com.pointlessgames.kingdomoflove.stages.FigureMenuStage;
+import com.pointlessgames.kingdomoflove.stages.dialogs.FigureInfoStage;
 import com.pointlessgames.kingdomoflove.stages.FiguresStage;
-import com.pointlessgames.kingdomoflove.stages.PickFigureStage;
-import com.pointlessgames.kingdomoflove.stages.UpgradeInfoStage;
+import com.pointlessgames.kingdomoflove.stages.dialogs.PickFigureStage;
+import com.pointlessgames.kingdomoflove.stages.dialogs.UpgradeFigureStage;
 import com.pointlessgames.kingdomoflove.stages.ui.StartUIStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
-import com.pointlessgames.kingdomoflove.utils.ScrollableGestureDetector;
+import com.pointlessgames.kingdomoflove.utils.overridden.ScrollableGestureDetector;
 import com.pointlessgames.kingdomoflove.utils.Settings;
-import com.pointlessgames.kingdomoflove.utils.SoundManager;
 import com.pointlessgames.kingdomoflove.utils.Stats;
-import com.pointlessgames.kingdomoflove.utils.TextureManager;
+import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WIDTH;
@@ -95,55 +95,80 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 	}
 
 	@Override public void onEmptyTileClicked(int mapX, int mapY) {
-		if(Settings.soundsOn)
-			SoundManager.getInstance().getSound(SoundManager.SELECT).play(0.5f);
-		PickFigureStage pickFigureStage = new PickFigureStage(sP, sR, stats);
-		ScrollableGestureDetector gestureDetector = addStage(pickFigureStage);
-		pickFigureStage.setClickListener(new PickFigureStage.ClickListener() {
-			@Override public void onCancelClick() {
-				pickFigureStage.hide(() -> removeStage(pickFigureStage, gestureDetector));
-			}
-			@Override public void onFigureClick(Figure f) {
-				if(stats.money >= f.getCost()) {
-					stats.money -= f.getCost();
-					stats.love = Math.min(stats.love + f.getLove(), 100);
-
-					f.setMapPos(mapX, mapY);
-					f.orientInSpace(stats);
-					f.setScale(0);
-					f.addAction(Actions.scaleTo(1, 1, Settings.duration, new Interpolation.SwingOut(3f)));
-					stats.figures.add(f);
-					stats.sortFigures();
-					pickFigureStage.hide(() -> removeStage(pickFigureStage, gestureDetector));
-
-					for(Figure figure : stats.figures)
-						if(figure instanceof Road)
-							figure.orientInSpace(stats);
-
-					if(Settings.soundsOn)
-						SoundManager.getInstance().getSound(SoundManager.PICK_FIGURE).play(0.5f);
-				} else if(Settings.soundsOn) SoundManager.getInstance().getSound(SoundManager.SELECT_ERROR).play(0.5f);
-			}
-		});
+		showPickFigureStage(mapX, mapY);
 	}
 
 	@Override public void onFigureClick(Figure f) {
 		stats.setCurrentFigure(f);
-		ContextMenuFigure contextMenuFigure = new ContextMenuFigure(sP, sR, stats);
-		contextMenuFigure.setFigure(f);
-		ScrollableGestureDetector gestureDetector = addStage(contextMenuFigure);
-		contextMenuFigure.setClickListener(new ContextMenuFigure.ClickListener() {
+		showFigureMenuStage(f);
+	}
+
+	private void showPickFigureStage(int mapX, int mapY) {
+		PickFigureStage pickFigureStage = new PickFigureStage(sP, sR, stats);
+		ScrollableGestureDetector gestureDetector = addStage(pickFigureStage);
+		pickFigureStage.setClickListener(new PickFigureStage.ClickListener() {
+			@Override public void onCancelClick() {
+				removeStage(null, gestureDetector);
+				pickFigureStage.hide(() -> removeStage(pickFigureStage, null));
+			}
+			@Override public void onFigureClick(Figure f) {
+				if(stats.money >= f.getCost()) {
+					removeStage(null, gestureDetector);
+					pickFigureStage.hide(() -> removeStage(pickFigureStage, null));
+
+					f.setMapPos(mapX, mapY);
+					showPickFigureMenuStage(f);
+				}
+			}
+		});
+	}
+
+	private void showPickFigureMenuStage(Figure f) {
+		stats.setCurrentFigure(f);
+		f.setScale(0);
+		f.addAction(Actions.scaleTo(1, 1, Settings.duration, new Interpolation.SwingOut(3f)));
+		PickFigureMenuStage pickFigureMenuStage = new PickFigureMenuStage(sP, sR, stats);
+		pickFigureMenuStage.setFigure(f);
+		ScrollableGestureDetector gestureDetector = addStage(getStagesCount() - 2, pickFigureMenuStage);
+		pickFigureMenuStage.setClickListener(new PickFigureMenuStage.ClickListener() {
 			@Override public void onCancelClick() {
 				stats.setCurrentFigure(null);
-				removeStage(contextMenuFigure, gestureDetector);
+				pickFigureMenuStage.hide(() -> removeStage(pickFigureMenuStage, gestureDetector));
+			}
+
+			@Override public void onConfirmClick() {
+				stats.money -= f.getCost();
+				stats.love += f.getLove();
+				stats.setCurrentFigure(null);
+				pickFigureMenuStage.hide(() -> removeStage(pickFigureMenuStage, gestureDetector));
+
+				f.orientInSpace(stats);
+				stats.figures.add(f);
+				stats.sortFigures();
+
+				for(Figure figure : stats.figures)
+					if(figure instanceof Road)
+						figure.orientInSpace(stats);
+			}
+		});
+	}
+
+	private void showFigureMenuStage(Figure f) {
+		FigureMenuStage figureMenuStage = new FigureMenuStage(sP, sR, stats);
+		figureMenuStage.setFigure(f);
+		ScrollableGestureDetector gestureDetector = addStage(getStagesCount() - 1, figureMenuStage);
+		figureMenuStage.setClickListener(new FigureMenuStage.ClickListener() {
+			@Override public void onCancelClick() {
+				stats.setCurrentFigure(null);
+				figureMenuStage.hide(() -> removeStage(figureMenuStage, gestureDetector));
 			}
 
 			@Override public void onUpgradeClick() {
-				showUpgradeStage(f);
+				showUpgradeFigureStage(f);
 			}
 
 			@Override public void onInfoClick() {
-				showInfoStage(f);
+				showFigureInfoStage(f);
 			}
 
 			@Override public void onDestroyClick() {
@@ -152,39 +177,37 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 		});
 	}
 
-	private void showUpgradeStage(Figure f) {
-		UpgradeInfoStage upgradeInfoStage = new UpgradeInfoStage(sP, sR, stats);
-		upgradeInfoStage.setFigure(f);
-		ScrollableGestureDetector gestureDetector = addStage(upgradeInfoStage);
-		upgradeInfoStage.setClickListener(new UpgradeInfoStage.ClickListener() {
+	private void showUpgradeFigureStage(Figure f) {
+		UpgradeFigureStage upgradeFigureStage = new UpgradeFigureStage(sP, sR, stats);
+		upgradeFigureStage.setFigure(f);
+		ScrollableGestureDetector gestureDetector = addStage(upgradeFigureStage);
+		upgradeFigureStage.setClickListener(new UpgradeFigureStage.ClickListener() {
 			@Override public void onCancelClick() {
-				upgradeInfoStage.hide(() -> removeStage(upgradeInfoStage, gestureDetector));
-				f.setLevel(f.getLevel() - 1);
+				removeStage(null, gestureDetector);
+				upgradeFigureStage.hide(() -> removeStage(upgradeFigureStage, null));
 			}
 
 			@Override public void onUpgradeClick() {
-				f.setLevel(f.getLevel() - 1);
 				if(f.canUpgrade(stats)) {
-					upgradeInfoStage.hide(() -> removeStage(upgradeInfoStage, gestureDetector));
+					upgradeFigureStage.hide(() -> removeStage(upgradeFigureStage, gestureDetector));
 					stats.money -= f.getUpgradeCost();
 					f.levelUp();
-					if(Settings.soundsOn)
-						SoundManager.getInstance().getSound(SoundManager.UPGRADE).play(0.5f);
-				} else if(Settings.soundsOn) SoundManager.getInstance().getSound(SoundManager.SELECT_ERROR).play(0.5f);
+				}
 			}
 		});
 	}
 
-	private void showInfoStage(Figure f) {
+	private void showFigureInfoStage(Figure f) {
 		FigureInfoStage figureInfoStage = new FigureInfoStage(sP, sR, stats);
 		figureInfoStage.setFigure(f);
 		ScrollableGestureDetector gestureDetector = addStage(figureInfoStage);
-		figureInfoStage.setClickListener(() -> figureInfoStage.hide(() -> removeStage(figureInfoStage, gestureDetector)));
+		figureInfoStage.setClickListener(() -> {
+			removeStage(null, gestureDetector);
+			figureInfoStage.hide(() -> removeStage(figureInfoStage, null));
+		});
 	}
 
 	@Override public void nextDayButtonClicked() {
-		if(Settings.soundsOn)
-			SoundManager.getInstance().getSound(SoundManager.NEXT_DAY).play(0.5f);
 		stats.day++;
 		for(int i = stats.figures.size() - 1; i >= 0; i--)
 			stats.figures.get(i).triggerAbility(stats);

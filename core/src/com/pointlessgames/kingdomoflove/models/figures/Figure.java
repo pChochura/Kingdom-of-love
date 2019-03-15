@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.models.Ability;
-import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
+import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
@@ -96,7 +96,7 @@ public abstract class Figure extends Actor {
 		sP.begin();
 		font.getData().setScale(size / (150f * ratio));
 		font.setColor(Colors.text3Color.cpy().mul(1, 1, 1, alpha));
-		font.draw(sP, String.valueOf(level), tileX + halfSize, tileY + size * 7f / 6f, size, Align.center, false);
+		font.draw(sP, String.valueOf(level), tileX + halfSize, tileY + halfSize + (size + font.getCapHeight()) / 2, size, Align.center, false);
 		font.setColor(Color.WHITE);
 		sP.end();
 

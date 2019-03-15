@@ -2,9 +2,9 @@ package com.pointlessgames.kingdomoflove.stages;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.pointlessgames.kingdomoflove.utils.ScrollableGestureDetector;
+import com.pointlessgames.kingdomoflove.utils.overridden.ScrollableGestureDetector;
 
-public class GestureStage extends Stage implements ScrollableGestureDetector.GestureListener {
+public class BaseStage extends Stage implements ScrollableGestureDetector.GestureListener {
 
 	public boolean touchInterruption = true;
 

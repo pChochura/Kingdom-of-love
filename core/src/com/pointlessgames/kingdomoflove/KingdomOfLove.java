@@ -4,15 +4,13 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.pointlessgames.kingdomoflove.renderers.CustomShapeRenderer;
-import com.pointlessgames.kingdomoflove.screens.EndScreen;
+import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.screens.MenuScreen;
 import com.pointlessgames.kingdomoflove.screens.StartScreen;
-import com.pointlessgames.kingdomoflove.screens.StoryScreen;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
-import com.pointlessgames.kingdomoflove.utils.SoundManager;
-import com.pointlessgames.kingdomoflove.utils.TextureManager;
+import com.pointlessgames.kingdomoflove.utils.managers.SoundManager;
+import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 import com.pointlessgames.kingdomoflove.utils.Utils;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
@@ -55,22 +53,15 @@ public class KingdomOfLove extends Game {
 	}
 
 	private void restart() {
-		setScreen(new MenuScreen().setOnStartListener(() -> {
-			if(Gdx.app.getPreferences("Stats").getBoolean("saved") || !Settings.historyOn)
-				start();
-			else setScreen(new StoryScreen().setOnEndListener(this::start));
-		}));
+		if(getScreen() != null)
+			getScreen().dispose();
+		setScreen(new MenuScreen().setOnStartListener(this::start));
 	}
 
 	private void start() {
-		getScreen().dispose();
-		setScreen(new StartScreen().setOnEndListener(() -> {
+		if(getScreen() != null)
 			getScreen().dispose();
-			if(Settings.historyOn)
-				setScreen(new EndScreen().setOnEndListener(this::create));
-			else restart();
-			Gdx.app.getPreferences("Stats").putBoolean("saved", false).flush();
-		}));
+		setScreen(new StartScreen().setOnEndListener(this::restart));
 	}
 
 	@Override public void dispose() {

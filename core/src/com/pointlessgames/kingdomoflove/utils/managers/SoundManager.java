@@ -1,4 +1,4 @@
-package com.pointlessgames.kingdomoflove.utils;
+package com.pointlessgames.kingdomoflove.utils.managers;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;

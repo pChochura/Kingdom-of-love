@@ -2,7 +2,7 @@ package com.pointlessgames.kingdomoflove.models.figures;
 
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
-import com.pointlessgames.kingdomoflove.utils.TextureManager;
+import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
@@ -44,6 +44,10 @@ public class Monument extends Structure {
 	}
 
 	@Override public boolean isUpgradable() {
+		return false;
+	}
+
+	@Override public boolean hasLevels() {
 		return false;
 	}
 

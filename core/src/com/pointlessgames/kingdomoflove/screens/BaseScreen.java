@@ -11,15 +11,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.pointlessgames.kingdomoflove.stages.GestureStage;
-import com.pointlessgames.kingdomoflove.utils.ScrollableGestureDetector;
+import com.pointlessgames.kingdomoflove.stages.BaseStage;
+import com.pointlessgames.kingdomoflove.utils.overridden.ScrollableGestureDetector;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 
 import java.util.ArrayList;
 
 public class BaseScreen implements Screen {
 
-	private ArrayList<GestureStage> stages;
+	private ArrayList<BaseStage> stages;
 	private StretchViewport viewport;
 
 	private ArrayList<SnapshotArray<InputProcessor>> processors;
@@ -40,8 +40,8 @@ public class BaseScreen implements Screen {
 		Gdx.input.setCatchBackKey(true);
 	}
 
-	public ScrollableGestureDetector addStage(GestureStage stage) {
-		stages.add(stage);
+	public ScrollableGestureDetector addStage(int index, BaseStage stage) {
+		stages.add(index, stage);
 		ScrollableGestureDetector processor = new ScrollableGestureDetector(stage);
 		if(!stage.touchInterruption) {
 			processors.add(new SnapshotArray<>(inputMultiplexer.getProcessors()));
@@ -51,13 +51,23 @@ public class BaseScreen implements Screen {
 		return processor;
 	}
 
-	public void removeStage(GestureStage stage, ScrollableGestureDetector gestureDetector) {
-		stages.remove(stage);
-		inputMultiplexer.removeProcessor(gestureDetector);
-		if(!stage.touchInterruption) {
-			inputMultiplexer.setProcessors(processors.get(processors.size() - 1));
-			processors.remove(processors.size() - 1);
+	public ScrollableGestureDetector addStage(BaseStage stage) {
+		return addStage(Math.max(stages.size(), 0), stage);
+	}
+
+	public void removeStage(BaseStage stage, ScrollableGestureDetector gestureDetector) {
+		if(stage != null) stages.remove(stage);
+		if(gestureDetector != null) {
+			inputMultiplexer.removeProcessor(gestureDetector);
+			if(stage == null || !stage.touchInterruption) {
+				inputMultiplexer.setProcessors(processors.get(processors.size() - 1));
+				processors.remove(processors.size() - 1);
+			}
 		}
+	}
+
+	public int getStagesCount() {
+		return stages.size();
 	}
 
 	private void setScreenSize() {

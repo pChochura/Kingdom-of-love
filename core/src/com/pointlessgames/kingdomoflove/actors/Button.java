@@ -2,8 +2,11 @@ package com.pointlessgames.kingdomoflove.actors;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 
 public class Button extends Actor {
@@ -11,6 +14,9 @@ public class Button extends Actor {
 	private final Color unpressedColor;
 	private final Color pressedColor;
 	private final Color inactiveColor;
+
+	private boolean selected;
+	private boolean inactive;
 
 	public Button(Color unpressedColor, Color pressedColor) {
 		this(unpressedColor, pressedColor, null);
@@ -23,24 +29,36 @@ public class Button extends Actor {
 		setColor(unpressedColor);
 	}
 
-	public void touchUp(float x, float y) {
-		if(!getColor().equals(inactiveColor)) {
+	public void touchUp() {
+		if(!inactive) {
 			clearActions();
-			addAction(Actions.color(unpressedColor, Settings.duration / 2));
+			addAction(Actions.color(selected ? pressedColor : unpressedColor, Settings.duration / 2));
 		}
 	}
 
 	public void touchDown(float x, float y) {
-		if(!getColor().equals(inactiveColor) && hit(x - getX(), y - getY(), true) != null) {
+		if(!inactive && hit(x - getX(), y - getY(), true) != null) {
 			clearActions();
 			addAction(Actions.color(pressedColor, Settings.duration / 2));
 		}
 	}
 
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
 	@Override public void setTouchable(Touchable touchable) {
 		super.setTouchable(touchable);
-		if(inactiveColor != null && touchable != Touchable.enabled)
+		if(inactiveColor != null && touchable != Touchable.enabled) {
 			setColor(inactiveColor);
-		else if(getColor().equals(inactiveColor)) setColor(unpressedColor);
+			inactive = true;
+		} else if(inactive) {
+			setColor(unpressedColor);
+			inactive = false;
+		}
 	}
 }
