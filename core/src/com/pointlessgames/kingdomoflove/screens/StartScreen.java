@@ -208,10 +208,6 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 	}
 
 	@Override public void nextDayButtonClicked() {
-		stats.day++;
-		for(int i = stats.figures.size() - 1; i >= 0; i--)
-			stats.figures.get(i).triggerAbility(stats);
-
 		for(Figure f : stats.figures)
 			if(f instanceof Road) ((Road) f).checked = false;
 

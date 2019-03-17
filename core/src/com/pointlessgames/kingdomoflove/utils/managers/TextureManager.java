@@ -32,6 +32,7 @@ public class TextureManager {
 	public final static String TREE = "figures/tree.png";
 	public final static String WELL = "figures/well.png";
 	public final static String WHEAT = "figures/wheat.png";
+	public static final String CHURCH = "figures/church.png";
 
 	private final static String ROAD = "figures/road.png";
 	private final static String CUT_RECT = "images/cut_rect.png";
@@ -78,6 +79,7 @@ public class TextureManager {
 		am.load(TREE, Texture.class);
 		am.load(WELL, Texture.class);
 		am.load(WHEAT, Texture.class);
+		am.load(CHURCH, Texture.class);
 		am.load(ROAD, Texture.class);
 	}
 
@@ -98,6 +100,8 @@ public class TextureManager {
 		am.dispose();
 		cutRect.getTexture().dispose();
 		rect.getTexture().dispose();
+		filledRect.getTexture().dispose();
+		outlineRect.getTexture().dispose();
 		for(TextureRegion[] t1 : road) for(TextureRegion t2 : t1) t2.getTexture().dispose();
 	}
 }

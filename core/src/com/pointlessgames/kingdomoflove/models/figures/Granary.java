@@ -43,8 +43,10 @@ public class Granary extends Structure {
 	private float getLoveProduction(Stats stats) {
 		Structure[][] map = new Structure[WIDTH][HEIGHT];
 		for(Figure f : stats.figures)
-			if(f instanceof Structure)
+			if(f instanceof Structure) {
 				map[f.getMapX()][f.getMapY()] = (Structure) f;
+				((Structure) f).checked = false;
+			}
 
 		Set<Structure> connectedStructures = stats.getConnectedFigures(map, getMapX(), getMapY(), true);
 		int amount = 0;

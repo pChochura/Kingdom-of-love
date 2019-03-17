@@ -61,7 +61,10 @@ public class KingdomOfLove extends Game {
 	private void start() {
 		if(getScreen() != null)
 			getScreen().dispose();
-		setScreen(new StartScreen().setOnEndListener(this::restart));
+		setScreen(new StartScreen().setOnEndListener(() -> {
+			Gdx.app.getPreferences("Stats").putBoolean("saved", false).flush();
+			restart();
+		}));
 	}
 
 	@Override public void dispose() {

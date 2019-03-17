@@ -8,13 +8,14 @@ import java.util.Locale;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
-public class Library extends Structure {
+public class Church extends Structure {
 
-	private int[] cost = {750, 1400, 2100, 2800, 3500, 4000, 4500, 5000};
-	private float[] loveProduction = {0.1f, 0.2f, 0.35f, 0.5f, 0.65f, 0.8f, 1.0f, 1.25f};
+	private int[] cost = {800, 1500, 2200, 2800, 3500, 4100, 4800, 5300};
+	private int[] capacity = {5, 8, 11, 14, 17, 20, 23, 26};
+	private float[] loveProduction = {2, 3, 4, 5, 6, 7, 8, 9};
 
-	public Library() {
-		super(TextureManager.getInstance().getTexture(TextureManager.LIBRARY));
+	public Church() {
+		super(TextureManager.getInstance().getTexture(TextureManager.CHURCH));
 		refreshSize();
 		setPos();
 	}
@@ -25,11 +26,13 @@ public class Library extends Structure {
 	}
 
 	private float getLoveProduction(Stats stats) {
-		return loveProduction[getLevel() - 1] * stats.getPopulation();
-	}
+		float love = 0;
+		for(Figure f : stats.figures) {
+			if(f instanceof Structure && ((Structure) f).hasRoad() && !(f instanceof Road))
+				love += loveProduction[getLevel() - 1] / Math.sqrt(Math.pow(f.getMapX() - getMapX(), 2) + Math.pow(f.getMapY() - getMapX(), 2));
+		}
 
-	@Override public int getCapacity() {
-		return 0;
+		return love;
 	}
 
 	@Override public void triggerAbility(Stats stats) {
@@ -41,7 +44,11 @@ public class Library extends Structure {
 	}
 
 	@Override public String getAbilityDescription() {
-		return String.format(Locale.getDefault(), "Daily increases love for every Kingdom inhabitant by %.1f%%.", loveProduction[getLevel() - 1]);
+		return String.format(Locale.getDefault(), "Daily increases love by at most %.1f%% for every structure. The bigger the distance is, the lower the love increase is.", loveProduction[getLevel() - 1]);
+	}
+
+	@Override public int getCapacity() {
+		return capacity[getLevel() - 1];
 	}
 
 	@Override public int getCost() {
@@ -49,7 +56,7 @@ public class Library extends Structure {
 	}
 
 	@Override public int getLove() {
-		return 25;
+		return 10;
 	}
 
 	@Override public Ability getAbility(Stats stats) {
@@ -63,9 +70,5 @@ public class Library extends Structure {
 	@Override protected void setPos() {
 		setX((tileSize - width * getScaleX()) / 2);
 		setY((tileSize - height * getScaleY()) / 2);
-	}
-
-	@Override public boolean canUpgrade(Stats stats) {
-		return false;
 	}
 }

@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.actors.Button;
+import com.pointlessgames.kingdomoflove.models.figures.Church;
 import com.pointlessgames.kingdomoflove.models.figures.Conifer;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Granary;
@@ -83,6 +84,7 @@ public class PickFigureStage extends BaseStage {
 		figures.add(new Granary());
 		figures.add(new Conifer());
 		figures.add(new Library());
+		figures.add(new Church());
 
 		Collections.sort(figures, (f1, f2) -> f1.getCost() - f2.getCost());
 

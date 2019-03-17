@@ -11,7 +11,6 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 public class Monument extends Structure {
 
 	public int money = 5;
-	private float love = -1f;
 
 	public Monument() {
 		super(TextureManager.getInstance().getTexture(TextureManager.MONUMENT));
@@ -25,12 +24,11 @@ public class Monument extends Structure {
 	}
 
 	@Override public int getCapacity() {
-		return 0;
+		return 1;
 	}
 
 	@Override public void triggerAbility(Stats stats) {
 		stats.money += money;
-		stats.love += love;
 
 		if(money > 0)
 			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.getInstance().getTexture(TextureManager.MONEY));
@@ -49,7 +47,7 @@ public class Monument extends Structure {
 	}
 
 	@Override public Ability getAbility(Stats stats) {
-		return new Ability(money, love);
+		return new Ability(Ability.ProductionType.MONEY, money);
 	}
 
 	@Override public boolean isUpgradable() {

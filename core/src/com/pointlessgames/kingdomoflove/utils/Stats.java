@@ -39,7 +39,7 @@ public class Stats {
 			if(f1.getMapY() > f2.getMapY()) return -1;
 			else if(f1.getMapY() == f2.getMapY())
 				return Integer.compare(f1.getMapX(), f2.getMapX());
-			return 0;
+			return 1;
 		});
 	}
 
@@ -109,6 +109,10 @@ public class Stats {
 	public void nextDay() {
 		love -= getPopulation();
 		love = MathUtils.clamp(love, 0, 100);
+
+		day++;
+		for(int i = figures.size() - 1; i >= 0; i--)
+			figures.get(i).triggerAbility(this);
 	}
 
 	public int getMoneyProduction() {
