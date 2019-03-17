@@ -47,8 +47,6 @@ public class FigureMenuStage extends BaseStage {
 		buttonInfo = new Button(Colors.buttonColor, Colors.tile2Color);
 		buttonDestroy = new Button(Colors.buttonColor, Colors.tile2Color, Colors.inactiveColor);
 
-		buttonDestroy.setTouchable(Touchable.disabled); //TODO add ability to destroy
-
 		float buttonSize = 100 * ratio;
 		buttonUpgrade.setSize(buttonSize, buttonSize);
 		buttonInfo.setSize(buttonSize, buttonSize);
@@ -175,6 +173,7 @@ public class FigureMenuStage extends BaseStage {
 	public void setFigure(Figure figure) {
 		this.pos = new Vector2(figure.getMapX(), figure.getMapY());
 		buttonUpgrade.setTouchable(figure.isUpgradable() ? Touchable.enabled : Touchable.disabled);
+		buttonDestroy.setTouchable(figure.isDestroyable() ? Touchable.enabled : Touchable.disabled);
 	}
 
 	public FigureMenuStage setClickListener(ClickListener clickListener) {

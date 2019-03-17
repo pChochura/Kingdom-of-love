@@ -58,6 +58,10 @@ public class Monument extends Structure {
 		return false;
 	}
 
+	@Override public boolean isDestroyable() {
+		return false;
+	}
+
 	@Override public boolean hasRoad() {
 		return false;
 	}

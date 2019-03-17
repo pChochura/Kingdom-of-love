@@ -47,9 +47,9 @@ public class PickFigureStage extends BaseStage {
 	private final float tileSize = 400 * ratio;
 	private final float tileSpace = 50 * ratio;
 	private float offsetX = tileSpace;
-	private boolean hiding;
 	private float bottomBarY;
 	private float time;
+	private boolean hiding;
 
 	private SpriteBatch sP;
 	private Stats stats;
@@ -107,26 +107,20 @@ public class PickFigureStage extends BaseStage {
 		float height = bottomBarHeight - y - tileSpace;
 		float width = new GlyphLayout(font, "All").width + tileSpace * 2;
 
-		Button a = new Button(Colors.buttonColor, Colors.tileColor);
-		a.setName("All");
-		a.setWidth(width);
-		a.setHeight(height);
-		a.setX(x);
-		a.setY(y);
-		categoriesTabs.add(a);
+		Button b = new Button(Colors.buttonColor, Colors.tileColor);
+		b.setName("All");
+		b.setBounds(x, y, width, height);
+		categoriesTabs.add(b);
 
 		x += width + tileSpace;
 
 		for(Class category : categories) {
 			String name = category.getSimpleName();
 			width = new GlyphLayout(font, name).width + tileSpace * 2;
-			Button a2 = new Button(Colors.textColor, Colors.tileColor);
-			a2.setName(name);
-			a2.setWidth(width);
-			a2.setHeight(height);
-			a2.setX(x);
-			a2.setY(y);
-			categoriesTabs.add(a2);
+			Button b2 = new Button(Colors.textColor, Colors.tileColor);
+			b2.setName(name);
+			b2.setBounds(x, y, width, height);
+			categoriesTabs.add(b2);
 
 			x += width + tileSpace;
 		}
@@ -149,10 +143,7 @@ public class PickFigureStage extends BaseStage {
 		for(Button a : allTiles) {
 			if(category == 0 || categories[category - 1].isInstance(a.getUserObject())) {
 				a.setVisible(true);
-				a.setX(x);
-				a.setY(tileSpace);
-				a.setWidth(tileSize);
-				a.setHeight(tileSize);
+				a.setBounds(x, tileSpace, tileSize, tileSize);
 				x += tileSize + tileSpace;
 				itemsInCategory++;
 			} else a.setVisible(false);
@@ -319,6 +310,18 @@ public class PickFigureStage extends BaseStage {
 		} else return false;
 	}
 
+	@Override public boolean longPress(float x, float y) {
+		if(Gdx.graphics.getHeight() - y < bottomBarHeight) {
+			for(Button b : allTiles)
+				if(b.hit(x - offsetX - b.getX(), Gdx.graphics.getHeight() - y - b.getY(), false) != null) {
+					clickListener.onInfoClick((Figure)b.getUserObject());
+					b.touchUp();
+					return true;
+				}
+		}
+		return false;
+	}
+
 	public void hide(Runnable onHideListener) {
 		this.onHideListener = onHideListener;
 		hiding = true;
@@ -332,5 +335,6 @@ public class PickFigureStage extends BaseStage {
 	public interface ClickListener {
 		void onCancelClick();
 		void onFigureClick(Figure f);
+		void onInfoClick(Figure f);
 	}
 }

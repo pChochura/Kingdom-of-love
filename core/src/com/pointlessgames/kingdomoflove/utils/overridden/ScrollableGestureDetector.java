@@ -42,7 +42,7 @@ public class ScrollableGestureDetector extends InputAdapter {
 	/** Creates a new GestureDetector with default values: halfTapSquareSize=20, tapCountInterval=0.4f, longPressDuration=1.1f,
 	 * maxFlingDelay=0.15f. */
 	public ScrollableGestureDetector (GestureListener listener) {
-		this(20, 0.4f, 1.1f, 0.15f, listener);
+		this(20, 0.4f, 0.5f, 0.15f, listener);
 	}
 
 	/** @param halfTapSquareSize half width in pixels of the square around an initial touch event, see

@@ -15,6 +15,7 @@ import com.pointlessgames.kingdomoflove.stages.BackgroundStage;
 import com.pointlessgames.kingdomoflove.stages.FigureMenuStage;
 import com.pointlessgames.kingdomoflove.stages.FiguresStage;
 import com.pointlessgames.kingdomoflove.stages.PickFigureMenuStage;
+import com.pointlessgames.kingdomoflove.stages.dialogs.DestroyFigureStage;
 import com.pointlessgames.kingdomoflove.stages.dialogs.FigureInfoStage;
 import com.pointlessgames.kingdomoflove.stages.dialogs.PickFigureStage;
 import com.pointlessgames.kingdomoflove.stages.dialogs.UpgradeFigureStage;
@@ -116,6 +117,9 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 					showPickFigureMenuStage(f);
 				}
 			}
+			@Override public void onInfoClick(Figure f) {
+				showFigureInfoStage(f);
+			}
 		});
 	}
 
@@ -171,7 +175,11 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 			}
 
 			@Override public void onDestroyClick() {
-
+				showDestroyFigureStage(f, () -> {
+					stats.setCurrentFigure(null);
+					removeStage(gestureDetector, figureMenuStage.touchInterruption);
+					figureMenuStage.hide(() -> removeStage(figureMenuStage));
+				});
 			}
 		});
 	}
@@ -191,6 +199,7 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 					removeStage(gestureDetector, upgradeFigureStage.touchInterruption);
 					upgradeFigureStage.hide(() -> removeStage(upgradeFigureStage));
 					stats.money -= f.getUpgradeCost();
+					stats.love += f.getLove();
 					f.levelUp();
 				}
 			}
@@ -204,6 +213,30 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 		figureInfoStage.setClickListener(() -> {
 			removeStage(gestureDetector, figureInfoStage.touchInterruption);
 			figureInfoStage.hide(() -> removeStage(figureInfoStage));
+		});
+	}
+
+	private void showDestroyFigureStage(Figure f, Runnable onDestroyed) {
+		DestroyFigureStage destroyFigureStage = new DestroyFigureStage(sP);
+		destroyFigureStage.setFigure(f);
+		ScrollableGestureDetector gestureDetector = addStage(destroyFigureStage);
+		destroyFigureStage.setClickListener(new DestroyFigureStage.ClickListener() {
+			@Override public void onCancelClick() {
+				removeStage(gestureDetector, destroyFigureStage.touchInterruption);
+				destroyFigureStage.hide(() -> removeStage(destroyFigureStage));
+			}
+
+			@Override public void onDestroyClick(int money, float love) {
+				removeStage(gestureDetector, destroyFigureStage.touchInterruption);
+				destroyFigureStage.hide(() -> removeStage(destroyFigureStage));
+
+				stats.figures.remove(f);
+				stats.sortFigures();
+				stats.money += money;
+				stats.love += love;
+
+				onDestroyed.run();
+			}
 		});
 	}
 

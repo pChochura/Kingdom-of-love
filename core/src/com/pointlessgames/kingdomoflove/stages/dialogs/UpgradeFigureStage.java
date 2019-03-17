@@ -107,7 +107,7 @@ public class UpgradeFigureStage extends BaseStage {
 		float y = dialog.getY() + dialog.getHeight() - offset;
 		sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha * alpha));
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), dialog.getX() + offset, y - iconSize, iconSize, iconSize);
-		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + 0.5f * dialog.getWidth() - 4/3f * iconSize, y - iconSize, iconSize, iconSize);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + 0.5f * dialog.getWidth() - iconSize, y - iconSize, iconSize, iconSize);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOVE), dialog.getX() + dialog.getWidth() - 5 * offset, y - iconSize, iconSize, iconSize);
 
 		font.getData().setScale(0.4f);
@@ -115,7 +115,7 @@ public class UpgradeFigureStage extends BaseStage {
 		font.draw(sP, String.format(Locale.getDefault(), "%+d$", prevMoneyProduction),
 				dialog.getX() + offset + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
 		font.draw(sP, String.format(Locale.getDefault(), "%d", prevCapacity),
-				dialog.getX() + 0.5f * dialog.getWidth() - 4/3f * iconSize + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
+				dialog.getX() + 0.5f * dialog.getWidth(), y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
 		font.draw(sP, String.format(Locale.getDefault(), "%+.1f%%", prevLoveProduction),
 				dialog.getX() + dialog.getWidth() - 5 * offset + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
 
@@ -128,7 +128,7 @@ public class UpgradeFigureStage extends BaseStage {
 
 		sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha * alpha));
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), dialog.getX() + offset, y - iconSize, iconSize, iconSize);
-		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + 0.5f * dialog.getWidth() - 4/3f * iconSize, y - iconSize, iconSize, iconSize);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + 0.5f * dialog.getWidth() -  iconSize, y - iconSize, iconSize, iconSize);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOVE), dialog.getX() + dialog.getWidth() - 5 * offset, y - iconSize, iconSize, iconSize);
 
 		font.getData().setScale(0.4f);
@@ -136,7 +136,7 @@ public class UpgradeFigureStage extends BaseStage {
 		font.draw(sP, String.format(Locale.getDefault(), "%+d$", moneyProduction),
 				dialog.getX() + offset + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
 		font.draw(sP, String.format(Locale.getDefault(), "%d", capacity),
-				dialog.getX() + 0.5f * dialog.getWidth() - 4/3f * iconSize + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
+				dialog.getX() + 0.5f * dialog.getWidth(), y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
 		font.draw(sP, String.format(Locale.getDefault(), "%+.1f%%", loveProduction),
 				dialog.getX() + dialog.getWidth() - 5 * offset + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
 
@@ -149,7 +149,7 @@ public class UpgradeFigureStage extends BaseStage {
 		TextureManager.getInstance().cutRect.draw(sP, buttonUpgrade.getX(), buttonUpgrade.getY(), buttonUpgrade.getWidth(), buttonUpgrade.getHeight());
 
 		font.getData().setScale(0.45f);
-		font.setColor(Colors.tile2Color.cpy().mul(1, 1, 1, alpha * alpha));
+		font.setColor(Colors.tileColor.cpy().mul(1, 1, 1, alpha * alpha));
 		font.draw(sP, String.format(Locale.getDefault(), "Upgrade (%d$)", figure.getUpgradeCost()),
 				buttonUpgrade.getX(), buttonUpgrade.getY() + font.getCapHeight() / 2 + buttonUpgrade.getHeight() / 2, buttonUpgrade.getWidth(), Align.center, false);
 	}
@@ -178,12 +178,12 @@ public class UpgradeFigureStage extends BaseStage {
 	@Override public boolean tap(float x, float y, int count, int button) {
 		buttonUpgrade.touchUp();
 		Vector2 pos = new Vector2(x, Gdx.graphics.getHeight() - y);
-		if(buttonUpgrade.hit(pos.x - buttonUpgrade.getX(), pos.y - buttonUpgrade.getY(), true) != null) {
+		if(buttonUpgrade.hit(pos.x - buttonUpgrade.getX(), pos.y - buttonUpgrade.getY(), false) != null) {
 			clickListener.onUpgradeClick();
 			buttonUpgrade.clearActions();
 			buttonUpgrade.setTouchable(figure.canUpgrade(stats) ? Touchable.enabled : Touchable.disabled);
 			return true;
-		} if(dialog.hit(pos.x - dialog.getX(), pos.y - dialog.getY(), true) == null) clickListener.onCancelClick();
+		} if(dialog.hit(pos.x - dialog.getX(), pos.y - dialog.getY(), false) == null) clickListener.onCancelClick();
 		return true;
 	}
 

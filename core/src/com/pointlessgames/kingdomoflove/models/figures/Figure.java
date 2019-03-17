@@ -163,6 +163,10 @@ public abstract class Figure extends Actor {
 		return true;
 	}
 
+	public boolean isDestroyable() {
+		return true;
+	}
+
 	public void orientInSpace(Stats stats) {}
 
 	protected void resetAbilityTip(String name, Texture texture) {

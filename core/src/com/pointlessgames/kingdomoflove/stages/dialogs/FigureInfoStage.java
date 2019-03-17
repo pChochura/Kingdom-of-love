@@ -39,6 +39,8 @@ public class FigureInfoStage extends BaseStage {
 	private float textureSize;
 	private float offset;
 
+	private boolean existing;
+
 	public FigureInfoStage(SpriteBatch sP, Stats stats) {
 		this.sP = sP;
 		this.stats = stats;
@@ -107,36 +109,51 @@ public class FigureInfoStage extends BaseStage {
 	private void drawFigureInfo() {
 		drawName();
 
+		float iconSize = (textureSize - 4 * offset) / 3;
 		float y = dialog.getY() + dialog.getHeight() - 2 * offset;
 
-		sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha * alpha));
-		sP.draw(figure.getTexture(), dialog.getX() + offset, y - textureSize, textureSize, textureSize);
-
 		Ability ability = figure.getAbility(stats);
-		int capacity = figure instanceof Structure ? ((Structure) figure).getCapacity() : 0;
-		int moneyProduction = (int) ability.getAmount(Ability.ProductionType.MONEY);
+		int capacity = figure instanceof Structure ? ((Structure)figure).getCapacity() : 0;
+		int moneyProduction = (int)ability.getAmount(Ability.ProductionType.MONEY);
 		float loveProduction = ability.getAmount(Ability.ProductionType.LOVE);
 
-		float iconSize = (textureSize - 4 * offset) / 3;
-		sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), dialog.getX() + textureSize + 2 * offset, y - iconSize - offset, iconSize, iconSize);
-		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + textureSize + 2 * offset, y - 2 * iconSize - 2 * offset, iconSize, iconSize);
-		sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOVE), dialog.getX() + textureSize + 2 * offset, y - 3 * iconSize - 3 * offset, iconSize, iconSize);
+		if(existing) {
+			sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha * alpha));
+			sP.draw(figure.getTexture(), dialog.getX() + offset, y - textureSize, textureSize, textureSize);
 
-		font.getData().setScale(0.4f);
-		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
-		font.draw(sP, String.format(Locale.getDefault(), "%+d$", moneyProduction),
-				dialog.getX() + textureSize + 2 * offset + iconSize, y + 0.5f * (iconSize + font.getCapHeight()) - iconSize - offset, iconSize, Align.left, false);
-		font.draw(sP, String.format(Locale.getDefault(), "%d", capacity),
-				dialog.getX() + textureSize + 2 * offset + iconSize, y + 0.5f * (iconSize + font.getCapHeight()) - 2 * iconSize - 2 * offset, iconSize, Align.left, false);
-		font.draw(sP, String.format(Locale.getDefault(), "%+.1f%%", loveProduction),
-				dialog.getX() + textureSize + 2 * offset + iconSize, y + 0.5f * (iconSize + font.getCapHeight()) - 3 * iconSize - 3 * offset, iconSize, Align.left, false);
+			sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), dialog.getX() + textureSize + 2 * offset, y - iconSize - offset, iconSize, iconSize);
+			sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + textureSize + 2 * offset, y - 2 * iconSize - 2 * offset, iconSize, iconSize);
+			sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOVE), dialog.getX() + textureSize + 2 * offset, y - 3 * iconSize - 3 * offset, iconSize, iconSize);
+
+			font.getData().setScale(0.4f);
+			font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
+			font.draw(sP, String.format(Locale.getDefault(), "%+d$", moneyProduction),
+					dialog.getX() + textureSize + 2 * offset + iconSize, y + 0.5f * (iconSize + font.getCapHeight()) - iconSize - offset, iconSize, Align.left, false);
+			font.draw(sP, String.format(Locale.getDefault(), "%d", capacity),
+					dialog.getX() + textureSize + 2 * offset + iconSize, y + 0.5f * (iconSize + font.getCapHeight()) - 2 * iconSize - 2 * offset, iconSize, Align.left, false);
+			font.draw(sP, String.format(Locale.getDefault(), "%+.1f%%", loveProduction),
+					dialog.getX() + textureSize + 2 * offset + iconSize, y + 0.5f * (iconSize + font.getCapHeight()) - 3 * iconSize - 3 * offset, iconSize, Align.left, false);
+		} else {
+			sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha * alpha));
+			sP.draw(figure.getTexture(), dialog.getX() + 0.5f * (dialog.getWidth() - textureSize), y - textureSize, textureSize, textureSize);
+
+			if(capacity != 0) {
+				sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + offset, y - textureSize, iconSize, iconSize);
+
+				font.getData().setScale(0.4f);
+				font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
+				font.draw(sP, String.format(Locale.getDefault(), "%+d", capacity),
+						dialog.getX() + offset + iconSize, y + 0.5f * (iconSize + font.getCapHeight()) - textureSize, iconSize, Align.left, false);
+			}
+		}
 
 		font.getData().setScale(0.5f);
+		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
 		font.draw(sP, figure.getAbilityDescription(), dialog.getX() + offset, y - textureSize - 2 * offset, dialog.getWidth() - 2 * offset, Align.center, true);
 
 		drawDivider();
 
-		if(figure.hasLevels())
+		if(existing && figure.hasLevels())
 			drawLevel();
 	}
 
@@ -178,6 +195,7 @@ public class FigureInfoStage extends BaseStage {
 
 	public void setFigure(Figure figure) {
 		this.figure = figure;
+		this.existing = stats.figures.contains(figure);
 	}
 
 	public FigureInfoStage setClickListener(ClickListener clickListener) {
