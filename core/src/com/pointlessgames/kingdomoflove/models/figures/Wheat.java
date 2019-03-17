@@ -9,11 +9,13 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 public class Wheat extends Plant {
 
 	private int[] cost = {35, 75, 100, 125, 175, 225, 275, 350};
+	private int maxLife = 5;
 
 	public Wheat() {
 		super(TextureManager.getInstance().getTexture(TextureManager.WHEAT));
 		refreshSize();
 		setPos();
+		setLife(getMaxLife());
 	}
 
 	@Override public void refreshSize() {
@@ -59,6 +61,6 @@ public class Wheat extends Plant {
 	}
 
 	@Override public int getMaxLife() {
-		return 10;
+		return maxLife + getLevel() - 1;
 	}
 }

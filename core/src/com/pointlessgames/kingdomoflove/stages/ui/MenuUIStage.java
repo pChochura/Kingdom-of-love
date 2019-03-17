@@ -5,12 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.actors.Button;
-import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
@@ -22,16 +19,14 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
 public class MenuUIStage extends BaseStage {
 
-	private CustomShapeRenderer sR;
 	private SpriteBatch sP;
 
 	private Runnable startListener;
 	private Button buttonStart;
 	private Button buttonSound;
 
-	public MenuUIStage(SpriteBatch sP, CustomShapeRenderer sR) {
+	public MenuUIStage(SpriteBatch sP) {
 		this.sP = sP;
-		this.sR = sR;
 
 		buttonStart = new Button(Colors.buttonColor, Colors.tile2Color);
 		buttonStart.setWidth(500 * ratio);
@@ -47,54 +42,47 @@ public class MenuUIStage extends BaseStage {
 	}
 
 	private void drawBackground() {
-		sP.begin();
 		sP.setColor(Color.WHITE);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.BACKGROUND), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		sP.end();
 	}
 
 	private void drawLogo() {
-		sP.begin();
 		font.getData().setScale(0.85f);
 		font.setColor(Colors.textColor);
 		font.draw(sP, Settings.APP_NAME, 0, Gdx.graphics.getHeight() - 750 * ratio, Gdx.graphics.getWidth(), Align.center, true);
 		sP.setColor(Color.WHITE);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOGO), Gdx.graphics.getWidth() / 2 - 256 * ratio, Gdx.graphics.getHeight() - 750 * ratio, 512 * ratio, 512 * ratio);
-		sP.end();
 	}
 
 	private void drawButtons() {
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-
-		sR.setColor(buttonSound.getColor());
-		sR.rect(buttonSound.getX(), buttonSound.getY(), buttonSound.getWidth(), buttonSound.getHeight(), 4 * ratio);
-
-		sR.setColor(buttonStart.getColor());
-		sR.cutRect(buttonStart.getX(), buttonStart.getY(), buttonStart.getWidth(), buttonStart.getHeight(), MathUtils.PI / 18, 4 * ratio);
-
-		sR.end();
-
-		sP.begin();
-
-		Texture texture;
+		//Button start
+		sP.setColor(buttonStart.getColor());
+		TextureManager.getInstance().cutRect.draw(sP, buttonStart.getX(), buttonStart.getY(), buttonStart.getWidth(), buttonStart.getHeight());
 
 		font.getData().setScale(0.55f);
 		font.setColor(Colors.tileColor);
 		font.draw(sP, "Start", buttonStart.getX(), buttonStart.getY() + font.getCapHeight() / 2 + buttonStart.getHeight() / 2, buttonStart.getWidth(), Align.center, false);
 
+		//Button sound
+		sP.setColor(buttonSound.getColor());
+		TextureManager.getInstance().rect.draw(sP, buttonSound.getX(), buttonSound.getY(), buttonSound.getWidth(), buttonSound.getHeight());
+
 		sP.setColor(Colors.tileColor);
-		texture = TextureManager.getInstance().getTexture(Settings.soundsOn ? TextureManager.SOUNDS_ON : TextureManager.SOUNDS_OFF);
+		Texture texture = TextureManager.getInstance().getTexture(Settings.soundsOn ? TextureManager.SOUNDS_ON : TextureManager.SOUNDS_OFF);
 		sP.draw(texture, buttonSound.getX(), buttonSound.getY(), buttonSound.getWidth() * 0.5f, buttonSound.getHeight() * 0.5f,
 				buttonSound.getWidth(), buttonSound.getHeight(), 0.65f, 0.65f, 0, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
 
-		sP.setColor(Color.WHITE);
-		sP.end();
 	}
 
 	@Override public void draw() {
+		sP.begin();
+
 		drawBackground();
 		drawLogo();
 		drawButtons();
+
+		sP.setColor(Color.WHITE);
+		sP.end();
 	}
 
 	@Override public void act(float delta) {

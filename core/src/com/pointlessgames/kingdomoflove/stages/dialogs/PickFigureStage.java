@@ -2,9 +2,9 @@ package com.pointlessgames.kingdomoflove.stages.dialogs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -28,11 +28,9 @@ import com.pointlessgames.kingdomoflove.models.figures.Structure;
 import com.pointlessgames.kingdomoflove.models.figures.Tree;
 import com.pointlessgames.kingdomoflove.models.figures.Well;
 import com.pointlessgames.kingdomoflove.models.figures.Wheat;
-import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
-import com.pointlessgames.kingdomoflove.utils.managers.SoundManager;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
@@ -53,7 +51,6 @@ public class PickFigureStage extends BaseStage {
 	private float bottomBarY;
 	private float time;
 
-	private CustomShapeRenderer sR;
 	private SpriteBatch sP;
 	private Stats stats;
 
@@ -69,9 +66,8 @@ public class PickFigureStage extends BaseStage {
 
 	private Actor flingActor;
 
-	public PickFigureStage(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
+	public PickFigureStage(SpriteBatch sP, Stats stats) {
 		this.sP = sP;
-		this.sR = sR;
 		this.stats = stats;
 
 		touchInterruption = false;
@@ -99,10 +95,8 @@ public class PickFigureStage extends BaseStage {
 	}
 
 	private void drawBottomBar() {
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(Colors.barColor);
-		sR.rect(0, bottomBarY, Gdx.graphics.getWidth(), bottomBarHeight);
-		sR.end();
+		sP.setColor(Colors.barColor);
+		TextureManager.getInstance().filledRect.draw(sP, 0, bottomBarY, Gdx.graphics.getWidth(), bottomBarHeight);
 	}
 
 	private void setCategoriesTabs() {
@@ -139,18 +133,13 @@ public class PickFigureStage extends BaseStage {
 	}
 
 	private void drawCategoriesTabs() {
-		for(int i = 0; i < categoriesTabs.size(); i++) {
-			Button a = categoriesTabs.get(i);
-			sR.begin(ShapeRenderer.ShapeType.Filled);
-			sR.setColor(a.getColor());
-			sR.rect(a.getX(), a.getY() + bottomBarY, a.getWidth(), a.getHeight(), 4 * ratio);
-			sR.end();
+		for(Button a : categoriesTabs) {
+			sP.setColor(a.getColor());
+			TextureManager.getInstance().rect.draw(sP, a.getX(), a.getY() + bottomBarY, a.getWidth(), a.getHeight());
 
-			sP.begin();
 			font.getData().setScale(0.4f);
 			font.setColor(a.isSelected() ? Colors.textColor : Colors.tileColor);
 			font.draw(sP, a.getName(), a.getX(), a.getY() + bottomBarY + a.getHeight() / 1.5f, a.getWidth(), Align.center, false);
-			sP.end();
 		}
 	}
 
@@ -168,7 +157,7 @@ public class PickFigureStage extends BaseStage {
 				itemsInCategory++;
 			} else a.setVisible(false);
 		}
-		for(int i = 0; i < categoriesTabs.size(); i++) {
+		for(int i = categoriesTabs.size() - 1; i >= 0; i--) {
 			categoriesTabs.get(i).setSelected(i == category);
 			categoriesTabs.get(i).touchUp();
 		}
@@ -190,12 +179,12 @@ public class PickFigureStage extends BaseStage {
 				Figure figure = ((Figure) b.getUserObject());
 				float x = b.getX() + offsetX;
 				float y = b.getY() + bottomBarY;
-				sR.begin(ShapeRenderer.ShapeType.Filled);
-				sR.setColor(b.getColor());
-				sR.rect(x, y, tileSize, tileSize, 4 * ratio);
-				sR.end();
 
-				sP.begin();
+				//Tile
+				sP.setColor(b.getColor());
+				TextureManager.getInstance().rect.draw(sP, x, y, tileSize, tileSize);
+
+				sP.setColor(Color.WHITE);
 
 				//Title
 				font.getData().setScale(0.3f);
@@ -212,16 +201,19 @@ public class PickFigureStage extends BaseStage {
 				//Love
 				sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOVE), x + tileSize - tileSpace / 2 - 75 * ratio, y + tileSpace / 2, 75 * ratio, 75 * ratio);
 				font.draw(sP, String.format(Locale.getDefault(), "%+d%%", figure.getLove()), x + tileSize - tileSpace / 2 - 175 * ratio, y + tileSpace / 2 + 50 * ratio, 100 * ratio, Align.right, false);
-
-				sP.end();
 			}
 		}
 	}
 
 	@Override public void draw() {
+		sP.begin();
+
 		drawBottomBar();
 		drawCategoriesTabs();
 		drawFigureCards();
+
+		sP.setColor(Color.WHITE);
+		sP.end();
 	}
 
 	@Override public void act(float delta) {

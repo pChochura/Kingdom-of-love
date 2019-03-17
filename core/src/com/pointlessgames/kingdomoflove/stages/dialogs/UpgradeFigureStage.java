@@ -3,12 +3,9 @@ package com.pointlessgames.kingdomoflove.stages.dialogs;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -16,7 +13,6 @@ import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.actors.Button;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
-import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
@@ -32,7 +28,6 @@ public class UpgradeFigureStage extends BaseStage {
 
 	private Runnable onHideListener;
 	private ClickListener clickListener;
-	private CustomShapeRenderer sR;
 	private SpriteBatch sP;
 	private Stats stats;
 
@@ -44,9 +39,8 @@ public class UpgradeFigureStage extends BaseStage {
 	private float alpha;
 	private boolean hiding;
 
-	public UpgradeFigureStage(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
+	public UpgradeFigureStage(SpriteBatch sP, Stats stats) {
 		this.sP = sP;
-		this.sR = sR;
 		this.stats = stats;
 
 		touchInterruption = false;
@@ -63,32 +57,17 @@ public class UpgradeFigureStage extends BaseStage {
 	}
 
 	private void drawBackground() {
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(Color.BLACK.cpy().mul(1, 1, 1, 0.5f * alpha));
-		sR.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		sR.end();
-
-		Gdx.gl.glDisable(GL20.GL_BLEND);
+		sP.setColor(Color.BLACK.cpy().mul(1, 1, 1, 0.5f * alpha));
+		TextureManager.getInstance().filledRect.draw(sP, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	private void drawFigureInfo() {
-		if(alpha != 1) {
-			Gdx.gl.glEnable(GL20.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
-
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(Colors.barColor.cpy().mul(1, 1, 1, alpha));
-		sR.rect(dialog.getX(), dialog.getY(), dialog.getWidth(), dialog.getHeight(), 6 * ratio);
-		sR.end();
+		sP.setColor(Colors.barColor.cpy().mul(1, 1, 1, alpha));
+		TextureManager.getInstance().rect.draw(sP, dialog.getX(), dialog.getY(), dialog.getWidth(), dialog.getHeight());
 
 		float textureSize = dialog.getWidth() / 2;
 		float offset = 50 * ratio;
 		float y;
-		sP.begin();
 
 		font.getData().setScale(0.65f);
 		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
@@ -112,37 +91,27 @@ public class UpgradeFigureStage extends BaseStage {
 				font.draw(sP, String.valueOf(capacity), dialog.getX() + 50 * ratio + 100 * ratio, y + font.getCapHeight() / 2 + 50 * ratio, 100 * ratio, Align.left, true);
 			}
 		}
-
-		sP.end();
-
-		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	private void drawUpgradeButton() {
-		if(alpha != 1) {
-			Gdx.gl.glEnable(GL20.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
-
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(buttonUpgrade.getColor().cpy().mul(1, 1, 1, alpha));
-		sR.cutRect(buttonUpgrade.getX(), buttonUpgrade.getY(), buttonUpgrade.getWidth(), buttonUpgrade.getHeight(), MathUtils.PI / 18, 4 * ratio);
-		sR.end();
+		sP.setColor(buttonUpgrade.getColor().cpy().mul(1, 1, 1, alpha));
+		TextureManager.getInstance().cutRect.draw(sP, buttonUpgrade.getX(), buttonUpgrade.getY(), buttonUpgrade.getWidth(), buttonUpgrade.getHeight());
 
 		font.getData().setScale(0.45f);
 		font.setColor(Colors.tile2Color.cpy().mul(1, 1, 1, alpha * alpha));
-		sP.begin();
 		font.draw(sP, String.format(Locale.getDefault(), "Upgrade (%d$)", figure.getCost()),
 				buttonUpgrade.getX(), buttonUpgrade.getY() + font.getCapHeight() / 2 + buttonUpgrade.getHeight() / 2, buttonUpgrade.getWidth(), Align.center, false);
-		sP.end();
-
-		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	@Override public void draw() {
+		sP.begin();
+
 		drawBackground();
 		drawFigureInfo();
 		drawUpgradeButton();
+
+		sP.setColor(Color.WHITE);
+		sP.end();
 	}
 
 	@Override public void act(float delta) {

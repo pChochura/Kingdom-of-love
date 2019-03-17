@@ -3,11 +3,10 @@ package com.pointlessgames.kingdomoflove.stages;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
-import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Utils;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WIDTH;
@@ -16,18 +15,12 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 public class FiguresStage extends BaseStage {
 
 	private OnFigureClickListener figureClickListener;
-	private CustomShapeRenderer sR;
 	private SpriteBatch sP;
 	private Stats stats;
 
-	private Rectangle screenRect;
-
-	public FiguresStage(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
+	public FiguresStage(SpriteBatch sP, Stats stats) {
 		this.sP = sP;
-		this.sR = sR;
 		this.stats = stats;
-
-		screenRect = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	private void drawFigures() {
@@ -37,18 +30,21 @@ public class FiguresStage extends BaseStage {
 			Figure f = stats.figures.get(i);
 			float x = cx + f.getMapX() * tileSize;
 			float y = cy + f.getMapY() * tileSize;
-			Rectangle rect = new Rectangle(x, y, f.getWidth(), f.getHeight());
-			if(!rect.overlaps(screenRect)) continue;
+			if(!Utils.overlaps(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), x, y, f.getWidth(), f.getHeight())) continue;
 
-			sP.setColor(Color.WHITE);
 			if(stats.selectedFigures == null || stats.selectedFigures.contains(f))
-				f.draw(sP, sR, x, y);
-			else f.draw(sP, sR, x, y, 0.3f);
+				f.draw(sP, x, y);
+			else f.draw(sP, x, y, 0.3f);
 		}
 	}
 
 	@Override public void draw() {
+		sP.begin();
+
 		drawFigures();
+
+		sP.setColor(Color.WHITE);
+		sP.end();
 	}
 
 	private void updateFigures(float delta) {

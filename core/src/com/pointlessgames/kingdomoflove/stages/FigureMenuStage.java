@@ -3,17 +3,14 @@ package com.pointlessgames.kingdomoflove.stages;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.actors.Button;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
-import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
@@ -27,7 +24,6 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 public class FigureMenuStage extends BaseStage {
 
 	private Runnable onHideListener;
-	private CustomShapeRenderer sR;
 	private SpriteBatch sP;
 	private Stats stats;
 
@@ -43,8 +39,7 @@ public class FigureMenuStage extends BaseStage {
 	private float time;
 	private float alpha;
 
-	public FigureMenuStage(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
-		this.sR = sR;
+	public FigureMenuStage(SpriteBatch sP, Stats stats) {
 		this.sP = sP;
 		this.stats = stats;
 
@@ -70,27 +65,14 @@ public class FigureMenuStage extends BaseStage {
 	}
 
 	private void drawButtons() {
-		if(alpha != 1) {
-			Gdx.gl.glEnable(GL20.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
+		sP.setColor(buttonUpgrade.getColor().cpy().mul(1, 1, 1, alpha));
+		TextureManager.getInstance().rect.draw(sP, buttonUpgrade.getX(), buttonUpgrade.getY(), buttonUpgrade.getWidth(), buttonUpgrade.getHeight());
 
-		sR.begin(ShapeRenderer.ShapeType.Filled);
+		sP.setColor(buttonInfo.getColor().cpy().mul(1, 1, 1, alpha));
+		TextureManager.getInstance().rect.draw(sP, buttonInfo.getX(), buttonInfo.getY(), buttonInfo.getWidth(), buttonInfo.getHeight());
 
-		sR.setColor(buttonUpgrade.getColor().cpy().mul(1, 1, 1, alpha));
-		sR.rect(buttonUpgrade.getX(), buttonUpgrade.getY(), buttonUpgrade.getWidth(), buttonUpgrade.getHeight(), 4 * ratio);
-
-		sR.setColor(buttonInfo.getColor().cpy().mul(1, 1, 1, alpha));
-		sR.rect(buttonInfo.getX(), buttonInfo.getY(), buttonInfo.getWidth(), buttonInfo.getHeight(), 4 * ratio);
-
-		sR.setColor(buttonDestroy.getColor().cpy().mul(1, 1, 1, alpha));
-		sR.rect(buttonDestroy.getX(), buttonDestroy.getY(), buttonDestroy.getWidth(), buttonDestroy.getHeight(), 4 * ratio);
-
-		sR.end();
-
-		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
-
-		sP.begin();
+		sP.setColor(buttonDestroy.getColor().cpy().mul(1, 1, 1, alpha));
+		TextureManager.getInstance().rect.draw(sP, buttonDestroy.getX(), buttonDestroy.getY(), buttonDestroy.getWidth(), buttonDestroy.getHeight());
 
 		Texture texture;
 
@@ -108,13 +90,15 @@ public class FigureMenuStage extends BaseStage {
 		texture = TextureManager.getInstance().getTexture(TextureManager.DESTROY);
 		sP.draw(texture, buttonDestroy.getX(), buttonDestroy.getY(), buttonDestroy.getWidth() * 0.5f, buttonDestroy.getHeight() * 0.5f,
 				buttonDestroy.getWidth(), buttonDestroy.getHeight(), 0.65f, 0.65f, 0, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
-
-		sP.setColor(Color.WHITE);
-		sP.end();
 	}
 
 	@Override public void draw() {
+		sP.begin();
+
 		drawButtons();
+
+		sP.setColor(Color.WHITE);
+		sP.end();
 	}
 
 	@Override public void act(float delta) {

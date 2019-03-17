@@ -11,20 +11,19 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Monument;
 import com.pointlessgames.kingdomoflove.models.figures.Road;
-import com.pointlessgames.kingdomoflove.stages.PickFigureMenuStage;
-import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.stages.BackgroundStage;
 import com.pointlessgames.kingdomoflove.stages.FigureMenuStage;
-import com.pointlessgames.kingdomoflove.stages.dialogs.FigureInfoStage;
 import com.pointlessgames.kingdomoflove.stages.FiguresStage;
+import com.pointlessgames.kingdomoflove.stages.PickFigureMenuStage;
+import com.pointlessgames.kingdomoflove.stages.dialogs.FigureInfoStage;
 import com.pointlessgames.kingdomoflove.stages.dialogs.PickFigureStage;
 import com.pointlessgames.kingdomoflove.stages.dialogs.UpgradeFigureStage;
 import com.pointlessgames.kingdomoflove.stages.ui.StartUIStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
-import com.pointlessgames.kingdomoflove.utils.overridden.ScrollableGestureDetector;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
+import com.pointlessgames.kingdomoflove.utils.overridden.ScrollableGestureDetector;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WIDTH;
@@ -34,7 +33,6 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 		FiguresStage.OnFigureClickListener, StartUIStage.ButtonClickListener {
 
 	public static BitmapFont font;
-	private CustomShapeRenderer sR;
 	private SpriteBatch sP;
 
 	private Runnable endListener;
@@ -55,15 +53,13 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 		font = generator.generateFont(parameter);
 		generator.dispose();
 
-		sR = new CustomShapeRenderer();
 		sP = new SpriteBatch();
 		stats = new Stats();
 		stats.load();
-		sR.setAutoShapeType(true);
 
-		addStage(new BackgroundStage(sP, sR, stats).setOnTileClickedListener(this));
-		addStage(new FiguresStage(sP, sR, stats).setOnFigureClickedListener(this));
-		addStage(new StartUIStage(sP, sR, stats).setOnButtonClickListener(this));
+		addStage(new BackgroundStage(sP, stats).setOnTileClickedListener(this));
+		addStage(new FiguresStage(sP, stats).setOnFigureClickedListener(this));
+		addStage(new StartUIStage(sP, stats).setOnButtonClickListener(this));
 
 		if(stats.figures.isEmpty()) {
 			Monument m = new Monument();
@@ -104,17 +100,17 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 	}
 
 	private void showPickFigureStage(int mapX, int mapY) {
-		PickFigureStage pickFigureStage = new PickFigureStage(sP, sR, stats);
+		PickFigureStage pickFigureStage = new PickFigureStage(sP, stats);
 		ScrollableGestureDetector gestureDetector = addStage(pickFigureStage);
 		pickFigureStage.setClickListener(new PickFigureStage.ClickListener() {
 			@Override public void onCancelClick() {
-				removeStage(null, gestureDetector);
-				pickFigureStage.hide(() -> removeStage(pickFigureStage, null));
+				removeStage(gestureDetector, pickFigureStage.touchInterruption);
+				pickFigureStage.hide(() -> removeStage(pickFigureStage));
 			}
 			@Override public void onFigureClick(Figure f) {
 				if(stats.money >= f.getCost()) {
-					removeStage(null, gestureDetector);
-					pickFigureStage.hide(() -> removeStage(pickFigureStage, null));
+					removeStage(gestureDetector, pickFigureStage.touchInterruption);
+					pickFigureStage.hide(() -> removeStage(pickFigureStage));
 
 					f.setMapPos(mapX, mapY);
 					showPickFigureMenuStage(f);
@@ -127,20 +123,22 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 		stats.setCurrentFigure(f);
 		f.setScale(0);
 		f.addAction(Actions.scaleTo(1, 1, Settings.duration, new Interpolation.SwingOut(3f)));
-		PickFigureMenuStage pickFigureMenuStage = new PickFigureMenuStage(sP, sR, stats);
+		PickFigureMenuStage pickFigureMenuStage = new PickFigureMenuStage(sP, stats);
 		pickFigureMenuStage.setFigure(f);
 		ScrollableGestureDetector gestureDetector = addStage(getStagesCount() - 2, pickFigureMenuStage);
 		pickFigureMenuStage.setClickListener(new PickFigureMenuStage.ClickListener() {
 			@Override public void onCancelClick() {
 				stats.setCurrentFigure(null);
-				pickFigureMenuStage.hide(() -> removeStage(pickFigureMenuStage, gestureDetector));
+				removeStage(gestureDetector, pickFigureMenuStage.touchInterruption);
+				pickFigureMenuStage.hide(() -> removeStage(pickFigureMenuStage));
 			}
 
 			@Override public void onConfirmClick() {
 				stats.money -= f.getCost();
 				stats.love += f.getLove();
 				stats.setCurrentFigure(null);
-				pickFigureMenuStage.hide(() -> removeStage(pickFigureMenuStage, gestureDetector));
+				removeStage(gestureDetector, pickFigureMenuStage.touchInterruption);
+				pickFigureMenuStage.hide(() -> removeStage(pickFigureMenuStage));
 
 				f.orientInSpace(stats);
 				stats.figures.add(f);
@@ -154,13 +152,14 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 	}
 
 	private void showFigureMenuStage(Figure f) {
-		FigureMenuStage figureMenuStage = new FigureMenuStage(sP, sR, stats);
+		FigureMenuStage figureMenuStage = new FigureMenuStage(sP, stats);
 		figureMenuStage.setFigure(f);
 		ScrollableGestureDetector gestureDetector = addStage(getStagesCount() - 1, figureMenuStage);
 		figureMenuStage.setClickListener(new FigureMenuStage.ClickListener() {
 			@Override public void onCancelClick() {
 				stats.setCurrentFigure(null);
-				figureMenuStage.hide(() -> removeStage(figureMenuStage, gestureDetector));
+				removeStage(gestureDetector, figureMenuStage.touchInterruption);
+				figureMenuStage.hide(() -> removeStage(figureMenuStage));
 			}
 
 			@Override public void onUpgradeClick() {
@@ -178,18 +177,19 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 	}
 
 	private void showUpgradeFigureStage(Figure f) {
-		UpgradeFigureStage upgradeFigureStage = new UpgradeFigureStage(sP, sR, stats);
+		UpgradeFigureStage upgradeFigureStage = new UpgradeFigureStage(sP, stats);
 		upgradeFigureStage.setFigure(f);
 		ScrollableGestureDetector gestureDetector = addStage(upgradeFigureStage);
 		upgradeFigureStage.setClickListener(new UpgradeFigureStage.ClickListener() {
 			@Override public void onCancelClick() {
-				removeStage(null, gestureDetector);
-				upgradeFigureStage.hide(() -> removeStage(upgradeFigureStage, null));
+				removeStage(gestureDetector, upgradeFigureStage.touchInterruption);
+				upgradeFigureStage.hide(() -> removeStage(upgradeFigureStage));
 			}
 
 			@Override public void onUpgradeClick() {
 				if(f.canUpgrade(stats)) {
-					upgradeFigureStage.hide(() -> removeStage(upgradeFigureStage, gestureDetector));
+					removeStage(gestureDetector, upgradeFigureStage.touchInterruption);
+					upgradeFigureStage.hide(() -> removeStage(upgradeFigureStage));
 					stats.money -= f.getUpgradeCost();
 					f.levelUp();
 				}
@@ -198,12 +198,12 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 	}
 
 	private void showFigureInfoStage(Figure f) {
-		FigureInfoStage figureInfoStage = new FigureInfoStage(sP, sR, stats);
+		FigureInfoStage figureInfoStage = new FigureInfoStage(sP, stats);
 		figureInfoStage.setFigure(f);
 		ScrollableGestureDetector gestureDetector = addStage(figureInfoStage);
 		figureInfoStage.setClickListener(() -> {
-			removeStage(null, gestureDetector);
-			figureInfoStage.hide(() -> removeStage(figureInfoStage, null));
+			removeStage(gestureDetector, figureInfoStage.touchInterruption);
+			figureInfoStage.hide(() -> removeStage(figureInfoStage));
 		});
 	}
 

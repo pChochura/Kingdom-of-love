@@ -3,20 +3,15 @@ package com.pointlessgames.kingdomoflove.stages;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Noise;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
-import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 import com.pointlessgames.kingdomoflove.utils.Utils;
+import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WIDTH;
@@ -27,77 +22,61 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 public class BackgroundStage extends BaseStage {
 
 	private OnTileClickedListener tileClickedListener;
-	private CustomShapeRenderer sR;
 	private SpriteBatch sP;
 	private Stats stats;
 
 	private float initialScale;
-	private Rectangle screenRect;
 
-	public BackgroundStage(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
+	public BackgroundStage(SpriteBatch sP, Stats stats) {
 		this.sP = sP;
-		this.sR = sR;
 		this.stats = stats;
-		screenRect = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
 		stats.mapOffset.set(0, 0);
 	}
 
 	private void drawBackground() {
-		sP.begin();
 		sP.setColor(Color.WHITE);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.BACKGROUND), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		sP.end();
 	}
 
 	private void drawMap() {
 		float offsetX = (Gdx.graphics.getWidth() - WIDTH * tileSize) / 2;
 		float offsetY = (Gdx.graphics.getHeight() - HEIGHT * tileSize) / 2;
 
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-
-		Polygon polygon = new Polygon();
 		for(int i = 0; i < WIDTH; i++) for(int j = 0; j < HEIGHT; j++) {
-			float[] vertices = {
-			/* x */ offsetX + stats.mapOffset.x + i * tileSize + getOffset(i + WINDOW_WIDTH, j + WINDOW_HEIGHT + 4),
-			/* y */ offsetY + stats.mapOffset.y + j * tileSize + getOffset(i + WINDOW_WIDTH + 4, j + WINDOW_HEIGHT),
-			/* x */ offsetX + stats.mapOffset.x + i * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 1, j + WINDOW_HEIGHT + 5),
-			/* y */ offsetY + stats.mapOffset.y + j * tileSize + getOffset(i + WINDOW_WIDTH + 5, j + WINDOW_HEIGHT + 1),
-			/* x */ offsetX + stats.mapOffset.x + i * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 2, j + WINDOW_HEIGHT + 6),
-			/* y */ offsetY + stats.mapOffset.y + j * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 6, j + WINDOW_HEIGHT + 2),
-			/* x */ offsetX + stats.mapOffset.x + i * tileSize + getOffset(i + WINDOW_WIDTH + 3, j + WINDOW_HEIGHT + 7),
-			/* y */ offsetY + stats.mapOffset.y + j * tileSize + tileSize - getOffset(i + WINDOW_WIDTH + 7, j + WINDOW_HEIGHT + 3)
-			};
+			float y = offsetY + stats.mapOffset.y + j * tileSize;
+			float x = offsetX + stats.mapOffset.x + i * tileSize;
 
-			polygon.setVertices(vertices);
-			if(!polygon.getBoundingRectangle().overlaps(screenRect)) continue;
+			if(!Utils.overlaps(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), x, y, tileSize, tileSize)) continue;
 
 			Color color = Colors.tileColor.cpy().lerp(Colors.tile2Color, Math.abs(Noise.noise((float)i / WINDOW_WIDTH, (float)j / WINDOW_HEIGHT, 0)));
 			if(!stats.isTileAvailable(i, j)) color.a = 0.5f;
-			sR.setColor(color);
-			sR.polygon(vertices);
+			sP.setColor(color);
+			TextureManager.getInstance().filledRect.draw(sP, x, y, 0.5f * tileSize, 0.5f * tileSize, tileSize, tileSize, 0.99f, 0.99f, getOffset(i + WINDOW_WIDTH, j + WINDOW_HEIGHT));
 		}
-
-		sR.end();
-		Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	private float getOffset(int x, int y) {
-		return Math.abs(Noise.noise(Utils.map(x, 0, 2 * WINDOW_WIDTH, 0, 1), Utils.map(y, 0, 2 * WINDOW_HEIGHT, 0, 1), 0)) * tileSize * 0.02f;
+		return Noise.noise(Utils.map(x, 0, 2 * WINDOW_WIDTH, 0, 1), Utils.map(y, 0, 2 * WINDOW_HEIGHT, 0, 1), 0) * tileSize * 0.01f;
 	}
 
 	@Override public void draw() {
+		sP.begin();
+
 		drawBackground();
 		drawMap();
+
+		sP.setColor(Color.WHITE);
+		sP.end();
 	}
 
 	@Override public boolean keyDown(int keyCode) {
 		if(keyCode == Input.Keys.BACK || keyCode == Input.Keys.ESCAPE) {
 			stats.save();
 			Gdx.app.exit();
+			return true;
 		}
-		return super.keyDown(keyCode);
+		return false;
 	}
 
 	public BackgroundStage setOnTileClickedListener(OnTileClickedListener tileClickedListener) {

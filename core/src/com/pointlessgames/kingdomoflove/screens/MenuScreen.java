@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.stages.ui.MenuUIStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
@@ -14,8 +13,6 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 public class MenuScreen extends BaseScreen {
 
 	public static BitmapFont font;
-	private CustomShapeRenderer sR;
-	private SpriteBatch sP;
 
 	private Runnable startListener;
 
@@ -32,10 +29,7 @@ public class MenuScreen extends BaseScreen {
 		font = generator.generateFont(parameter);
 		generator.dispose();
 
-		sR = new CustomShapeRenderer();
-		sP = new SpriteBatch();
-
-		addStage(new MenuUIStage(sP, sR).setOnStartListener(startListener));
+		addStage(new MenuUIStage(new SpriteBatch()).setOnStartListener(startListener));
 	}
 
 	public MenuScreen setOnStartListener(Runnable startListener) {

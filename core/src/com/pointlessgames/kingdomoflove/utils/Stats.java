@@ -25,6 +25,7 @@ public class Stats {
 	public float love = 50;
 	public ArrayList<Figure> figures;
 	public Set<Figure> selectedFigures;
+	public Figure selectedFigure;
 
 	public Vector2 mapOffset;
 
@@ -45,6 +46,7 @@ public class Stats {
 	public void setCurrentFigure(Figure figure) {
 		if(figure == null) {
 			selectedFigures = null;
+			selectedFigure = null;
 			return;
 		}
 		Structure[][] map = new Structure[WIDTH][HEIGHT];
@@ -54,7 +56,7 @@ public class Stats {
 				((Structure) f).checked = false;
 			}
 		selectedFigures = new HashSet<>();
-		selectedFigures.add(figure);
+		selectedFigures.add(selectedFigure = figure);
 		if(figures.contains(figure) && figure instanceof Structure && ((Structure) figure).hasRoad()) {
 			((Structure) figure).checked = true;
 			selectedFigures.addAll(getConnectedFigures(map, figure.getMapX(), figure.getMapY(), !(figure instanceof Road)));

@@ -4,7 +4,6 @@ import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
@@ -42,16 +41,14 @@ public class Granary extends Structure {
 	}
 
 	private float getLoveProduction(Stats stats) {
-		Set<Structure> structures = new HashSet<>();
-
 		Structure[][] map = new Structure[WIDTH][HEIGHT];
 		for(Figure f : stats.figures)
 			if(f instanceof Structure)
 				map[f.getMapX()][f.getMapY()] = (Structure) f;
 
-		stats.getConnectedFigures(map, getMapX(), getMapY(), true);
+		Set<Structure> connectedStructures = stats.getConnectedFigures(map, getMapX(), getMapY(), true);
 		int amount = 0;
-		for(Structure s : structures)
+		for(Structure s : connectedStructures)
 			if(s instanceof Sawmill || s instanceof Mill) amount++;
 
 		return amount * loveProduction[getLevel() - 1];

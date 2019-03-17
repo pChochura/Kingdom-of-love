@@ -1,22 +1,19 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.models.Ability;
-import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import static com.pointlessgames.kingdomoflove.screens.StartScreen.font;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
@@ -55,60 +52,43 @@ public abstract class Figure extends Actor {
 		setPos();
 	}
 
-	public void draw(SpriteBatch sP, CustomShapeRenderer sR, float tileX, float tileY, float alpha) {
+	public void draw(SpriteBatch sP, float tileX, float tileY) {
+		draw(sP, tileX, tileY, 1);
+	}
+
+	public void draw(SpriteBatch sP, float tileX, float tileY, float alpha) {
 		drawTexture(sP, tileX, tileY, alpha);
 
-		if(hasLevels()) drawLevel(sP, sR, tileX, tileY, alpha);
+		if(hasLevels()) drawLevel(sP, tileX, tileY, alpha);
 
 		drawAbilityTip(sP, tileX, tileY, alpha);
 	}
 
-	public void draw(SpriteBatch sP, CustomShapeRenderer sR, float tileX, float tileY) {
-		draw(sP, sR, tileX, tileY, 1);
-	}
-
 	protected void drawAbilityTip(SpriteBatch sP, float tileX, float tileY, float alpha) {
 		if(abilityTip != null) {
-			sP.begin();
 			font.getData().setScale(0.35f);
 			font.setColor(abilityTip.getColor().cpy().mul(1, 1, 1, alpha));
 			font.draw(sP, abilityTip.getName(), tileX + tileSize - 27 * ratio + abilityTip.getX(), tileY + tileSize - 60 * ratio + abilityTip.getY(), 35 * ratio, Align.center, false);
-			sP.setColor(new Color(1, 1, 1, abilityTip.getColor().a * alpha));
+			sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, abilityTip.getColor().a * alpha));
 			sP.draw(((Texture) abilityTip.getUserObject()), tileX + tileSize - 27 * ratio + abilityTip.getX(), tileY + tileSize - 60 * ratio + abilityTip.getY(), 35 * ratio, 35 * ratio);
-			sP.setColor(Color.WHITE);
-			sP.end();
 		}
 	}
 
-	protected void drawLevel(SpriteBatch sP, CustomShapeRenderer sR, float tileX, float tileY, float alpha) {
-		if(alpha != 1) {
-			Gdx.gl.glEnable(GL20.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
-
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(Colors.loveColor.cpy().mul(1, 1, 1, alpha));
+	protected void drawLevel(SpriteBatch sP, float tileX, float tileY, float alpha) {
 		float size = tileSize * 0.2f;
 		float halfSize = size * 0.5f;
-		sR.rect(tileX + halfSize, tileY + halfSize, halfSize, halfSize, size, size, getScaleX(), getScaleY(), 45);
-		sR.end();
 
-		sP.begin();
+		sP.setColor(Colors.loveColor.cpy().mul(1, 1, 1, alpha));
+		TextureManager.getInstance().filledRect.draw(sP, tileX + halfSize, tileY + halfSize, halfSize, halfSize, size, size, getScaleX(), getScaleY(), 45);
+
 		font.getData().setScale(size / (150f * ratio));
 		font.setColor(Colors.text3Color.cpy().mul(1, 1, 1, alpha));
 		font.draw(sP, String.valueOf(level), tileX + halfSize, tileY + halfSize + (size + font.getCapHeight()) / 2, size, Align.center, false);
-		font.setColor(Color.WHITE);
-		sP.end();
-
-		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	protected void drawTexture(SpriteBatch sP, float tileX, float tileY, float alpha) {
-		sP.begin();
-		sP.setColor(new Color(1, 1, 1, alpha));
+		sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha));
 		sP.draw(texture, tileX + getX(), tileY + getY(), getScaleX() * width, getScaleY() * height);
-		sP.setColor(Color.WHITE);
-		sP.end();
 	}
 
 	public void setMapPos(int x, int y) {

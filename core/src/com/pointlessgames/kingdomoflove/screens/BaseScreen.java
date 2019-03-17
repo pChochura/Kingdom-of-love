@@ -55,11 +55,19 @@ public class BaseScreen implements Screen {
 		return addStage(Math.max(stages.size(), 0), stage);
 	}
 
-	public void removeStage(BaseStage stage, ScrollableGestureDetector gestureDetector) {
+	public void removeStage(BaseStage stage) {
+		removeStage(stage, null, false);
+	}
+
+	public void removeStage(ScrollableGestureDetector gestureDetector, boolean touchInterruption) {
+		removeStage(null, gestureDetector, touchInterruption);
+	}
+
+	public void removeStage(BaseStage stage, ScrollableGestureDetector gestureDetector, boolean touchInterruption) {
 		if(stage != null) stages.remove(stage);
 		if(gestureDetector != null) {
 			inputMultiplexer.removeProcessor(gestureDetector);
-			if(stage == null || !stage.touchInterruption) {
+			if(!touchInterruption) {
 				inputMultiplexer.setProcessors(processors.get(processors.size() - 1));
 				processors.remove(processors.size() - 1);
 			}

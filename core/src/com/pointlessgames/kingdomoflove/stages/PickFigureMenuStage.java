@@ -3,10 +3,8 @@ package com.pointlessgames.kingdomoflove.stages;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -14,12 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.actors.Button;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
-import com.pointlessgames.kingdomoflove.models.figures.Structure;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
-import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WIDTH;
@@ -29,7 +25,6 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 public class PickFigureMenuStage extends BaseStage {
 
 	private Runnable onHideListener;
-	private CustomShapeRenderer sR;
 	private SpriteBatch sP;
 	private Stats stats;
 
@@ -45,9 +40,8 @@ public class PickFigureMenuStage extends BaseStage {
 	private float time;
 	private float alpha;
 
-	public PickFigureMenuStage(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
+	public PickFigureMenuStage(SpriteBatch sP, Stats stats) {
 		this.sP = sP;
-		this.sR = sR;
 		this.stats = stats;
 
 		buttonConfirm = new Button(Colors.buttonColor, Colors.tile2Color, Colors.inactiveColor);
@@ -71,24 +65,11 @@ public class PickFigureMenuStage extends BaseStage {
 	}
 
 	private void drawButtons() {
-		if(alpha != 1) {
-			Gdx.gl.glEnable(GL20.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
+		sP.setColor(buttonConfirm.getColor().cpy().mul(1, 1, 1, alpha));
+		TextureManager.getInstance().rect.draw(sP, buttonConfirm.getX(), buttonConfirm.getY(), buttonConfirm.getWidth(), buttonConfirm.getHeight());
 
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-
-		sR.setColor(buttonConfirm.getColor().cpy().mul(1, 1, 1, alpha));
-		sR.rect(buttonConfirm.getX(), buttonConfirm.getY(), buttonConfirm.getWidth(), buttonConfirm.getHeight(), 4 * ratio);
-
-		sR.setColor(buttonCancel.getColor().cpy().mul(1, 1, 1, alpha));
-		sR.rect(buttonCancel.getX(), buttonCancel.getY(), buttonCancel.getWidth(), buttonCancel.getHeight(), 4 * ratio);
-
-		sR.end();
-
-		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
-
-		sP.begin();
+		sP.setColor(buttonCancel.getColor().cpy().mul(1, 1, 1, alpha));
+		TextureManager.getInstance().rect.draw(sP, buttonCancel.getX(), buttonCancel.getY(), buttonCancel.getWidth(), buttonCancel.getHeight());
 
 		Texture texture;
 
@@ -101,25 +82,24 @@ public class PickFigureMenuStage extends BaseStage {
 		texture = TextureManager.getInstance().getTexture(TextureManager.CANCEL);
 		sP.draw(texture, buttonCancel.getX(), buttonCancel.getY(), buttonCancel.getWidth() * 0.5f, buttonCancel.getHeight() * 0.5f,
 				buttonCancel.getWidth(), buttonCancel.getHeight(), 0.65f, 0.65f, 0, 0, 0, texture.getWidth(), texture.getHeight(), false, false);
-
-		sP.setColor(Color.WHITE);
-		sP.end();
 	}
-
 
 	private void drawFigure() {
 		float cx = (Gdx.graphics.getWidth() - WIDTH * tileSize) / 2 + stats.mapOffset.x;
 		float cy = (Gdx.graphics.getHeight() - HEIGHT * tileSize) / 2 + stats.mapOffset.y;
 		float x = cx + figure.getMapX() * tileSize;
 		float y = cy + figure.getMapY() * tileSize;
-		sP.setColor(Color.WHITE);
-		sR.setColor(Color.WHITE);
-		figure.draw(sP, sR, x, y, hiding ? alpha : 1);
+		figure.draw(sP, x, y, hiding ? alpha : 1);
 	}
 
 	@Override public void draw() {
+		sP.begin();
+
 		drawFigure();
 		drawButtons();
+
+		sP.setColor(Color.WHITE);
+		sP.end();
 	}
 
 	@Override public void act(float delta) {

@@ -75,9 +75,7 @@ public class Tree extends Plant {
 	}
 
 	@Override protected void drawTexture(SpriteBatch sP, float tileX, float tileY, float alpha) {
-		sP.begin();
-		Color color = sP.getColor();
-		sP.setColor(color.cpy().mul(1, 1, 1, alpha));
+		sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha));
 		switch(getLevel()) {
 			case 1:
 				sP.draw(texture, tileX + getX(), tileY + getY(), getScaleX() * width, getScaleY() * height);
@@ -122,7 +120,5 @@ public class Tree extends Plant {
 				sP.draw(texture, tileX + getX() + width / 6f, tileY + getY() - height / 6f, getScaleX() * width, getScaleY() * height);
 				break;
 		}
-		sP.setColor(color);
-		sP.end();
 	}
 }

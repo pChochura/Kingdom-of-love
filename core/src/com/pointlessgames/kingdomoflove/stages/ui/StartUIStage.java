@@ -3,17 +3,15 @@ package com.pointlessgames.kingdomoflove.stages.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.actors.Button;
-import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
-import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.stages.BaseStage;
+import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Stats;
-import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 import com.pointlessgames.kingdomoflove.utils.Utils;
+import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.Locale;
 
@@ -25,15 +23,13 @@ public class StartUIStage extends BaseStage {
 	private final float topBarHeight = 150 * ratio;
 
 	private ButtonClickListener buttonClickListener;
-	private CustomShapeRenderer sR;
 	private SpriteBatch sP;
 	private Stats stats;
 
 	private Button buttonNextDay;
 
-	public StartUIStage(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
+	public StartUIStage(SpriteBatch sP, Stats stats) {
 		this.sP = sP;
-		this.sR = sR;
 		this.stats = stats;
 
 		buttonNextDay = new Button(Colors.buttonColor, Colors.tile2Color);
@@ -41,83 +37,73 @@ public class StartUIStage extends BaseStage {
 	}
 
 	private void drawStats() {
+		sP.begin();
+
 		drawTopBar();
 		drawMoney();
 		drawPopulation();
 		drawLove();
 		drawDay();
 		drawNextDayButton();
+
+		sP.setColor(Color.WHITE);
+		sP.end();
 	}
 
 	private void drawTopBar() {
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(Colors.barColor);
-		sR.rect(0, Gdx.graphics.getHeight() - topBarHeight, Gdx.graphics.getWidth(), topBarHeight);
-		sR.end();
+		sP.setColor(Colors.barColor);
+		TextureManager.getInstance().filledRect.draw(sP, 0, Gdx.graphics.getHeight() - topBarHeight, Gdx.graphics.getWidth(), topBarHeight);
 	}
 
 	private void drawMoney() {
-		sP.begin();
 		font.getData().setScale(0.4f);
 		font.setColor(Colors.textColor);
 		font.draw(sP, String.format(Locale.getDefault(), "%d (%+d)", stats.money, stats.getMoneyProduction()), 135 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
 		sP.setColor(Color.WHITE);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), 50 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
-		sP.end();
 	}
 
 	private void drawPopulation() {
-		sP.begin();
 		font.getData().setScale(0.4f);
 		font.setColor(Colors.textColor);
 		font.draw(sP, String.valueOf(Gdx.graphics.getFramesPerSecond()), Gdx.graphics.getWidth() / 2 - 25 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
 		sP.setColor(Color.WHITE);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), Gdx.graphics.getWidth() / 2 - 100 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
-		sP.end();
 	}
 
 	private void drawLove() {
+		//TODO fix displaying low love level
 		float loveBarWidth = Math.max(Gdx.graphics.getWidth() / 4 - 200, 200) * ratio;
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(Colors.inactiveColor);
-		sR.roundedRect(Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio, Gdx.graphics.getHeight() - 100 * ratio, loveBarWidth, 50 * ratio, 25 * ratio);
-
 		float width = Utils.map(stats.love, 0, 100, 0, loveBarWidth);
-		sR.setColor(Colors.loveColor);
-		sR.roundedRect(Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio, Gdx.graphics.getHeight() - 100 * ratio, width, 50 * ratio, stats.love >= 25 * ratio ? 25 * ratio : stats.love);
-		sR.end();
 
-		sP.begin();
+		sP.setColor(Colors.inactiveColor);
+		TextureManager.getInstance().roundRect.draw(sP, Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio, Gdx.graphics.getHeight() - 100 * ratio, loveBarWidth, 50 * ratio);
+
+		sP.setColor(Colors.loveColor);
+		TextureManager.getInstance().roundRect.draw(sP, Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio, Gdx.graphics.getHeight() - 100 * ratio, width, 50 * ratio);
+
 		font.getData().setScale(0.25f);
 		font.setColor(Colors.text3Color);
 		font.draw(sP, String.format(Locale.getDefault(), "%d%% (%+.1f%%)", MathUtils.round(stats.love), stats.getLoveProduction()),
 				Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio, Gdx.graphics.getHeight() - 70 * ratio, loveBarWidth, Align.center, false);
+
 		sP.setColor(Color.WHITE);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOVE), Gdx.graphics.getWidth() - 125 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
-		sP.end();
 	}
 
 	private void drawDay() {
-		sP.begin();
 		font.getData().setScale(0.65f);
 		font.setColor(Colors.textColor);
 		font.draw(sP, String.format(Locale.getDefault(), "Day %d", stats.day), 0, Gdx.graphics.getHeight() - 1.5f * topBarHeight, Gdx.graphics.getWidth(), Align.center, false);
-		sP.setColor(Color.WHITE);
-		sP.end();
 	}
 
 	private void drawNextDayButton() {
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(buttonNextDay.getColor());
-		sR.cutRect(buttonNextDay.getX(), buttonNextDay.getY(), buttonNextDay.getWidth(), buttonNextDay.getHeight(), MathUtils.PI / 18, 4 * ratio);
-		sR.end();
+		sP.setColor(buttonNextDay.getColor());
+		TextureManager.getInstance().cutRect.draw(sP, buttonNextDay.getX(), buttonNextDay.getY(), buttonNextDay.getWidth(), buttonNextDay.getHeight());
 
-		sP.begin();
 		font.getData().setScale(0.55f);
 		font.setColor(Colors.tileColor);
 		font.draw(sP, "Next day", buttonNextDay.getX(), buttonNextDay.getY() + font.getCapHeight() / 2 + buttonNextDay.getHeight() / 2, buttonNextDay.getWidth(), Align.center, false);
-		sP.setColor(Color.WHITE);
-		sP.end();
 	}
 
 	@Override public void act(float delta) {

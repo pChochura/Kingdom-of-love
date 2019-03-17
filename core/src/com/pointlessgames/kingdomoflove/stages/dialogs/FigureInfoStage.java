@@ -3,18 +3,14 @@ package com.pointlessgames.kingdomoflove.stages.dialogs;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
-import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
@@ -30,7 +26,6 @@ public class FigureInfoStage extends BaseStage {
 
 	private Runnable onHideListener;
 	private ClickListener clickListener;
-	private CustomShapeRenderer sR;
 	private SpriteBatch sP;
 	private Stats stats;
 
@@ -44,9 +39,8 @@ public class FigureInfoStage extends BaseStage {
 	private float textureSize;
 	private float offset;
 
-	public FigureInfoStage(SpriteBatch sP, CustomShapeRenderer sR, Stats stats) {
+	public FigureInfoStage(SpriteBatch sP, Stats stats) {
 		this.sP = sP;
-		this.sR = sR;
 		this.stats = stats;
 
 		touchInterruption = false;
@@ -60,105 +54,54 @@ public class FigureInfoStage extends BaseStage {
 	}
 
 	private void drawBackground() {
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(Color.BLACK.cpy().mul(1, 1, 1, 0.5f * alpha));
-		sR.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		sR.end();
-
-		Gdx.gl.glDisable(GL20.GL_BLEND);
+		sP.setColor(Color.BLACK.cpy().mul(1, 1, 1, 0.5f * alpha));
+		TextureManager.getInstance().filledRect.draw(sP, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	private void drawDialog() {
-		if(alpha != 1) {
-			Gdx.gl.glEnable(GL20.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
-
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(Colors.barColor.cpy().mul(1, 1, 1, alpha));
-		sR.rect(dialog.getX(), dialog.getY(), dialog.getWidth(), dialog.getHeight(), 6 * ratio);
-		sR.end();
-
-		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
+		sP.setColor(Colors.barColor.cpy().mul(1, 1, 1, alpha));
+		TextureManager.getInstance().rect.draw(sP, dialog.getX(), dialog.getY(), dialog.getWidth(), dialog.getHeight());
 	}
 
 	private void drawName() {
-		if(alpha != 1) {
-			Gdx.gl.glEnable(GL20.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
-
 		float width = 650 * ratio;
 		float height = 125 * ratio;
 		float x = (Gdx.graphics.getWidth() - width) / 2;
 		float y = dialog.getY() + dialog.getHeight() - height / 2;
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(Colors.inactiveColor.cpy().mul(1, 1, 1, alpha));
-		sR.cutRect(x, y, width, height, MathUtils.PI / 18, 4 * ratio);
-		sR.end();
 
-		sP.begin();
+		sP.setColor(Colors.inactiveColor.cpy().mul(1, 1, 1, alpha));
+		TextureManager.getInstance().cutRect.draw(sP, x, y, width, height);
 
 		font.getData().setScale(0.65f);
 		font.setColor(Colors.tileColor.cpy().mul(1, 1, 1, alpha * alpha));
 		font.draw(sP, figure.getName(), x, y + (height + font.getCapHeight()) / 2, width, Align.center, true);
-
-		sP.end();
-
-		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	private void drawLevel() {
-		if(alpha != 1) {
-			Gdx.gl.glEnable(GL20.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
-
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-		sR.setColor(Colors.loveColor.cpy().mul(1, 1, 1, alpha * alpha));
 		float size = textureSize * 0.2f;
 		float halfSize = size * 0.5f;
 		float x = dialog.getX() + offset + halfSize;
 		float y = dialog.getY() + dialog.getHeight() - textureSize - 2 * offset + halfSize;
-		sR.rect(x, y, halfSize, halfSize, size, size, 1, 1, 45);
-		sR.end();
 
-		sP.begin();
+		sP.setColor(Colors.loveColor.cpy().mul(1, 1, 1, alpha * alpha));
+		TextureManager.getInstance().filledRect.draw(sP, x, y, halfSize, halfSize, size, size, 1, 1, 45);
+
 		font.getData().setScale(size / (150f * ratio));
 		font.setColor(Colors.text3Color.cpy().mul(1, 1, 1, alpha * alpha));
 		font.draw(sP, String.valueOf(figure.getLevel()), x, y + (size + font.getCapHeight()) / 2, size, Align.center, false);
-		font.setColor(Color.WHITE);
-		sP.end();
-
-		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
 	}
 
 	private void drawDivider() {
-		if(alpha != 1) {
-			Gdx.gl.glEnable(GL20.GL_BLEND);
-			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		}
-
-		sR.begin(ShapeRenderer.ShapeType.Filled);
-
-		float radius = 15 * ratio;
-		float x = Gdx.graphics.getWidth() / 2;
+		float size = 40 * ratio;
+		float halfSize = 0.5f * size;
 		float width = 300 * ratio;
-		float y = dialog.getY() + dialog.getHeight() / 2;
-		sR.setColor(Colors.tile2Color.cpy().mul(1, 1, 1, alpha * alpha));
-		sR.rectLine(x - width, y, x - radius, y, 4 * ratio);
-		sR.rectLine(x + radius, y, x + width, y, 4 * ratio);
+		float x = dialog.getX() + 0.5f * (dialog.getWidth() - size);
+		float y = dialog.getY() + 0.5f * (dialog.getHeight() - size);
 
-		sR.set(ShapeRenderer.ShapeType.Line);
-		Gdx.gl.glLineWidth(4 * ratio);
-		sR.circle(x, y, radius);
-
-		sR.end();
-
-		if(alpha != 1) Gdx.gl.glDisable(GL20.GL_BLEND);
+		sP.setColor(Colors.tile2Color.cpy().mul(1, 1, 1, alpha * alpha));
+		TextureManager.getInstance().filledRect.draw(sP, x - width, y - 3 * ratio + halfSize, width + 3 * ratio, 6 * ratio);
+		TextureManager.getInstance().outlineRect.draw(sP, x, y, halfSize, halfSize, size, size, 1, 1, 45);
+		TextureManager.getInstance().filledRect.draw(sP, x + size, y - 3 * ratio + halfSize, width + 3 * ratio, 6 * ratio);
 	}
 
 	private void drawFigureInfo() {
@@ -166,7 +109,6 @@ public class FigureInfoStage extends BaseStage {
 
 		float y = dialog.getY() + dialog.getHeight() - 2 * offset;
 
-		sP.begin();
 		sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha * alpha));
 		sP.draw(figure.getTexture(), dialog.getX() + offset, y - textureSize, textureSize, textureSize);
 
@@ -191,9 +133,7 @@ public class FigureInfoStage extends BaseStage {
 
 		font.getData().setScale(0.5f);
 		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
-		font.draw(sP, figure.getAbilityDescription(), dialog.getX() + offset, y - textureSize - 2 * offset, dialog.getWidth() - 2 * offset, Align.left, true);
-
-		sP.end();
+		font.draw(sP, figure.getAbilityDescription(), dialog.getX() + offset, y - textureSize - 2 * offset, dialog.getWidth() - 2 * offset, Align.center, true);
 
 		drawDivider();
 
@@ -202,9 +142,14 @@ public class FigureInfoStage extends BaseStage {
 	}
 
 	@Override public void draw() {
+		sP.begin();
+
 		drawBackground();
 		drawDialog();
 		drawFigureInfo();
+
+		sP.setColor(Color.WHITE);
+		sP.end();
 	}
 
 	@Override public void act(float delta) {

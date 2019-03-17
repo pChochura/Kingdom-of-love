@@ -98,12 +98,8 @@ public class Road extends Structure {
 	}
 
 	@Override protected void drawTexture(SpriteBatch sP, float tileX, float tileY, float alpha) {
-		sP.begin();
-		Color color = sP.getColor();
-		sP.setColor(color.cpy().mul(1, 1, 1, alpha));
+		sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha));
 		sP.draw(TextureManager.getInstance().road[roadX][roadY], tileX + getX(), tileY + getY(), width * getScaleX(), height * getScaleY());
-		sP.setColor(color);
-		sP.end();
 	}
 
 	@Override public int getCapacity() {
