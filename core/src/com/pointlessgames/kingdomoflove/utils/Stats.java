@@ -115,8 +115,8 @@ public class Stats {
 		int money = 0;
 		for(Figure f : figures) {
 			Ability ability = f.getAbility(this);
-			if(ability.getProductionType() == Ability.ProductionType.MONEY)
-				money += ability.getAmount();
+			if((ability.getProductionType().number & Ability.ProductionType.MONEY.number) != 0)
+				money += ability.getAmount(Ability.ProductionType.MONEY);
 		}
 		return money;
 	}
@@ -126,8 +126,8 @@ public class Stats {
 		for(Figure f : figures) {
 			if(!(f instanceof Road) || !((Road) f).checked) {
 				Ability ability = f.getAbility(this);
-				if(ability.getProductionType() == Ability.ProductionType.LOVE)
-					love += ability.getAmount();
+				if((ability.getProductionType().number & Ability.ProductionType.LOVE.number) != 0)
+					love += ability.getAmount(Ability.ProductionType.LOVE);
 			}
 		}
 		love -= getPopulation();

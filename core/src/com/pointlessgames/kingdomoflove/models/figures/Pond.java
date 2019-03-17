@@ -37,12 +37,12 @@ public class Pond extends Structure {
 		float love = getLoveProduction(stats);
 		stats.love += love;
 
-		if(love > 0)
-			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", Math.abs(love)), TextureManager.getInstance().getTexture(TextureManager.LOVE));
+		if(love != 0)
+			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().getTexture(TextureManager.LOVE));
 	}
 
 	@Override public String getAbilityDescription() {
-		return String.format(Locale.getDefault(), "Decreases %.1f%% love for every surrounding road.", love);
+		return String.format(Locale.getDefault(), "Decreases %.1f%% love for every surrounding road.", Math.abs(love));
 	}
 
 	@Override public int getCapacity() {

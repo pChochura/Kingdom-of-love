@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.actors.Button;
+import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
 import com.pointlessgames.kingdomoflove.stages.BaseStage;
@@ -39,6 +40,18 @@ public class UpgradeFigureStage extends BaseStage {
 	private float alpha;
 	private boolean hiding;
 
+	private float offset;
+	private float iconSize;
+
+	private int prevCapacity;
+	private int capacity;
+	private int prevMoneyProduction;
+	private String prevAbilityDescription;
+	private int moneyProduction;
+	private float prevLoveProduction;
+	private float loveProduction;
+	private String abilityDescription;
+
 	public UpgradeFigureStage(SpriteBatch sP, Stats stats) {
 		this.sP = sP;
 		this.stats = stats;
@@ -53,7 +66,18 @@ public class UpgradeFigureStage extends BaseStage {
 		buttonUpgrade.setSize(500 * ratio, 100 * ratio);
 		buttonUpgrade.setPosition(Gdx.graphics.getWidth() / 2, dialog.getY(), Align.center);
 
-		//TODO remake whole stage
+		offset = 50 * ratio;
+		iconSize = 75 * ratio;
+	}
+
+	private void setDialogHeight() {
+		float prevAbilityHeight = new GlyphLayout(font, prevAbilityDescription, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true).height;
+		float abilityHeight = new GlyphLayout(font, abilityDescription, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true).height;
+		float dividerHeight = 40 * ratio;
+		float height = 7 * offset + 2 * iconSize + prevAbilityHeight + abilityHeight + dividerHeight;
+		dialog.setHeight(height);
+		dialog.setY(0.5f * Gdx.graphics.getHeight(), Align.center);
+		buttonUpgrade.setY(dialog.getY(), Align.center);
 	}
 
 	private void drawBackground() {
@@ -61,36 +85,63 @@ public class UpgradeFigureStage extends BaseStage {
 		TextureManager.getInstance().filledRect.draw(sP, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
-	private void drawFigureInfo() {
+	private void drawDialog() {
 		sP.setColor(Colors.barColor.cpy().mul(1, 1, 1, alpha));
 		TextureManager.getInstance().rect.draw(sP, dialog.getX(), dialog.getY(), dialog.getWidth(), dialog.getHeight());
+	}
 
-		float textureSize = dialog.getWidth() / 2;
-		float offset = 50 * ratio;
-		float y;
+	private void drawDivider() {
+		float size = 40 * ratio;
+		float halfSize = 0.5f * size;
+		float width = 300 * ratio;
+		float x = dialog.getX() + 0.5f * (dialog.getWidth() - size);
+		float y = dialog.getY() + 0.5f * (dialog.getHeight() - size);
 
-		font.getData().setScale(0.65f);
+		sP.setColor(Colors.tile2Color.cpy().mul(1, 1, 1, alpha * alpha));
+		TextureManager.getInstance().filledRect.draw(sP, x - width, y - 1.5f / ratio + halfSize, width - 1.5f / ratio, 3 / ratio);
+		TextureManager.getInstance().outlineRect.draw(sP, x, y, halfSize, halfSize, size, size, 1, 1, 45);
+		TextureManager.getInstance().filledRect.draw(sP, x + size + 1.5f / ratio, y - 1.5f / ratio + halfSize, width - 1.5f / ratio, 3 / ratio);
+	}
+
+	private void drawFigureInfo() {
+		float y = dialog.getY() + dialog.getHeight() - offset;
+		sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha * alpha));
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), dialog.getX() + offset, y - iconSize, iconSize, iconSize);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + 0.5f * dialog.getWidth() - 4/3f * iconSize, y - iconSize, iconSize, iconSize);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOVE), dialog.getX() + dialog.getWidth() - 5 * offset, y - iconSize, iconSize, iconSize);
+
+		font.getData().setScale(0.4f);
 		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
-		font.draw(sP, String.format(Locale.getDefault(), "%s (lvl. %d)", figure.getName(), figure.getLevel()), dialog.getX(), y = (dialog.getY() + dialog.getHeight() - font.getCapHeight() / 2 - offset), dialog.getWidth(), Align.center, true);
+		font.draw(sP, String.format(Locale.getDefault(), "%+d$", prevMoneyProduction),
+				dialog.getX() + offset + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
+		font.draw(sP, String.format(Locale.getDefault(), "%d", prevCapacity),
+				dialog.getX() + 0.5f * dialog.getWidth() - 4/3f * iconSize + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
+		font.draw(sP, String.format(Locale.getDefault(), "%+.1f%%", prevLoveProduction),
+				dialog.getX() + dialog.getWidth() - 5 * offset + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
+
+		font.getData().setScale(0.5f);
+		font.draw(sP, prevAbilityDescription, dialog.getX() + offset, y - iconSize - offset, dialog.getWidth() - 2 * offset, Align.center, true);
+
+		drawDivider();
+
+		y -= 0.5f * dialog.getHeight();
 
 		sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha * alpha));
-		sP.draw(figure.getTexture(), dialog.getX() + (dialog.getWidth() - textureSize) / 2, y -= (offset + textureSize + font.getCapHeight()), textureSize, textureSize);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), dialog.getX() + offset, y - iconSize, iconSize, iconSize);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + 0.5f * dialog.getWidth() - 4/3f * iconSize, y - iconSize, iconSize, iconSize);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOVE), dialog.getX() + dialog.getWidth() - 5 * offset, y - iconSize, iconSize, iconSize);
 
-		font.getData().setScale(0.45f);
+		font.getData().setScale(0.4f);
 		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
-		font.draw(sP, figure.getAbilityDescription(), dialog.getX() + 50 * ratio, y -= offset, dialog.getWidth() - 100 * ratio, Align.left, true);
+		font.draw(sP, String.format(Locale.getDefault(), "%+d$", moneyProduction),
+				dialog.getX() + offset + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
+		font.draw(sP, String.format(Locale.getDefault(), "%d", capacity),
+				dialog.getX() + 0.5f * dialog.getWidth() - 4/3f * iconSize + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
+		font.draw(sP, String.format(Locale.getDefault(), "%+.1f%%", loveProduction),
+				dialog.getX() + dialog.getWidth() - 5 * offset + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
 
-		float height = new GlyphLayout(font, figure.getAbilityDescription(), Colors.text2Color, dialog.getWidth() - 100 * ratio, Align.left, true).height;
-
-		if(figure instanceof Structure) {
-			int capacity = ((Structure) figure).getCapacity();
-			if(capacity != 0) {
-				sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + 50 * ratio, y -= (font.getCapHeight() + offset + height + 100 * ratio), 100 * ratio, 100 * ratio);
-
-				font.getData().setScale(0.6f);
-				font.draw(sP, String.valueOf(capacity), dialog.getX() + 50 * ratio + 100 * ratio, y + font.getCapHeight() / 2 + 50 * ratio, 100 * ratio, Align.left, true);
-			}
-		}
+		font.getData().setScale(0.5f);
+		font.draw(sP, abilityDescription, dialog.getX() + offset, y - iconSize - offset, dialog.getWidth() - 2 * offset, Align.center, true);
 	}
 
 	private void drawUpgradeButton() {
@@ -99,7 +150,7 @@ public class UpgradeFigureStage extends BaseStage {
 
 		font.getData().setScale(0.45f);
 		font.setColor(Colors.tile2Color.cpy().mul(1, 1, 1, alpha * alpha));
-		font.draw(sP, String.format(Locale.getDefault(), "Upgrade (%d$)", figure.getCost()),
+		font.draw(sP, String.format(Locale.getDefault(), "Upgrade (%d$)", figure.getUpgradeCost()),
 				buttonUpgrade.getX(), buttonUpgrade.getY() + font.getCapHeight() / 2 + buttonUpgrade.getHeight() / 2, buttonUpgrade.getWidth(), Align.center, false);
 	}
 
@@ -107,6 +158,7 @@ public class UpgradeFigureStage extends BaseStage {
 		sP.begin();
 
 		drawBackground();
+		drawDialog();
 		drawFigureInfo();
 		drawUpgradeButton();
 
@@ -171,6 +223,23 @@ public class UpgradeFigureStage extends BaseStage {
 	public void setFigure(Figure figure) {
 		this.figure = figure;
 		buttonUpgrade.setTouchable(figure.canUpgrade(stats) ? Touchable.enabled : Touchable.disabled);
+
+		Ability ability = figure.getAbility(stats);
+		prevCapacity = figure instanceof Structure ? ((Structure) figure).getCapacity() : 0;
+		prevMoneyProduction = (int)ability.getAmount(Ability.ProductionType.MONEY);
+		prevLoveProduction = ability.getAmount(Ability.ProductionType.LOVE);
+		prevAbilityDescription = figure.getAbilityDescription();
+
+		figure.setLevel(figure.getLevel() + 1);
+		ability = figure.getAbility(stats);
+		capacity = figure instanceof Structure ? ((Structure) figure).getCapacity() : 0;
+		moneyProduction = (int)ability.getAmount(Ability.ProductionType.MONEY);
+		loveProduction = ability.getAmount(Ability.ProductionType.LOVE);
+		abilityDescription = figure.getAbilityDescription();
+
+		figure.setLevel(figure.getLevel() - 1);
+
+		setDialogHeight();
 	}
 
 	public UpgradeFigureStage setClickListener(ClickListener clickListener) {

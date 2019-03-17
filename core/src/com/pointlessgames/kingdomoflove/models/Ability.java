@@ -3,19 +3,42 @@ package com.pointlessgames.kingdomoflove.models;
 public class Ability {
 
 	public enum ProductionType {
-		MONEY, LOVE, NOTHING
+		NOTHING(0),
+		MONEY(1),
+		LOVE(2),
+		BOTH(MONEY.number | LOVE.number);
+
+		public int number;
+
+		ProductionType(int number) {
+			this.number = number;
+		}
 	}
 
 	private ProductionType productionType;
-	private float amount;
+	private int moneyAmount;
+	private float loveAmount;
+
+	public Ability() {
+		this.productionType = ProductionType.NOTHING;
+		this.moneyAmount = 0;
+		this.loveAmount = 0;
+	}
 
 	public Ability(ProductionType productionType, float amount) {
 		this.productionType = productionType;
-		this.amount = amount;
+		if(productionType == ProductionType.MONEY) moneyAmount = (int) amount;
+		else loveAmount = amount;
 	}
 
-	public float getAmount() {
-		return amount;
+	public Ability(int moneyAmount, float loveAmount) {
+		this.moneyAmount = moneyAmount;
+		this.loveAmount = loveAmount;
+		this.productionType = ProductionType.BOTH;
+	}
+
+	public float getAmount(ProductionType productionType) {
+		return productionType == ProductionType.MONEY ? moneyAmount : loveAmount;
 	}
 
 	public ProductionType getProductionType() {

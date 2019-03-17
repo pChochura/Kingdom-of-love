@@ -38,7 +38,7 @@ public class Well extends Structure {
 	}
 
 	@Override public Ability getAbility(Stats stats) {
-		return new Ability(Ability.ProductionType.NOTHING, 0);
+		return new Ability();
 	}
 
 	@Override public boolean isUpgradable() {

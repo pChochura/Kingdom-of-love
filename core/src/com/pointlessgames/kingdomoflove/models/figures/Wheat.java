@@ -48,7 +48,7 @@ public class Wheat extends Plant {
 	}
 
 	@Override public Ability getAbility(Stats stats) {
-		return new Ability(Ability.ProductionType.NOTHING, 0);
+		return new Ability();
 	}
 
 	@Override public boolean isUpgradable() {

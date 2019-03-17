@@ -66,21 +66,20 @@ public class StartUIStage extends BaseStage {
 	private void drawPopulation() {
 		font.getData().setScale(0.4f);
 		font.setColor(Colors.textColor);
-		font.draw(sP, String.valueOf(Gdx.graphics.getFramesPerSecond()), Gdx.graphics.getWidth() / 2 - 25 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
+		font.draw(sP, String.valueOf(stats.getPopulation()), Gdx.graphics.getWidth() / 2 - 25 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
 		sP.setColor(Color.WHITE);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), Gdx.graphics.getWidth() / 2 - 100 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
 	}
 
 	private void drawLove() {
-		//TODO fix displaying low love level
 		float loveBarWidth = Math.max(Gdx.graphics.getWidth() / 4 - 200, 200) * ratio;
 		float width = Utils.map(stats.love, 0, 100, 0, loveBarWidth);
 
 		sP.setColor(Colors.inactiveColor);
-		TextureManager.getInstance().roundRect.draw(sP, Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio, Gdx.graphics.getHeight() - 100 * ratio, loveBarWidth, 50 * ratio);
+		TextureManager.getInstance().filledRect.draw(sP, Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio, Gdx.graphics.getHeight() - 100 * ratio, loveBarWidth, 50 * ratio);
 
 		sP.setColor(Colors.loveColor);
-		TextureManager.getInstance().roundRect.draw(sP, Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio, Gdx.graphics.getHeight() - 100 * ratio, width, 50 * ratio);
+		TextureManager.getInstance().filledRect.draw(sP, Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio, Gdx.graphics.getHeight() - 100 * ratio, width, 50 * ratio);
 
 		font.getData().setScale(0.25f);
 		font.setColor(Colors.text3Color);

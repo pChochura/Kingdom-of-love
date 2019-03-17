@@ -18,9 +18,9 @@ public class DesktopLauncher {
     private static LwjglApplicationConfiguration getDefaultConfiguration() {
         LwjglApplicationConfiguration configuration = new LwjglApplicationConfiguration();
         configuration.title = "KingdomOfLove";
-        configuration.width = 480;
-        configuration.height = 800;
-        configuration.samples = 64;
+        configuration.width = 1920;
+        configuration.height = 1080;
+        configuration.samples = 16;
         configuration.resizable = false;
         configuration.fullscreen = true;
         configuration.addIcon("images/logo.png", FileType.Internal);

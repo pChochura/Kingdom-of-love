@@ -37,7 +37,6 @@ public class TextureManager {
 	private final static String CUT_RECT = "images/cut_rect.png";
 	private final static String RECT = "images/rect.png";
 	private final static String FILLED_RECT = "images/filled_rect.png";
-	private final static String ROUND_RECT = "images/round_rect.png";
 	private final static String OUTLINE_RECT = "images/outline_rect.png";
 
 	public AssetManager am = new AssetManager();
@@ -45,7 +44,6 @@ public class TextureManager {
 	public NinePatch cutRect;
 	public NinePatch rect;
 	public NinePatch filledRect;
-	public NinePatch roundRect;
 	public NinePatch outlineRect;
 
 	public static TextureManager getInstance() {
@@ -58,7 +56,6 @@ public class TextureManager {
 		am.load(CUT_RECT, Texture.class);
 		am.load(RECT, Texture.class);
 		am.load(FILLED_RECT, Texture.class);
-		am.load(ROUND_RECT, Texture.class);
 		am.load(OUTLINE_RECT, Texture.class);
 		am.load(MONEY, Texture.class);
 		am.load(LOVE, Texture.class);
@@ -86,11 +83,10 @@ public class TextureManager {
 
 	public void getTextures() {
 		road = TextureRegion.split(am.get(ROAD), 128, 128);
-		cutRect = new NinePatch(am.get(CUT_RECT, Texture.class), 62, 62, 0, 0);
-		rect = new NinePatch(am.get(RECT, Texture.class), 15, 15, 15, 15);
+		cutRect = new NinePatch(am.get(CUT_RECT, Texture.class), 15, 15, 15, 15);
+		rect = new NinePatch(am.get(RECT, Texture.class), 7, 7, 7, 7);
 		filledRect = new NinePatch(am.get(FILLED_RECT, Texture.class), 0, 0, 0, 0);
-		roundRect = new NinePatch(am.get(ROUND_RECT, Texture.class), 20, 20, 20, 20);
-		outlineRect = new NinePatch(am.get(OUTLINE_RECT, Texture.class), 15, 15, 15, 15);
+		outlineRect = new NinePatch(am.get(OUTLINE_RECT, Texture.class), 3, 3, 3, 3);
 	}
 
 	public Texture getTexture(String name) {

@@ -166,7 +166,8 @@ public abstract class Figure extends Actor {
 	public void orientInSpace(Stats stats) {}
 
 	protected void resetAbilityTip(String name, Texture texture) {
-		abilityTip = new Actor();
+		if(abilityTip == null) abilityTip = new Actor();
+		else abilityTip.clear();
 		abilityTip.setName(name);
 		abilityTip.setUserObject(texture);
 		abilityTip.setPosition(0, 0);

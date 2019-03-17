@@ -19,7 +19,6 @@ import com.pointlessgames.kingdomoflove.models.figures.Granary;
 import com.pointlessgames.kingdomoflove.models.figures.House;
 import com.pointlessgames.kingdomoflove.models.figures.Library;
 import com.pointlessgames.kingdomoflove.models.figures.Mill;
-import com.pointlessgames.kingdomoflove.models.figures.Monument;
 import com.pointlessgames.kingdomoflove.models.figures.Plant;
 import com.pointlessgames.kingdomoflove.models.figures.Pond;
 import com.pointlessgames.kingdomoflove.models.figures.Road;
@@ -79,7 +78,6 @@ public class PickFigureStage extends BaseStage {
 		figures.add(new Well());
 		figures.add(new Mill());
 		figures.add(new Wheat());
-		figures.add(new Monument());
 		figures.add(new Pond());
 		figures.add(new Road());
 		figures.add(new Granary());
@@ -137,9 +135,9 @@ public class PickFigureStage extends BaseStage {
 			sP.setColor(a.getColor());
 			TextureManager.getInstance().rect.draw(sP, a.getX(), a.getY() + bottomBarY, a.getWidth(), a.getHeight());
 
-			font.getData().setScale(0.4f);
+			font.getData().setScale(0.4f * ratio);
 			font.setColor(a.isSelected() ? Colors.textColor : Colors.tileColor);
-			font.draw(sP, a.getName(), a.getX(), a.getY() + bottomBarY + a.getHeight() / 1.5f, a.getWidth(), Align.center, false);
+			font.draw(sP, a.getName(), a.getX(), a.getY() + bottomBarY + 0.5f * (a.getHeight() + font.getCapHeight()), a.getWidth(), Align.center, false);
 		}
 	}
 
