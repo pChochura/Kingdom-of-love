@@ -19,7 +19,7 @@ public class Mill extends Structure {
 
 	private int[] cost = {175, 450, 950, 1250, 1750, 2250, 2850, 3100};
 	private int[] capacity = {2, 3, 4, 5, 6, 7, 8, 9};
-	private int[] moneyProduction = {5, 7, 10, 13, 17, 21, 26, 35};
+	private int[] moneyProduction = {8, 12, 16, 20, 25, 30, 36, 42};
 
 	public Mill() {
 		super(TextureManager.getInstance().getTexture(TextureManager.MILL));
@@ -65,7 +65,7 @@ public class Mill extends Structure {
 			Collections.sort(wheat, (w1, w2) -> (int) Math.signum(w1.getLife() - w2.getLife()));
 			wheat.get(0).decreaseLife();
 			if(wheat.get(0).getLife() == 0)
-				wheat.get(0).addAction(sequence(scaleTo(0, 0, Settings.duration, Interpolation.swingIn), run(() -> stats.figures.remove(wheat.get(0)))));
+				wheat.get(0).destroy(stats);
 		}
 	}
 

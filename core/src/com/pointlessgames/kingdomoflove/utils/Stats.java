@@ -107,12 +107,11 @@ public class Stats {
 	}
 
 	public void nextDay() {
-		love -= getPopulation();
-		love = MathUtils.clamp(love, 0, 100);
-
 		day++;
 		for(int i = figures.size() - 1; i >= 0; i--)
 			figures.get(i).triggerAbility(this);
+
+		love = MathUtils.clamp(love - getPopulation(), 0, 100);
 	}
 
 	public int getMoneyProduction() {

@@ -11,7 +11,7 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public abstract class Plant extends Figure {
 
-	private int life;
+	private float life;
 
 	Plant(Texture texture) {
 		super(texture);
@@ -48,14 +48,14 @@ public abstract class Plant extends Figure {
 	public abstract int getMaxLife();
 
 	public float getLife() {
-		return (float) life / getMaxLife();
+		return life / getMaxLife();
 	}
 
 	public void decreaseLife() {
-		life--;
+		life = MathUtils.clamp(life - 1, 0, getMaxLife());
 	}
 
-	public void setLife(int life) {
+	public void setLife(float life) {
 		this.life = life;
 	}
 }

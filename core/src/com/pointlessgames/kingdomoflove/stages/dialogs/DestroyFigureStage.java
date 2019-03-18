@@ -41,6 +41,7 @@ public class DestroyFigureStage extends BaseStage {
 	private int money;
 	private int capacity;
 	private float love;
+	private float warningTextHeight;
 
 	public DestroyFigureStage(SpriteBatch sP) {
 		this.sP = sP;
@@ -57,11 +58,12 @@ public class DestroyFigureStage extends BaseStage {
 
 		offset = 50 * ratio;
 		iconSize = 75 * ratio;
+		font.getData().setScale(0.5f);
+		warningTextHeight = new GlyphLayout(font, "Are you sure?\nAfter destroying this figure you'll get:", Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true).height;
 	}
 
 	private void setDialogHeight() {
-		float textHeight = new GlyphLayout(font, "Do you really want to destroy this figure?", Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true).height;
-		float height = 4 * offset + iconSize + textHeight;
+		float height = 4 * offset + iconSize + warningTextHeight;
 		dialog.setHeight(height);
 		dialog.setY(0.5f * Gdx.graphics.getHeight(), Align.center);
 		buttonDestroy.setY(dialog.getY(), Align.center);
@@ -79,6 +81,13 @@ public class DestroyFigureStage extends BaseStage {
 
 	private void drawFigureInfo() {
 		float y = dialog.getY() + dialog.getHeight() - offset;
+
+		font.getData().setScale(0.5f);
+		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
+		font.draw(sP, "Are you sure?\nAfter destroying this figure you'll get:", dialog.getX() + offset, y, dialog.getWidth() - 2 * offset, Align.center, true);
+
+		y -= warningTextHeight + offset;
+
 		sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha * alpha));
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), dialog.getX() + offset, y - iconSize, iconSize, iconSize);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + 0.5f * dialog.getWidth() - iconSize, y - iconSize, iconSize, iconSize);
@@ -93,8 +102,6 @@ public class DestroyFigureStage extends BaseStage {
 		font.draw(sP, String.format(Locale.getDefault(), "%+.1f%%", love),
 				dialog.getX() + dialog.getWidth() - 5 * offset + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
 
-		font.getData().setScale(0.5f);
-		font.draw(sP, "Do you really want to destroy this figure?", dialog.getX() + offset, y - iconSize - offset, dialog.getWidth() - 2 * offset, Align.center, true);
 	}
 
 	private void drawDestroyButton() {
@@ -127,13 +134,27 @@ public class DestroyFigureStage extends BaseStage {
 		} else if(hiding && onHideListener != null) onHideListener.run();
 	}
 
+	@Override public boolean keyDown(int keyCode) {
+		if(keyCode == Input.Keys.BACK || keyCode == Input.Keys.ESCAPE) {
+			clickListener.onCancelClick();
+			return true;
+		} else return false;
+	}
+
+	@Override public boolean touchDown(float x, float y, int pointer, int button) {
+		buttonDestroy.touchDown(x, Gdx.graphics.getHeight() - y);
+		return super.touchDown(x, y, pointer, button);
+	}
+
 	@Override public boolean tap(float x, float y, int count, int button) {
 		buttonDestroy.touchUp();
 		Vector2 pos = new Vector2(x, Gdx.graphics.getHeight() - y);
 		if(buttonDestroy.hit(pos.x - buttonDestroy.getX(), pos.y - buttonDestroy.getY(), false) != null) {
 			clickListener.onDestroyClick(money, love);
 			return true;
-		} if(dialog.hit(pos.x - dialog.getX(), pos.y - dialog.getY(), false) == null) clickListener.onCancelClick();
+		}
+		if(dialog.hit(pos.x - dialog.getX(), pos.y - dialog.getY(), false) == null)
+			clickListener.onCancelClick();
 		return true;
 	}
 
@@ -148,21 +169,9 @@ public class DestroyFigureStage extends BaseStage {
 		return super.pinch(initialPointer1, initialPointer2, pointer1, pointer2);
 	}
 
-	@Override public boolean touchDown(float x, float y, int pointer, int button) {
-		buttonDestroy.touchDown(x, Gdx.graphics.getHeight() - y);
-		return super.touchDown(x, y, pointer, button);
-	}
-
 	@Override public boolean touchUp(float x, float y, int pointer, int button) {
 		buttonDestroy.touchUp();
 		return super.touchUp(x, y, pointer, button);
-	}
-
-	@Override public boolean keyDown(int keyCode) {
-		if(keyCode == Input.Keys.BACK || keyCode == Input.Keys.ESCAPE) {
-			clickListener.onCancelClick();
-			return true;
-		} else return false;
 	}
 
 	public void hide(Runnable onHideListener) {
@@ -173,14 +182,14 @@ public class DestroyFigureStage extends BaseStage {
 	public void setFigure(Figure figure) {
 		int level = figure.getLevel();
 
-		capacity = - (figure instanceof Structure ? ((Structure) figure).getCapacity() : 0);
+		capacity = -(figure instanceof Structure ? ((Structure)figure).getCapacity() : 0);
 		money = 0;
 		love = -figure.getLove();
 		for(int i = 1; i <= level; i++) {
 			figure.setLevel(i);
 			money += figure.getCost();
 		}
-		money = (int)Math.sqrt(money);
+		money /= (2 * level);
 		figure.setLevel(level);
 
 		setDialogHeight();
@@ -193,6 +202,7 @@ public class DestroyFigureStage extends BaseStage {
 
 	public interface ClickListener {
 		void onCancelClick();
+
 		void onDestroyClick(int money, float love);
 	}
 }

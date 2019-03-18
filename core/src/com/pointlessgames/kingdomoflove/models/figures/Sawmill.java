@@ -60,7 +60,7 @@ public class Sawmill extends Structure {
 			Collections.sort(trees, (t1, t2) -> (int) Math.signum(t1.getLife() - t2.getLife()));
 			trees.get(0).decreaseLife();
 			if(trees.get(0).getLife() == 0)
-				trees.get(0).addAction(sequence(scaleTo(0, 0, Settings.duration, Interpolation.swingIn), run(() -> stats.figures.remove(trees.get(0)))));
+				trees.get(0).destroy(stats);
 		}
 	}
 

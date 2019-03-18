@@ -10,9 +10,9 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class House extends Structure {
 
-	private int[] cost = {15, 35, 75, 115, 175, 245, 315, 400};
+	private int[] cost = {35, 80, 130, 230, 400, 750, 1200};
 	private int[] capacity = {1, 2, 3, 4, 5, 6, 7, 8};
-	private int[] moneyProduction = {5, 7, 9, 10, 12, 14, 15, 17};
+	private int[] moneyProduction = {3, 7, 11, 15, 19, 24, 29, 35};
 
 	public House() {
 		super(TextureManager.getInstance().getTexture(TextureManager.HOUSE));
@@ -46,7 +46,7 @@ public class House extends Structure {
 	}
 
 	@Override public int getCost() {
-		return cost[getLevel()];
+		return cost[getLevel() - 1];
 	}
 
 	@Override public int getLove() {

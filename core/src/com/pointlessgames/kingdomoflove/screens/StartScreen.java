@@ -231,7 +231,9 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 				destroyFigureStage.hide(() -> removeStage(destroyFigureStage));
 
 				stats.figures.remove(f);
-				stats.sortFigures();
+				for(Figure figure : stats.figures)
+					figure.orientInSpace(stats);
+
 				stats.money += money;
 				stats.love += love;
 
@@ -246,7 +248,7 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 
 		stats.nextDay();
 
-		if(stats.love == 0) endListener.run();
+		if(stats.love <= 0) endListener.run();
 	}
 
 	public StartScreen setOnEndListener(Runnable endListener) {

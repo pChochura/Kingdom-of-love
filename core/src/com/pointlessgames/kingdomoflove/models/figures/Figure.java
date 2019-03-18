@@ -15,6 +15,9 @@ import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import static com.pointlessgames.kingdomoflove.screens.StartScreen.font;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
@@ -179,5 +182,9 @@ public abstract class Figure extends Actor {
 		abilityTip.addAction(Actions.sequence(
 				Actions.parallel(Actions.alpha(0, Settings.duration), Actions.moveBy(0, 30 * ratio, Settings.duration, Interpolation.exp10Out)),
 				Actions.run(() -> abilityTip = null)));
+	}
+
+	protected void destroy(Stats stats) {
+		addAction(sequence(scaleTo(0, 0, Settings.duration, Interpolation.swingIn), run(() -> stats.figures.remove(this))));
 	}
 }

@@ -2,6 +2,7 @@ package com.pointlessgames.kingdomoflove.models.figures;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
@@ -32,12 +33,16 @@ public class Conifer extends Plant {
 		float love = this.love[getLevel() - 1];
 		stats.love += love;
 
+		setLife(MathUtils.clamp(getLife() * getMaxLife() - 0.2f, 0, getMaxLife()));
+		if(getLife() == 0)
+			destroy(stats);
+
 		if(love > 0)
 			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().getTexture(TextureManager.LOVE));
 	}
 
 	@Override public String getAbilityDescription() {
-		return String.format(Locale.getDefault(), "Daily increases love by %.1f%%.", love[getLevel() - 1]);
+		return String.format(Locale.getDefault(), "Daily increases love by %.1f%%.\nDecreases its own life every 5 days.", love[getLevel() - 1]);
 	}
 
 	@Override public int getCost() {

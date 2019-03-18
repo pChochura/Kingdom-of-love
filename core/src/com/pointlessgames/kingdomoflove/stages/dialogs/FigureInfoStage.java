@@ -5,11 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Align;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
+import com.pointlessgames.kingdomoflove.models.figures.Plant;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
 import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
@@ -21,6 +23,7 @@ import java.util.Locale;
 
 import static com.pointlessgames.kingdomoflove.screens.StartScreen.font;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
+import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class FigureInfoStage extends BaseStage {
 
@@ -83,7 +86,7 @@ public class FigureInfoStage extends BaseStage {
 		float size = textureSize * 0.2f;
 		float halfSize = size * 0.5f;
 		float x = dialog.getX() + offset + halfSize;
-		float y = dialog.getY() + dialog.getHeight() - textureSize - 2 * offset + halfSize;
+		float y = dialog.getY() + dialog.getHeight() - textureSize - 2 * offset;
 
 		sP.setColor(Colors.loveColor.cpy().mul(1, 1, 1, alpha * alpha));
 		TextureManager.getInstance().filledRect.draw(sP, x, y, halfSize, halfSize, size, size, 1, 1, 45);
@@ -91,6 +94,26 @@ public class FigureInfoStage extends BaseStage {
 		font.getData().setScale(size / (150f * ratio));
 		font.setColor(Colors.text3Color.cpy().mul(1, 1, 1, alpha * alpha));
 		font.draw(sP, String.valueOf(figure.getLevel()), x, y + (size + font.getCapHeight()) / 2, size, Align.center, false);
+	}
+
+	private void drawLifeBar() {
+		float size = textureSize * 0.2f;
+		float halfSize = size * 0.5f;
+		float x = dialog.getX() + offset + size;
+		float y = dialog.getY() + dialog.getHeight() - textureSize - 2 * offset;
+		float lifePercentage = ((Plant)figure).getLife();
+		float maxLife = ((Plant)figure).getMaxLife();
+		float life = lifePercentage * maxLife;
+
+		sP.setColor(Colors.inactiveColor.cpy().mul(1, 1, 1, alpha * alpha));
+		TextureManager.getInstance().filledRect.draw(sP, x, y, 0, halfSize, textureSize - (size + halfSize), size, 1, 0.75f, 0);
+
+		sP.setColor(Colors.loveColor.cpy().mul(1, 1, 1, alpha * alpha));
+		TextureManager.getInstance().filledRect.draw(sP, x, y, 0, halfSize, MathUtils.lerp(0, textureSize - (size + halfSize), lifePercentage), size, 1, 0.75f, 0);
+
+		font.getData().setScale(0.3f);
+		font.setColor(Colors.tile2Color.cpy().mul(1, 1, 1, alpha * alpha));
+		font.draw(sP, String.format(Locale.getDefault(), "%.1f/%.0f", life, maxLife), x, y + halfSize + 0.5f * font.getCapHeight(), textureSize - (size + halfSize), Align.center, false);
 	}
 
 	private void drawDivider() {
@@ -152,6 +175,9 @@ public class FigureInfoStage extends BaseStage {
 		font.draw(sP, figure.getAbilityDescription(), dialog.getX() + offset, y - textureSize - 2 * offset, dialog.getWidth() - 2 * offset, Align.center, true);
 
 		drawDivider();
+
+		if(existing && figure instanceof Plant)
+			drawLifeBar();
 
 		if(existing && figure.hasLevels())
 			drawLevel();

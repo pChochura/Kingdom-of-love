@@ -71,10 +71,21 @@ public class UpgradeFigureStage extends BaseStage {
 	}
 
 	private void setDialogHeight() {
-		float prevAbilityHeight = new GlyphLayout(font, prevAbilityDescription, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true).height;
-		float abilityHeight = new GlyphLayout(font, abilityDescription, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true).height;
+		font.getData().setScale(0.4f);
+		GlyphLayout layout = new GlyphLayout(font, prevAbilityDescription, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true);
+		float prevAbilityHeight = layout.height;
+
+		font.getData().setScale(0.4f);
+		layout.setText(font, abilityDescription, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true);
+		float abilityHeight = layout.height;
+
+		font.getData().setScale(0.5f);
+		layout.setText(font, "After update", Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, false);
+		float titleHeight = layout.height;
+
 		float dividerHeight = 40 * ratio;
-		float height = 7 * offset + 2 * iconSize + prevAbilityHeight + abilityHeight + dividerHeight;
+
+		float height = 12 * offset + 2 * iconSize + prevAbilityHeight + abilityHeight + 2 * titleHeight + dividerHeight;
 		dialog.setHeight(height);
 		dialog.setY(0.5f * Gdx.graphics.getHeight(), Align.center);
 		buttonUpgrade.setY(dialog.getY(), Align.center);
@@ -95,7 +106,7 @@ public class UpgradeFigureStage extends BaseStage {
 		float halfSize = 0.5f * size;
 		float width = 300 * ratio;
 		float x = dialog.getX() + 0.5f * (dialog.getWidth() - size);
-		float y = dialog.getY() + 0.5f * (dialog.getHeight() - size);
+		float y = dialog.getY() + 0.5f * (dialog.getHeight() - size) + 0.25f * size;
 
 		sP.setColor(Colors.tile2Color.cpy().mul(1, 1, 1, alpha * alpha));
 		TextureManager.getInstance().filledRect.draw(sP, x - width, y - 1.5f / ratio + halfSize, width - 1.5f / ratio, 3 / ratio);
@@ -105,6 +116,13 @@ public class UpgradeFigureStage extends BaseStage {
 
 	private void drawFigureInfo() {
 		float y = dialog.getY() + dialog.getHeight() - offset;
+
+		font.getData().setScale(0.5f);
+		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
+		font.draw(sP, "Currently", dialog.getX() + offset, y, dialog.getWidth() - 2 * offset, Align.center, false);
+
+		y -= font.getCapHeight() + 0.5f * offset;
+
 		sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha * alpha));
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), dialog.getX() + offset, y - iconSize, iconSize, iconSize);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), dialog.getX() + 0.5f * dialog.getWidth() - iconSize, y - iconSize, iconSize, iconSize);
@@ -120,11 +138,18 @@ public class UpgradeFigureStage extends BaseStage {
 				dialog.getX() + dialog.getWidth() - 5 * offset + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
 
 		font.getData().setScale(0.5f);
+		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
 		font.draw(sP, prevAbilityDescription, dialog.getX() + offset, y - iconSize - offset, dialog.getWidth() - 2 * offset, Align.center, true);
 
 		drawDivider();
 
-		y -= 0.5f * dialog.getHeight();
+		y = dialog.getY() + 0.5f * dialog.getHeight() - offset;
+
+		font.getData().setScale(0.5f);
+		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
+		font.draw(sP, "After update", dialog.getX() + offset, y, dialog.getWidth() - 2 * offset, Align.center, false);
+
+		y -= font.getCapHeight() + 0.5f * offset;
 
 		sP.setColor(Color.WHITE.cpy().mul(1, 1, 1, alpha * alpha));
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), dialog.getX() + offset, y - iconSize, iconSize, iconSize);

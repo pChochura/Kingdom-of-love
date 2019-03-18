@@ -1,5 +1,6 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
@@ -33,10 +34,14 @@ public class Wheat extends Plant {
 				maxLevel = Math.max(maxLevel, f.getLevel());
 		}
 		this.level = Math.min(maxLevel, ponds + 1);
+
+		setLife(MathUtils.clamp(getLife() * getMaxLife() - 0.2f, 0, getMaxLife()));
+		if(getLife() == 0)
+			destroy(stats);
 	}
 
 	@Override public String getAbilityDescription() {
-		return "Increases own level if borders a pond.";
+		return "Increases its own level if borders a pond.\nDecreases its own life every 5 days.";
 	}
 
 	@Override public int getCost() {
