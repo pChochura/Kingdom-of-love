@@ -41,6 +41,7 @@ public class UpgradeFigureStage extends BaseStage {
 	private boolean hiding;
 
 	private float offset;
+	private float dividerY;
 	private float iconSize;
 
 	private int prevCapacity;
@@ -71,24 +72,23 @@ public class UpgradeFigureStage extends BaseStage {
 	}
 
 	private void setDialogHeight() {
-		font.getData().setScale(0.4f);
-		GlyphLayout layout = new GlyphLayout(font, prevAbilityDescription, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true);
-		float prevAbilityHeight = layout.height;
-
-		font.getData().setScale(0.4f);
-		layout.setText(font, abilityDescription, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true);
-		float abilityHeight = layout.height;
+		font.getData().setScale(0.5f);
+		float prevAbilityHeight = new GlyphLayout(font, prevAbilityDescription, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true).height;
 
 		font.getData().setScale(0.5f);
-		layout.setText(font, "After update", Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, false);
-		float titleHeight = layout.height;
+		float abilityHeight = new GlyphLayout(font, abilityDescription, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true).height;
+
+		font.getData().setScale(0.5f);
+		float titleHeight = new GlyphLayout(font, "After update", Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, false).height;
 
 		float dividerHeight = 40 * ratio;
 
-		float height = 12 * offset + 2 * iconSize + prevAbilityHeight + abilityHeight + 2 * titleHeight + dividerHeight;
+		float height = 8 * offset + 2 * iconSize + prevAbilityHeight + abilityHeight + 2 * titleHeight + dividerHeight;
 		dialog.setHeight(height);
 		dialog.setY(0.5f * Gdx.graphics.getHeight(), Align.center);
 		buttonUpgrade.setY(dialog.getY(), Align.center);
+
+		dividerY = 4 * offset + titleHeight + iconSize + prevAbilityHeight;
 	}
 
 	private void drawBackground() {
@@ -106,7 +106,7 @@ public class UpgradeFigureStage extends BaseStage {
 		float halfSize = 0.5f * size;
 		float width = 300 * ratio;
 		float x = dialog.getX() + 0.5f * (dialog.getWidth() - size);
-		float y = dialog.getY() + 0.5f * (dialog.getHeight() - size) + 0.25f * size;
+		float y = dialog.getY() + dialog.getHeight() - dividerY - 0.25f * size;
 
 		sP.setColor(Colors.tile2Color.cpy().mul(1, 1, 1, alpha * alpha));
 		TextureManager.getInstance().filledRect.draw(sP, x - width, y - 1.5f / ratio + halfSize, width - 1.5f / ratio, 3 / ratio);
@@ -143,7 +143,7 @@ public class UpgradeFigureStage extends BaseStage {
 
 		drawDivider();
 
-		y = dialog.getY() + 0.5f * dialog.getHeight() - offset;
+		y = dialog.getY() + dialog.getHeight() - dividerY - offset;
 
 		font.getData().setScale(0.5f);
 		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
@@ -166,6 +166,7 @@ public class UpgradeFigureStage extends BaseStage {
 				dialog.getX() + dialog.getWidth() - 5 * offset + iconSize, y - iconSize + 0.5f * (iconSize + font.getCapHeight()));
 
 		font.getData().setScale(0.5f);
+		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
 		font.draw(sP, abilityDescription, dialog.getX() + offset, y - iconSize - offset, dialog.getWidth() - 2 * offset, Align.center, true);
 	}
 

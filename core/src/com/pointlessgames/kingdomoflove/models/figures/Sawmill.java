@@ -65,7 +65,10 @@ public class Sawmill extends Structure {
 	}
 
 	@Override public String getAbilityDescription() {
-		return String.format(Locale.getDefault(), "Daily produces %d$ for every surrounding tree.\nDecreases life of the weakest surrounding tree every day.", moneyProduction[getLevel() - 1]);
+		if(getLevel() > 1)
+			return String.format(Locale.getDefault(), "Daily produces %d$ for every surrounding tree.\nDecreases life of the weakest surrounding tree every day." +
+				"\nAllows you to upgrade surrounding trees to level %d.", moneyProduction[getLevel() - 1], getLevel());
+		else return String.format(Locale.getDefault(), "Daily produces %d$ for every surrounding tree.\nDecreases life of the weakest surrounding tree every day.", moneyProduction[getLevel() - 1]);
 	}
 
 	@Override public int getCapacity() {

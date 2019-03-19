@@ -42,7 +42,7 @@ public class Pond extends Structure {
 	}
 
 	@Override public String getAbilityDescription() {
-		return String.format(Locale.getDefault(), "Decreases %.1f%% love for every surrounding road.", Math.abs(love));
+		return String.format(Locale.getDefault(), "Daily decreases %.1f%% love for every surrounding road.", Math.abs(love));
 	}
 
 	@Override public int getCapacity() {

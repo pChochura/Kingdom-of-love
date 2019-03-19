@@ -70,7 +70,10 @@ public class Mill extends Structure {
 	}
 
 	@Override public String getAbilityDescription() {
-		return String.format(Locale.getDefault(), "Daily produces %d$ money for every surrounding wheat and pond or well." +
+		if(getLevel() > 1)
+			return String.format(Locale.getDefault(), "Daily produces %d$ for every surrounding wheat and pond or well." +
+					"\nDecreases life of the weakest surrounding wheat every day.\nAllows you to upgrade surrounding wheat to level %d.", moneyProduction[getLevel() - 1], getLevel());
+		else return String.format(Locale.getDefault(), "Daily produces %d$ for every surrounding wheat and pond or well." +
 				"\nDecreases life of the weakest surrounding wheat every day.", moneyProduction[getLevel() - 1]);
 	}
 

@@ -3,6 +3,7 @@ package com.pointlessgames.kingdomoflove.stages.dialogs;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -56,6 +57,17 @@ public class FigureInfoStage extends BaseStage {
 
 		textureSize = dialog.getWidth() / 2;
 		offset = 50 * ratio;
+	}
+
+	private void setDialogHeight() {
+		float dividerHeight = 40 * ratio;
+
+		font.getData().setScale(0.5f);
+		float abilityHeight = new GlyphLayout(font, figure.getAbilityDescription(), Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true).height;
+
+		float height = 5 * offset + textureSize + dividerHeight + abilityHeight;
+		dialog.setHeight(height);
+		dialog.setY(0.5f * Gdx.graphics.getHeight(), Align.center);
 	}
 
 	private void drawBackground() {
@@ -121,7 +133,7 @@ public class FigureInfoStage extends BaseStage {
 		float halfSize = 0.5f * size;
 		float width = 300 * ratio;
 		float x = dialog.getX() + 0.5f * (dialog.getWidth() - size);
-		float y = dialog.getY() + 0.5f * (dialog.getHeight() - size);
+		float y = dialog.getY() + dialog.getHeight() - textureSize - 3 * offset - 0.25f * size;
 
 		sP.setColor(Colors.tile2Color.cpy().mul(1, 1, 1, alpha * alpha));
 		TextureManager.getInstance().filledRect.draw(sP, x - width, y - 1.5f / ratio + halfSize, width - 1.5f / ratio, 3 / ratio);
@@ -222,6 +234,7 @@ public class FigureInfoStage extends BaseStage {
 	public void setFigure(Figure figure) {
 		this.figure = figure;
 		this.existing = stats.figures.contains(figure);
+		setDialogHeight();
 	}
 
 	public FigureInfoStage setClickListener(ClickListener clickListener) {
