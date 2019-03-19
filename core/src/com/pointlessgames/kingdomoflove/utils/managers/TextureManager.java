@@ -42,6 +42,7 @@ public class TextureManager {
 
 	public AssetManager am = new AssetManager();
 	public TextureRegion[][] road;
+	public TextureRegion[][] tree;
 	public NinePatch cutRect;
 	public NinePatch rect;
 	public NinePatch filledRect;
@@ -85,6 +86,7 @@ public class TextureManager {
 
 	public void getTextures() {
 		road = TextureRegion.split(am.get(ROAD), 128, 128);
+		tree = TextureRegion.split(am.get(TREE), 128, 128);
 		cutRect = new NinePatch(am.get(CUT_RECT, Texture.class), 15, 15, 15, 15);
 		rect = new NinePatch(am.get(RECT, Texture.class), 7, 7, 7, 7);
 		filledRect = new NinePatch(am.get(FILLED_RECT, Texture.class), 0, 0, 0, 0);
@@ -103,5 +105,6 @@ public class TextureManager {
 		filledRect.getTexture().dispose();
 		outlineRect.getTexture().dispose();
 		for(TextureRegion[] t1 : road) for(TextureRegion t2 : t1) t2.getTexture().dispose();
+		for(TextureRegion[] t1 : tree) for(TextureRegion t2 : t1) t2.getTexture().dispose();
 	}
 }
