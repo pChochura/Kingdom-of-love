@@ -109,14 +109,15 @@ public class Stats {
 		for(int i = figures.size() - 1; i >= 0; i--)
 			figures.get(i).triggerAbility(this);
 
-		love = MathUtils.clamp(love - getPopulation(), 0, 100);
+		love = MathUtils.clamp(love + getLoveProduction(), 0, 100);
+		money += getMoneyProduction();
 	}
 
 	public int getMoneyProduction() {
 		int money = 0;
 		for(Figure f : figures) {
 			Ability ability = f.getAbility(this);
-			if((ability.getProductionType().number & Ability.ProductionType.MONEY.number) != 0)
+			if((ability.getProductionType().number & Ability.ProductionType.MONEY.number) == Ability.ProductionType.MONEY.number)
 				money += ability.getAmount(Ability.ProductionType.MONEY);
 		}
 		return money;
@@ -127,7 +128,7 @@ public class Stats {
 		for(Figure f : figures) {
 			if(!(f instanceof Road) || !((Road) f).checked) {
 				Ability ability = f.getAbility(this);
-				if((ability.getProductionType().number & Ability.ProductionType.LOVE.number) != 0)
+				if((ability.getProductionType().number & Ability.ProductionType.LOVE.number) == Ability.ProductionType.LOVE.number)
 					love += ability.getAmount(Ability.ProductionType.LOVE);
 			}
 		}

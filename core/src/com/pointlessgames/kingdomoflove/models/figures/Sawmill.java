@@ -47,7 +47,7 @@ public class Sawmill extends Structure {
 	@Override public void triggerAbility(Stats stats) {
 		ArrayList<Plant> trees = new ArrayList<>();
 		int money = getMoneyProduction(stats, trees);
-		stats.money += money;
+//		stats.money += money;
 
 		if(money > 0)
 			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.getInstance().getTexture(TextureManager.MONEY));

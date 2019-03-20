@@ -40,6 +40,7 @@ public class Strings {
 
 	public static final String WHEAT_ABILITY_DESCRIPTION = "Increases its own level if borders a pond." +
 			"\nDecreases its own life every 5 days.";
+
 	public static final String DIALOG_DESTROY_FIGURE_DESCRIPTION = "Are you sure?\nAfter destroying this figure you'll get:";
 
 	public static final String DESTROY = "Destroy";

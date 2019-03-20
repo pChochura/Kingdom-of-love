@@ -11,7 +11,7 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Library extends Structure {
 
-	private int[] cost = {750, 1400, 2100, 2800, 3500, 4000, 4500, 5000};
+	private int[] cost = {1500, 2500, 3750, 5500, 7500, 9500, 12000, 15000};
 	private float[] loveProduction = {0.1f, 0.2f, 0.35f, 0.5f, 0.65f, 0.8f, 1.0f, 1.25f};
 
 	public Library() {
@@ -35,7 +35,7 @@ public class Library extends Structure {
 
 	@Override public void triggerAbility(Stats stats) {
 		float love = getLoveProduction(stats);
-		stats.love += love;
+//		stats.love += love;
 
 		if(love > 0)
 			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().getTexture(TextureManager.LOVE));

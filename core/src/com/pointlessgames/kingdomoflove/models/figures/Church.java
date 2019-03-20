@@ -37,7 +37,7 @@ public class Church extends Structure {
 
 	@Override public void triggerAbility(Stats stats) {
 		float love = getLoveProduction(stats);
-		stats.love = love;
+//		stats.love += love;
 
 		if(love > 0)
 			resetAbilityTip(String.format(Locale.getDefault(), "%+.1f", love), TextureManager.getInstance().getTexture(TextureManager.LOVE));

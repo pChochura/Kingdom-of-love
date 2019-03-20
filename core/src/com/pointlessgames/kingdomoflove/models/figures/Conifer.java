@@ -34,7 +34,7 @@ public class Conifer extends Plant {
 
 	@Override public void triggerAbility(Stats stats) {
 		float love = this.love[getLevel() - 1];
-		stats.love += love;
+//		stats.love += love;
 
 		setLife(MathUtils.clamp(getLife() * getMaxLife() - 0.2f, 0, getMaxLife()));
 		if(getLife() == 0)

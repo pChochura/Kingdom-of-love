@@ -29,7 +29,7 @@ public class Monument extends Structure {
 	}
 
 	@Override public void triggerAbility(Stats stats) {
-		stats.money += money;
+//		stats.money += money;
 
 		if(money > 0)
 			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.getInstance().getTexture(TextureManager.MONEY));

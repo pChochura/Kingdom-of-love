@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
 import com.pointlessgames.kingdomoflove.models.figures.Monument;
 import com.pointlessgames.kingdomoflove.models.figures.Road;
+import com.pointlessgames.kingdomoflove.models.figures.Structure;
 import com.pointlessgames.kingdomoflove.stages.BackgroundStage;
 import com.pointlessgames.kingdomoflove.stages.FigureMenuStage;
 import com.pointlessgames.kingdomoflove.stages.FiguresStage;
@@ -199,8 +200,12 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 					removeStage(gestureDetector, upgradeFigureStage.touchInterruption);
 					upgradeFigureStage.hide(() -> removeStage(upgradeFigureStage));
 					stats.money -= f.getUpgradeCost();
-					stats.love += f.getLove();
+					int capacity = 0;
+					if(f instanceof Structure)
+						capacity = ((Structure) f).getCapacity();
 					f.levelUp();
+					if(f instanceof Structure)
+						stats.love += ((Structure) f).getCapacity() - capacity;
 				}
 			}
 		});

@@ -15,7 +15,7 @@ public class Mill extends Structure {
 
 	private int[] cost = {175, 450, 950, 1250, 1750, 2250, 2850, 3100};
 	private int[] capacity = {2, 3, 4, 5, 6, 7, 8, 9};
-	private int[] moneyProduction = {8, 12, 16, 20, 25, 30, 36, 42};
+	private int[] moneyProduction = {8, 10, 12, 15, 18, 21, 25, 30};
 
 	public Mill() {
 		super(TextureManager.getInstance().getTexture(TextureManager.MILL));
@@ -52,7 +52,7 @@ public class Mill extends Structure {
 	@Override public void triggerAbility(Stats stats) {
 		ArrayList<Plant> wheat = new ArrayList<>();
 		int money = getMoneyProduction(stats, wheat);
-		stats.money += money;
+//		stats.money += money;
 
 		if(money > 0)
 			resetAbilityTip(String.format(Locale.getDefault(), "%+d", money), TextureManager.getInstance().getTexture(TextureManager.MONEY));
