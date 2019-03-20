@@ -111,7 +111,7 @@ public class DestroyFigureStage extends BaseStage {
 
 		font.getData().setScale(0.45f);
 		font.setColor(Colors.tileColor.cpy().mul(1, 1, 1, alpha * alpha));
-		font.draw(sP, "Destroy", buttonDestroy.getX(), buttonDestroy.getY() + font.getCapHeight() / 2 + buttonDestroy.getHeight() / 2, buttonDestroy.getWidth(), Align.center, false);
+		font.draw(sP, Strings.DESTROY, buttonDestroy.getX(), buttonDestroy.getY() + font.getCapHeight() / 2 + buttonDestroy.getHeight() / 2, buttonDestroy.getWidth(), Align.center, false);
 	}
 
 	@Override public void draw() {

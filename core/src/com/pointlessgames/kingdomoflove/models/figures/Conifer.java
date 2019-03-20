@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.Locale;
@@ -44,7 +45,7 @@ public class Conifer extends Plant {
 	}
 
 	@Override public String getAbilityDescription() {
-		return String.format(Locale.getDefault(), "Daily increases love by %.1f%%.\nDecreases its own life every 5 days.", love[getLevel() - 1]);
+		return String.format(Locale.getDefault(), Strings.CONIFER_ABILITY_DESCRIPTION, love[getLevel() - 1]);
 	}
 
 	@Override public int getCost() {

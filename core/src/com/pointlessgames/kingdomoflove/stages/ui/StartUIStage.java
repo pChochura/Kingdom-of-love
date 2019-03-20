@@ -103,7 +103,7 @@ public class StartUIStage extends BaseStage {
 
 		font.getData().setScale(0.55f);
 		font.setColor(Colors.tileColor);
-		font.draw(sP, "Next day", buttonNextDay.getX(), buttonNextDay.getY() + font.getCapHeight() / 2 + buttonNextDay.getHeight() / 2, buttonNextDay.getWidth(), Align.center, false);
+		font.draw(sP, Strings.NEXT_DAY, buttonNextDay.getX(), buttonNextDay.getY() + font.getCapHeight() / 2 + buttonNextDay.getHeight() / 2, buttonNextDay.getWidth(), Align.center, false);
 	}
 
 	@Override public void act(float delta) {

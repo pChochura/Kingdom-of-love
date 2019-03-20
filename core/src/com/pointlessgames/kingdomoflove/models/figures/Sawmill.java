@@ -1,18 +1,14 @@
 package com.pointlessgames.kingdomoflove.models.figures;
 
-import com.badlogic.gdx.math.Interpolation;
 import com.pointlessgames.kingdomoflove.models.Ability;
-import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.run;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.scaleTo;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Sawmill extends Structure {
@@ -66,9 +62,8 @@ public class Sawmill extends Structure {
 
 	@Override public String getAbilityDescription() {
 		if(getLevel() > 1)
-			return String.format(Locale.getDefault(), "Daily produces %d$ for every surrounding tree.\nDecreases life of the weakest surrounding tree every day." +
-				"\nAllows you to upgrade surrounding trees to level %d.", moneyProduction[getLevel() - 1], getLevel());
-		else return String.format(Locale.getDefault(), "Daily produces %d$ for every surrounding tree.\nDecreases life of the weakest surrounding tree every day.", moneyProduction[getLevel() - 1]);
+			return String.format(Locale.getDefault(), Strings.SAWMILL_ABILITY_DESCRIPTION_EXTENDED, moneyProduction[getLevel() - 1], getLevel());
+		else return String.format(Locale.getDefault(), Strings.SAWMILL_ABILITY_DESCRIPTION, moneyProduction[getLevel() - 1]);
 	}
 
 	@Override public int getCapacity() {

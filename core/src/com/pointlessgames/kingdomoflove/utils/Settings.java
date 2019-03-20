@@ -9,7 +9,6 @@ public class Settings {
 	public static final float duration = 0.3f;
 	public static final float screenWidth = 1080f;
 	public static final float screenHeight = 1920f;
-	public static final String APP_NAME = "Kingdom Of Love";
 	public static float ratio = Gdx.graphics.getHeight() / screenHeight;
 
 	public static final int WIDTH = 15;
@@ -21,7 +20,6 @@ public class Settings {
 	public static float tileSize = 240 * Settings.ratio;
 
 	public static boolean soundsOn = true;
-	public static boolean historyOn = true;
 
 	public static void refreshTileSize(Stats stats) {
 		tileSize = 240 * Settings.ratio * scale;
@@ -40,15 +38,13 @@ public class Settings {
 	}
 
 	public static void load() {
-		Preferences prefs = Gdx.app.getPreferences("Settings");
-		soundsOn = prefs.getBoolean("soundsOn", soundsOn);
-		historyOn = prefs.getBoolean("historyOn", historyOn);
+		Preferences prefs = Gdx.app.getPreferences(Strings.PREFERENCES_SETTINGS);
+		soundsOn = prefs.getBoolean(Strings.PREFERENCES_SOUNDS_ON, soundsOn);
 	}
 
 	public static void save() {
-		Preferences prefs = Gdx.app.getPreferences("Settings");
-		prefs.putBoolean("soundsOn", soundsOn);
-		prefs.putBoolean("historyOn", historyOn);
+		Preferences prefs = Gdx.app.getPreferences(Strings.PREFERENCES_SETTINGS);
+		prefs.putBoolean(Strings.PREFERENCES_SOUNDS_ON, soundsOn);
 		prefs.flush();
 	}
 }

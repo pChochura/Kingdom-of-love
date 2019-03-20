@@ -25,7 +25,6 @@ public class Stats {
 	public float love = 50;
 	public ArrayList<Figure> figures;
 	public Set<Figure> selectedFigures;
-	public Figure selectedFigure;
 
 	public Vector2 mapOffset;
 
@@ -46,7 +45,6 @@ public class Stats {
 	public void setCurrentFigure(Figure figure) {
 		if(figure == null) {
 			selectedFigures = null;
-			selectedFigure = null;
 			return;
 		}
 		Structure[][] map = new Structure[WIDTH][HEIGHT];
@@ -56,7 +54,7 @@ public class Stats {
 				((Structure) f).checked = false;
 			}
 		selectedFigures = new HashSet<>();
-		selectedFigures.add(selectedFigure = figure);
+		selectedFigures.add(figure);
 		if(figures.contains(figure) && figure instanceof Structure && ((Structure) figure).hasRoad()) {
 			((Structure) figure).checked = true;
 			selectedFigures.addAll(getConnectedFigures(map, figure.getMapX(), figure.getMapY(), !(figure instanceof Road)));
@@ -139,37 +137,37 @@ public class Stats {
 
 	public void save() {
 		Preferences prefs = Gdx.app.getPreferences(Strings.PREFERENCES_STATS);
-		prefs.putBoolean("saved", true);
-		prefs.putInteger("day", day);
-		prefs.putInteger("money", money);
-		prefs.putFloat("love", love);
-		prefs.putInteger("f_size", figures.size());
+		prefs.putBoolean(Strings.PREFERENCES_SAVED, true);
+		prefs.putInteger(Strings.PREFERENCES_DAY, day);
+		prefs.putInteger(Strings.PREFERENCES_MONEY, money);
+		prefs.putFloat(Strings.PREFERENCES_LOVE, love);
+		prefs.putInteger(Strings.PREFERENCES_FIGURES_SIZE, figures.size());
 		for(int i = 0; i < figures.size(); i++) {
-			prefs.putString("f_name_" + i, figures.get(i).getClass().getName());
-			prefs.putInteger("f_level_" + i, figures.get(i).getLevel());
-			prefs.putInteger("f_map_x_" + i, figures.get(i).getMapX());
-			prefs.putInteger("f_map_y_" + i, figures.get(i).getMapY());
+			prefs.putString(Strings.PREFERENCES_FIGURE_NAME + i, figures.get(i).getClass().getName());
+			prefs.putInteger(Strings.PREFERENCES_FIGURE_LEVEL + i, figures.get(i).getLevel());
+			prefs.putInteger(Strings.PREFERENCES_FIGURE_MAP_X + i, figures.get(i).getMapX());
+			prefs.putInteger(Strings.PREFERENCES_FIGURE_MAP_Y + i, figures.get(i).getMapY());
 			if(figures.get(i) instanceof Plant)
-				prefs.putInteger("f_life_" + i, (int) (((Plant) figures.get(i)).getLife() * ((Plant) figures.get(i)).getMaxLife()));
+				prefs.putInteger(Strings.PREFERENCES_FIGURE_LIFE + i, (int) (((Plant) figures.get(i)).getLife() * ((Plant) figures.get(i)).getMaxLife()));
 		}
 		prefs.flush();
 	}
 
 	public void load() {
 		Preferences prefs = Gdx.app.getPreferences(Strings.PREFERENCES_STATS);
-		if(prefs.getBoolean("saved")) {
-			day = prefs.getInteger("day", day);
-			money = prefs.getInteger("money", money);
-			love = prefs.getFloat("love", love);
+		if(prefs.getBoolean(Strings.PREFERENCES_SAVED)) {
+			day = prefs.getInteger(Strings.PREFERENCES_DAY, day);
+			money = prefs.getInteger(Strings.PREFERENCES_MONEY, money);
+			love = prefs.getFloat(Strings.PREFERENCES_LOVE, love);
 
-			int size = prefs.getInteger("f_size", 0);
+			int size = prefs.getInteger(Strings.PREFERENCES_FIGURES_SIZE, 0);
 			for(int i = 0; i < size; i++) {
 				try {
-					Figure f = (Figure) Class.forName(prefs.getString("f_name_" + i, "com.pointlessgames.kingdomoflove.Monument")).newInstance();
-					f.setMapPos(prefs.getInteger("f_map_x_" + i, 0), prefs.getInteger("f_map_y_" + i, 0));
-					f.setLevel(prefs.getInteger("f_level_" + i, 1));
+					Figure f = (Figure) Class.forName(prefs.getString(Strings.PREFERENCES_FIGURE_NAME + i, Strings.PACKAGE_NAME)).newInstance();
+					f.setMapPos(prefs.getInteger(Strings.PREFERENCES_FIGURE_MAP_X + i, 0), prefs.getInteger(Strings.PREFERENCES_FIGURE_MAP_Y + i, 0));
+					f.setLevel(prefs.getInteger(Strings.PREFERENCES_FIGURE_LEVEL + i, 1));
 					if(f instanceof Plant)
-						((Plant) f).setLife(prefs.getInteger("f_life_" + i, ((Plant) f).getMaxLife()));
+						((Plant) f).setLife(prefs.getInteger(Strings.PREFERENCES_FIGURE_LIFE + i, ((Plant) f).getMaxLife()));
 					figures.add(f);
 				} catch(ClassCastException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 					e.printStackTrace();

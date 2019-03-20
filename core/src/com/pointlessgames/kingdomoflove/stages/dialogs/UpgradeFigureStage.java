@@ -120,7 +120,7 @@ public class UpgradeFigureStage extends BaseStage {
 
 		font.getData().setScale(0.5f);
 		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
-		font.draw(sP, "Currently", dialog.getX() + offset, y, dialog.getWidth() - 2 * offset, Align.center, false);
+		font.draw(sP, Strings.CURRENTLY, dialog.getX() + offset, y, dialog.getWidth() - 2 * offset, Align.center, false);
 
 		y -= font.getCapHeight() + 0.5f * offset;
 
@@ -177,7 +177,7 @@ public class UpgradeFigureStage extends BaseStage {
 
 		font.getData().setScale(0.45f);
 		font.setColor(Colors.tileColor.cpy().mul(1, 1, 1, alpha * alpha));
-		font.draw(sP, String.format(Locale.getDefault(), "Upgrade (%d$)", figure.getUpgradeCost()),
+		font.draw(sP, String.format(Locale.getDefault(), Strings.UPGRADE, figure.getUpgradeCost()),
 				buttonUpgrade.getX(), buttonUpgrade.getY() + font.getCapHeight() / 2 + buttonUpgrade.getHeight() / 2, buttonUpgrade.getWidth(), Align.center, false);
 	}
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.overridden.CustomShapeRenderer;
 import com.pointlessgames.kingdomoflove.screens.MenuScreen;
 import com.pointlessgames.kingdomoflove.screens.StartScreen;
@@ -62,7 +63,7 @@ public class KingdomOfLove extends Game {
 		if(getScreen() != null)
 			getScreen().dispose();
 		setScreen(new StartScreen().setOnEndListener(() -> {
-			Gdx.app.getPreferences("Stats").putBoolean("saved", false).flush();
+			Gdx.app.getPreferences(Strings.PREFERENCES_STATS).putBoolean(Strings.PREFERENCES_SAVED, false).flush();
 			restart();
 		}));
 	}
