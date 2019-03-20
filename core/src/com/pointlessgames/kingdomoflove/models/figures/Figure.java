@@ -185,6 +185,6 @@ public abstract class Figure extends Actor {
 	}
 
 	protected void destroy(Stats stats) {
-		addAction(sequence(scaleTo(0, 0, Settings.duration, Interpolation.swingIn), run(() -> stats.figures.remove(this))));
+		addAction(sequence(scaleTo(0, 0, Settings.duration, Interpolation.swingIn), run(() -> stats.removeFigure(this))));
 	}
 }

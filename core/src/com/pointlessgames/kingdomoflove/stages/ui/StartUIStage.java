@@ -59,7 +59,7 @@ public class StartUIStage extends BaseStage {
 	private void drawMoney() {
 		font.getData().setScale(0.4f);
 		font.setColor(Colors.textColor);
-		font.draw(sP, String.format(Locale.getDefault(), "%d (%+d)", stats.money, stats.getMoneyProduction()), 135 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
+		font.draw(sP, String.format(Locale.getDefault(), "%d (%+d)", stats.money, stats.moneyProduction), 135 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
 		sP.setColor(Color.WHITE);
 		sP.draw(TextureManager.getInstance().getTexture(TextureManager.MONEY), 50 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
 	}
@@ -84,7 +84,7 @@ public class StartUIStage extends BaseStage {
 
 		font.getData().setScale(0.25f);
 		font.setColor(Colors.text3Color);
-		font.draw(sP, String.format(Locale.getDefault(), "%d%% (%+.1f%%)", MathUtils.round(stats.love), stats.getLoveProduction()),
+		font.draw(sP, String.format(Locale.getDefault(), "%d%% (%+.1f%%)", MathUtils.round(stats.love), stats.loveProduction),
 				Gdx.graphics.getWidth() - loveBarWidth - 150 * ratio, Gdx.graphics.getHeight() - 70 * ratio, loveBarWidth, Align.center, false);
 
 		sP.setColor(Color.WHITE);

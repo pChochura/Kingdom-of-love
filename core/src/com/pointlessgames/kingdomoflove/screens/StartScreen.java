@@ -67,7 +67,7 @@ public class StartScreen extends BaseScreen implements BackgroundStage.ClickList
 		if(stats.figures.isEmpty()) {
 			Monument m = new Monument();
 			m.setMapPos(WIDTH / 2, HEIGHT / 2);
-			stats.figures.add(m);
+			stats.addFigure(m);
 		}
 	}
 
@@ -167,7 +167,7 @@ public class StartScreen extends BaseScreen implements BackgroundStage.ClickList
 				pickFigureMenuStage.hide(() -> removeStage(pickFigureMenuStage));
 
 				f.orientInSpace(stats);
-				stats.figures.add(f);
+				stats.addFigure(f);
 				stats.sortFigures();
 
 				for(Figure figure : stats.figures)
@@ -256,9 +256,7 @@ public class StartScreen extends BaseScreen implements BackgroundStage.ClickList
 				removeStage(gestureDetector, destroyFigureStage.touchInterruption);
 				destroyFigureStage.hide(() -> removeStage(destroyFigureStage));
 
-				stats.figures.remove(f);
-				for(Figure figure : stats.figures)
-					figure.orientInSpace(stats);
+				stats.removeFigure(f);
 
 				stats.money += money;
 				stats.love += love;

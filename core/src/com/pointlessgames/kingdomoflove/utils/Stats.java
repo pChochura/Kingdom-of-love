@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
+import com.pointlessgames.kingdomoflove.models.figures.Monument;
 import com.pointlessgames.kingdomoflove.models.figures.Plant;
 import com.pointlessgames.kingdomoflove.models.figures.Road;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
@@ -25,8 +26,9 @@ public class Stats {
 	public float love = 50;
 	public ArrayList<Figure> figures;
 	public Set<Figure> selectedFigures;
-
 	public Vector2 mapOffset;
+	public float loveProduction;
+	public int moneyProduction;
 
 	public Stats() {
 		this.figures = new ArrayList<>();
@@ -109,21 +111,23 @@ public class Stats {
 		for(int i = figures.size() - 1; i >= 0; i--)
 			figures.get(i).triggerAbility(this);
 
-		love = MathUtils.clamp(love + getLoveProduction(), 0, 100);
-		money += getMoneyProduction();
+		calculateLoveProduction();
+		calculateMoneyProduction();
+		love = MathUtils.clamp(love + loveProduction, 0, 100);
+		money += moneyProduction;
 	}
 
-	public int getMoneyProduction() {
+	public void calculateMoneyProduction() {
 		int money = 0;
 		for(Figure f : figures) {
 			Ability ability = f.getAbility(this);
 			if((ability.getProductionType().number & Ability.ProductionType.MONEY.number) == Ability.ProductionType.MONEY.number)
 				money += ability.getAmount(Ability.ProductionType.MONEY);
 		}
-		return money;
+		moneyProduction = money;
 	}
 
-	public float getLoveProduction() {
+	public void calculateLoveProduction() {
 		float love = 0;
 		for(Figure f : figures) {
 			if(!(f instanceof Road) || !((Road) f).checked) {
@@ -133,7 +137,7 @@ public class Stats {
 			}
 		}
 		love -= getPopulation();
-		return love;
+		loveProduction = love;
 	}
 
 	public void save() {
@@ -176,6 +180,9 @@ public class Stats {
 			}
 
 			for(Figure f : figures) if(f instanceof Road) f.orientInSpace(this);
+
+			calculateMoneyProduction();
+			calculateLoveProduction();
 		}
 	}
 
@@ -184,5 +191,21 @@ public class Stats {
 			if(Math.pow(f.getMapX() - x, 2) + Math.pow(f.getMapY() - y, 2) <= 2)
 				return true;
 		return false;
+	}
+
+	public void removeFigure(Figure figure) {
+		figures.remove(figure);
+		calculateLoveProduction();
+		calculateMoneyProduction();
+		for(Figure f : figures)
+			f.orientInSpace(this);
+	}
+
+	public void addFigure(Figure figure) {
+		figures.add(figure);
+		calculateLoveProduction();
+		calculateMoneyProduction();
+		for(Figure f : figures)
+			f.orientInSpace(this);
 	}
 }
