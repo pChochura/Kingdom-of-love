@@ -2,6 +2,7 @@ package com.pointlessgames.kingdomoflove.models.figures;
 
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.Locale;
@@ -43,7 +44,7 @@ public class Church extends Structure {
 	}
 
 	@Override public String getAbilityDescription() {
-		return String.format(Locale.getDefault(), "Daily increases love by at most %.1f%% for every structure. The bigger the distance is, the lower the love increase is.", loveProduction[getLevel() - 1]);
+		return String.format(Locale.getDefault(), Strings.CHURCH_ABILITY_DESCRIPTION, loveProduction[getLevel() - 1]);
 	}
 
 	@Override public int getCapacity() {

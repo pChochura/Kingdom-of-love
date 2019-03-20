@@ -15,6 +15,7 @@ import com.pointlessgames.kingdomoflove.models.figures.Structure;
 import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.Locale;
@@ -59,7 +60,7 @@ public class DestroyFigureStage extends BaseStage {
 		offset = 50 * ratio;
 		iconSize = 75 * ratio;
 		font.getData().setScale(0.5f);
-		warningTextHeight = new GlyphLayout(font, "Are you sure?\nAfter destroying this figure you'll get:", Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true).height;
+		warningTextHeight = new GlyphLayout(font, Strings.DIALOG_DESTROY_FIGURE_DESCRIPTION, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true).height;
 	}
 
 	private void setDialogHeight() {
@@ -84,7 +85,7 @@ public class DestroyFigureStage extends BaseStage {
 
 		font.getData().setScale(0.5f);
 		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
-		font.draw(sP, "Are you sure?\nAfter destroying this figure you'll get:", dialog.getX() + offset, y, dialog.getWidth() - 2 * offset, Align.center, true);
+		font.draw(sP, Strings.DIALOG_DESTROY_FIGURE_DESCRIPTION, dialog.getX() + offset, y, dialog.getWidth() - 2 * offset, Align.center, true);
 
 		y -= warningTextHeight + offset;
 

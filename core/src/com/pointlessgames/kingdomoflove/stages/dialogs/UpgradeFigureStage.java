@@ -18,6 +18,7 @@ import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.Locale;
@@ -79,7 +80,7 @@ public class UpgradeFigureStage extends BaseStage {
 		float abilityHeight = new GlyphLayout(font, abilityDescription, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, true).height;
 
 		font.getData().setScale(0.5f);
-		float titleHeight = new GlyphLayout(font, "After update", Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, false).height;
+		float titleHeight = new GlyphLayout(font, Strings.AFTER_UPDATE, Colors.textColor, dialog.getWidth() - 2 * offset, Align.center, false).height;
 
 		float dividerHeight = 40 * ratio;
 
@@ -147,7 +148,7 @@ public class UpgradeFigureStage extends BaseStage {
 
 		font.getData().setScale(0.5f);
 		font.setColor(Colors.textColor.cpy().mul(1, 1, 1, alpha * alpha));
-		font.draw(sP, "After update", dialog.getX() + offset, y, dialog.getWidth() - 2 * offset, Align.center, false);
+		font.draw(sP, Strings.AFTER_UPDATE, dialog.getX() + offset, y, dialog.getWidth() - 2 * offset, Align.center, false);
 
 		y -= font.getCapHeight() + 0.5f * offset;
 

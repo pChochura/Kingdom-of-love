@@ -32,6 +32,7 @@ import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.ArrayList;
@@ -105,10 +106,10 @@ public class PickFigureStage extends BaseStage {
 		float x = tileSpace;
 		float y = tileSize + 2 * tileSpace;
 		float height = bottomBarHeight - y - tileSpace;
-		float width = new GlyphLayout(font, "All").width + tileSpace * 2;
+		float width = new GlyphLayout(font, Strings.ALL).width + tileSpace * 2;
 
 		Button b = new Button(Colors.buttonColor, Colors.tileColor);
-		b.setName("All");
+		b.setName(Strings.ALL);
 		b.setBounds(x, y, width, height);
 		categoriesTabs.add(b);
 

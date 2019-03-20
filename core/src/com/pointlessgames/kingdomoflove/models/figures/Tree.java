@@ -27,7 +27,7 @@ public class Tree extends Plant {
 	}
 
 	@Override public void refreshSize() {
-		height = tileSize;
+		height = tileSize * 1.2f;
 		width = height;
 	}
 

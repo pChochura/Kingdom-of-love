@@ -11,6 +11,7 @@ import com.pointlessgames.kingdomoflove.actors.Button;
 import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Settings;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.SoundManager;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
@@ -61,7 +62,7 @@ public class MenuUIStage extends BaseStage {
 
 		font.getData().setScale(0.55f);
 		font.setColor(Colors.tileColor);
-		font.draw(sP, "Start", buttonStart.getX(), buttonStart.getY() + font.getCapHeight() / 2 + buttonStart.getHeight() / 2, buttonStart.getWidth(), Align.center, false);
+		font.draw(sP, Strings.START, buttonStart.getX(), buttonStart.getY() + font.getCapHeight() / 2 + buttonStart.getHeight() / 2, buttonStart.getWidth(), Align.center, false);
 
 		//Button sound
 		sP.setColor(buttonSound.getColor());

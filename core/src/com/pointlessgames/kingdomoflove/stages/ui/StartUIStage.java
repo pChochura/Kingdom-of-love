@@ -10,6 +10,7 @@ import com.pointlessgames.kingdomoflove.actors.Button;
 import com.pointlessgames.kingdomoflove.stages.BaseStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.Utils;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
@@ -93,7 +94,7 @@ public class StartUIStage extends BaseStage {
 	private void drawDay() {
 		font.getData().setScale(0.65f);
 		font.setColor(Colors.textColor);
-		font.draw(sP, String.format(Locale.getDefault(), "Day %d", stats.day), 0, Gdx.graphics.getHeight() - 1.5f * topBarHeight, Gdx.graphics.getWidth(), Align.center, false);
+		font.draw(sP, String.format(Locale.getDefault(), Strings.DAY, stats.day), 0, Gdx.graphics.getHeight() - 1.5f * topBarHeight, Gdx.graphics.getWidth(), Align.center, false);
 	}
 
 	private void drawNextDayButton() {

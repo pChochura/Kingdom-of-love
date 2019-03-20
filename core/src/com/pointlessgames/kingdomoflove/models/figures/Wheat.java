@@ -3,6 +3,7 @@ package com.pointlessgames.kingdomoflove.models.figures;
 import com.badlogic.gdx.math.MathUtils;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
@@ -41,7 +42,7 @@ public class Wheat extends Plant {
 	}
 
 	@Override public String getAbilityDescription() {
-		return "Increases its own level if borders a pond.\nDecreases its own life every 5 days.";
+		return Strings.WHEAT_ABILITY_DESCRIPTION;
 	}
 
 	@Override public int getCost() {

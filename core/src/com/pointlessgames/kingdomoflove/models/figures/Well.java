@@ -2,6 +2,7 @@ package com.pointlessgames.kingdomoflove.models.figures;
 
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
@@ -22,7 +23,7 @@ public class Well extends Structure {
 	@Override public void triggerAbility(Stats stats) { }
 
 	@Override public String getAbilityDescription() {
-		return "Just a well.";
+		return Strings.WELL_ABILITY_DESCRIPTION;
 	}
 
 	@Override public int getCapacity() {

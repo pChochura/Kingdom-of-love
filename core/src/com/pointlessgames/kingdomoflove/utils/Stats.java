@@ -138,7 +138,7 @@ public class Stats {
 	}
 
 	public void save() {
-		Preferences prefs = Gdx.app.getPreferences("Stats");
+		Preferences prefs = Gdx.app.getPreferences(Strings.PREFERENCES_STATS);
 		prefs.putBoolean("saved", true);
 		prefs.putInteger("day", day);
 		prefs.putInteger("money", money);
@@ -156,7 +156,7 @@ public class Stats {
 	}
 
 	public void load() {
-		Preferences prefs = Gdx.app.getPreferences("Stats");
+		Preferences prefs = Gdx.app.getPreferences(Strings.PREFERENCES_STATS);
 		if(prefs.getBoolean("saved")) {
 			day = prefs.getInteger("day", day);
 			money = prefs.getInteger("money", money);

@@ -2,6 +2,7 @@ package com.pointlessgames.kingdomoflove.models.figures;
 
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.Locale;
@@ -41,7 +42,7 @@ public class Library extends Structure {
 	}
 
 	@Override public String getAbilityDescription() {
-		return String.format(Locale.getDefault(), "Daily increases love for every Kingdom inhabitant by %.1f%%.", loveProduction[getLevel() - 1]);
+		return String.format(Locale.getDefault(), Strings.LIBRARY_ABILITY_DESCRIPTION, loveProduction[getLevel() - 1]);
 	}
 
 	@Override public int getCost() {

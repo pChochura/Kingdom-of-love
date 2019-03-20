@@ -2,6 +2,7 @@ package com.pointlessgames.kingdomoflove.models.figures;
 
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.Locale;
@@ -35,7 +36,7 @@ public class Monument extends Structure {
 	}
 
 	@Override public String getAbilityDescription() {
-		return "Just a monument.";
+		return Strings.MONUMENT_ABILITY_DESCRIPTION;
 	}
 
 	@Override public int getCost() {

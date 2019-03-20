@@ -2,6 +2,7 @@ package com.pointlessgames.kingdomoflove.models.figures;
 
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.Locale;
@@ -57,7 +58,7 @@ public class Granary extends Structure {
 	}
 
 	@Override public String getAbilityDescription() {
-		return String.format(Locale.getDefault(), "Daily increases love by %.1f%% for every connected sawmill or mill.", loveProduction[getLevel() - 1]);
+		return String.format(Locale.getDefault(), Strings.GRANARY_ABILITY_DESCRIPTION, loveProduction[getLevel() - 1]);
 	}
 
 	@Override public int getCost() {

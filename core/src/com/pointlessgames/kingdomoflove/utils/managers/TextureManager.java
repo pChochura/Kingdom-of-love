@@ -21,7 +21,6 @@ public class TextureManager {
 	public final static String DESTROY = "icons/cancel.png";
 	public final static String CANCEL = "icons/cancel.png";
 	public final static String CONFIRM = "icons/confirm.png";
-	public final static String CONIFER = "figures/conifer.png";
 	public final static String GRANARY = "figures/granary.png";
 	public final static String HOUSE = "figures/house.png";
 	public final static String LIBRARY = "figures/library.png";
@@ -29,11 +28,12 @@ public class TextureManager {
 	public final static String MONUMENT = "figures/monument.png";
 	public final static String POND = "figures/pond.png";
 	public final static String SAWMILL = "figures/sawmill.png";
-	public final static String TREE = "figures/tree.png";
 	public final static String WELL = "figures/well.png";
 	public final static String WHEAT = "figures/wheat.png";
 	public static final String CHURCH = "figures/church.png";
 
+	private final static String CONIFER = "figures/conifer.png";
+	private final static String TREE = "figures/tree.png";
 	private final static String ROAD = "figures/road.png";
 	private final static String CUT_RECT = "images/cut_rect.png";
 	private final static String RECT = "images/rect.png";
@@ -43,6 +43,7 @@ public class TextureManager {
 	public AssetManager am = new AssetManager();
 	public TextureRegion[][] road;
 	public TextureRegion[][] tree;
+	public TextureRegion[][] conifer;
 	public NinePatch cutRect;
 	public NinePatch rect;
 	public NinePatch filledRect;
@@ -87,6 +88,7 @@ public class TextureManager {
 	public void getTextures() {
 		road = TextureRegion.split(am.get(ROAD), 128, 128);
 		tree = TextureRegion.split(am.get(TREE), 128, 128);
+		conifer = TextureRegion.split(am.get(CONIFER), 128, 128);
 		cutRect = new NinePatch(am.get(CUT_RECT, Texture.class), 15, 15, 15, 15);
 		rect = new NinePatch(am.get(RECT, Texture.class), 7, 7, 7, 7);
 		filledRect = new NinePatch(am.get(FILLED_RECT, Texture.class), 0, 0, 0, 0);
@@ -106,5 +108,6 @@ public class TextureManager {
 		outlineRect.getTexture().dispose();
 		for(TextureRegion[] t1 : road) for(TextureRegion t2 : t1) t2.getTexture().dispose();
 		for(TextureRegion[] t1 : tree) for(TextureRegion t2 : t1) t2.getTexture().dispose();
+		for(TextureRegion[] t1 : conifer) for(TextureRegion t2 : t1) t2.getTexture().dispose();
 	}
 }

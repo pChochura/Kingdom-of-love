@@ -2,6 +2,7 @@ package com.pointlessgames.kingdomoflove.models.figures;
 
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.Locale;
@@ -38,7 +39,7 @@ public class House extends Structure {
 	}
 
 	@Override public String getAbilityDescription() {
-		return String.format(Locale.getDefault(), "Daily produces %d$ for every inhabitant.", moneyProduction[getLevel() - 1]);
+		return String.format(Locale.getDefault(), Strings.HOUSE_ABILITY_DESCRIPTION, moneyProduction[getLevel() - 1]);
 	}
 
 	@Override public int getCapacity() {

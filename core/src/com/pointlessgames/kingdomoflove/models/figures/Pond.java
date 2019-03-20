@@ -2,6 +2,7 @@ package com.pointlessgames.kingdomoflove.models.figures;
 
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.utils.Stats;
+import com.pointlessgames.kingdomoflove.utils.Strings;
 import com.pointlessgames.kingdomoflove.utils.managers.TextureManager;
 
 import java.util.Locale;
@@ -42,7 +43,7 @@ public class Pond extends Structure {
 	}
 
 	@Override public String getAbilityDescription() {
-		return String.format(Locale.getDefault(), "Daily decreases %.1f%% love for every surrounding road.", Math.abs(love));
+		return String.format(Locale.getDefault(), Strings.POND_ABILITY_DESCRIPTION, Math.abs(love));
 	}
 
 	@Override public int getCapacity() {
