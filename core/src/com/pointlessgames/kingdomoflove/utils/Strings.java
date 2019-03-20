@@ -88,4 +88,8 @@ public class Strings {
 	public static final String PREFERENCES_FIGURE_LIFE = "f_life_";
 
 	public static final String PACKAGE_NAME = "com.pointlessgames.kingdomoflove.Monument";
+
+	public static final String DIALOG_EXIT_DESCRIPTION = "Is that really the time you quit the game?";
+
+	public static final String EXIT = "Yep. It is.";
 }

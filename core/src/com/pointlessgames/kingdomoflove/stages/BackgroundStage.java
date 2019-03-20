@@ -21,7 +21,7 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class BackgroundStage extends BaseStage {
 
-	private OnTileClickedListener tileClickedListener;
+	private ClickListener clickListener;
 	private SpriteBatch sP;
 	private Stats stats;
 
@@ -72,15 +72,14 @@ public class BackgroundStage extends BaseStage {
 
 	@Override public boolean keyDown(int keyCode) {
 		if(keyCode == Input.Keys.BACK || keyCode == Input.Keys.ESCAPE) {
-			stats.save();
-			Gdx.app.exit();
+			clickListener.onBackPressed();
 			return true;
 		}
 		return false;
 	}
 
-	public BackgroundStage setOnTileClickedListener(OnTileClickedListener tileClickedListener) {
-		this.tileClickedListener = tileClickedListener;
+	public BackgroundStage setOnTileClickedListener(ClickListener tileClickedListener) {
+		this.clickListener = tileClickedListener;
 		return this;
 	}
 
@@ -97,7 +96,7 @@ public class BackgroundStage extends BaseStage {
 		int mapX = MathUtils.floor(pos.x / tileSize);
 		int mapY = MathUtils.floor(pos.y / tileSize);
 		if(mapX >= 0 && mapX < WIDTH && mapY >= 0 && mapY < HEIGHT && stats.isTileAvailable(mapX, mapY)) {
-			tileClickedListener.onEmptyTileClicked(mapX, mapY);
+			clickListener.onTileClicked(mapX, mapY);
 			return true;
 		}
 		return false;
@@ -139,8 +138,9 @@ public class BackgroundStage extends BaseStage {
 		return true;
 	}
 
-	public interface OnTileClickedListener {
-		void onEmptyTileClicked(int mapX, int mapY);
+	public interface ClickListener {
+		void onTileClicked(int mapX, int mapY);
+		void onBackPressed();
 	}
 }
 

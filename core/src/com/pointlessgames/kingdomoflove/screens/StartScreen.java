@@ -17,6 +17,7 @@ import com.pointlessgames.kingdomoflove.stages.FigureMenuStage;
 import com.pointlessgames.kingdomoflove.stages.FiguresStage;
 import com.pointlessgames.kingdomoflove.stages.PickFigureMenuStage;
 import com.pointlessgames.kingdomoflove.stages.dialogs.DestroyFigureStage;
+import com.pointlessgames.kingdomoflove.stages.dialogs.ExitStage;
 import com.pointlessgames.kingdomoflove.stages.dialogs.FigureInfoStage;
 import com.pointlessgames.kingdomoflove.stages.dialogs.PickFigureStage;
 import com.pointlessgames.kingdomoflove.stages.dialogs.UpgradeFigureStage;
@@ -31,7 +32,7 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.HEIGHT;
 import static com.pointlessgames.kingdomoflove.utils.Settings.WIDTH;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
-public class StartScreen extends BaseScreen implements BackgroundStage.OnTileClickedListener,
+public class StartScreen extends BaseScreen implements BackgroundStage.ClickListener,
 		FiguresStage.OnFigureClickListener, StartUIStage.ButtonClickListener {
 
 	public static BitmapFont font;
@@ -92,13 +93,33 @@ public class StartScreen extends BaseScreen implements BackgroundStage.OnTileCli
 			stats.figures.get(i).dispose();
 	}
 
-	@Override public void onEmptyTileClicked(int mapX, int mapY) {
+	@Override public void onTileClicked(int mapX, int mapY) {
 		showPickFigureStage(mapX, mapY);
+	}
+
+	@Override public void onBackPressed() {
+		showExitStage();
 	}
 
 	@Override public void onFigureClick(Figure f) {
 		stats.setCurrentFigure(f);
 		showFigureMenuStage(f);
+	}
+
+	private void showExitStage() {
+		ExitStage exitStage = new ExitStage(sP);
+		ScrollableGestureDetector gestureDetector = addStage(exitStage);
+		exitStage.setClickListener(new ExitStage.ClickListener() {
+			@Override public void onCancelClick() {
+				removeStage(gestureDetector, exitStage.touchInterruption);
+				exitStage.hide(() -> removeStage(exitStage));
+			}
+
+			@Override public void onExitClick() {
+				stats.save();
+				Gdx.app.exit();
+			}
+		});
 	}
 
 	private void showPickFigureStage(int mapX, int mapY) {
