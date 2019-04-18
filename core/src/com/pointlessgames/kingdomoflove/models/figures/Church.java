@@ -11,9 +11,9 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Church extends Structure {
 
-	private int[] cost = {800, 1500, 2200, 2800, 3500, 4100, 4800, 5300};
-	private int[] capacity = {5, 8, 11, 14, 17, 20, 23, 26};
-	private float[] loveProduction = {2, 3, 4, 5, 6, 7, 8, 9};
+	private final int[] cost = {800, 1500, 2200, 2800, 3500, 4100, 4800, 5300};
+	private final int[] capacity = {5, 8, 11, 14, 17, 20, 23, 26};
+	private final float[] loveProduction = {2, 3, 4, 5, 6, 7, 8, 9};
 
 	public Church() {
 		super(TextureManager.getInstance().getTexture(TextureManager.CHURCH));

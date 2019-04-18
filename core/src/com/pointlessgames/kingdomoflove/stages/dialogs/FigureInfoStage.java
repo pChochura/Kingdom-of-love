@@ -24,24 +24,23 @@ import java.util.Locale;
 
 import static com.pointlessgames.kingdomoflove.screens.StartScreen.font;
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
-import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class FigureInfoStage extends BaseStage {
 
 	private Runnable onHideListener;
 	private ClickListener clickListener;
-	private SpriteBatch sP;
-	private Stats stats;
+	private final SpriteBatch sP;
+	private final Stats stats;
 
 	private Figure figure;
-	private Actor dialog;
+	private final Actor dialog;
 
 	private float time;
 	private float alpha;
 	private boolean hiding;
 
-	private float textureSize;
-	private float offset;
+	private final float textureSize;
+	private final float offset;
 
 	private boolean existing;
 
@@ -53,7 +52,7 @@ public class FigureInfoStage extends BaseStage {
 
 		dialog = new Actor();
 		dialog.setSize(900 * ratio, 1200 * ratio);
-		dialog.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, Align.center);
+		dialog.setPosition(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f, Align.center);
 
 		textureSize = dialog.getWidth() / 2;
 		offset = 50 * ratio;

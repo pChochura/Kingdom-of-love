@@ -16,7 +16,7 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Road extends Structure {
 
-	private float love = 0.5f;
+	private final float love = 0.5f;
 	private int roadY, roadX;
 
 	public Road() {

@@ -22,8 +22,8 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 public class BackgroundStage extends BaseStage {
 
 	private ClickListener clickListener;
-	private SpriteBatch sP;
-	private Stats stats;
+	private final SpriteBatch sP;
+	private final Stats stats;
 
 	private float initialScale;
 
@@ -109,7 +109,7 @@ public class BackgroundStage extends BaseStage {
 
 	@Override
 	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
-		Vector2 initialPos = initialPointer1.cpy().add(initialPointer2).scl(0.5f).sub(Gdx.graphics.getWidth() / 2 + stats.mapOffset.x, Gdx.graphics.getHeight() / 2 + stats.mapOffset.y);
+		Vector2 initialPos = initialPointer1.cpy().add(initialPointer2).scl(0.5f).sub(Gdx.graphics.getWidth() / 2f + stats.mapOffset.x, Gdx.graphics.getHeight() / 2f + stats.mapOffset.y);
 
 		Vector2 beforeZoom = initialPos.cpy().scl(Settings.scale);
 
@@ -124,7 +124,7 @@ public class BackgroundStage extends BaseStage {
 	}
 
 	@Override public boolean scrolled(int amount) {
-		Vector2 initialPos = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()).sub(Gdx.graphics.getWidth() / 2 + stats.mapOffset.x, Gdx.graphics.getHeight() / 2 + stats.mapOffset.y);
+		Vector2 initialPos = new Vector2(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY()).sub(Gdx.graphics.getWidth() / 2f + stats.mapOffset.x, Gdx.graphics.getHeight() / 2f + stats.mapOffset.y);
 
 		Vector2 beforeZoom = initialPos.cpy().scl(Settings.scale);
 

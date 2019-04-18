@@ -27,7 +27,7 @@ public class ScrollableGestureDetector extends InputAdapter {
 	private final VelocityTracker tracker = new VelocityTracker();
 	private float tapRectangleCenterX, tapRectangleCenterY;
 	private long gestureStartTime;
-	Vector2 pointer1 = new Vector2();
+	final Vector2 pointer1 = new Vector2();
 	private final Vector2 pointer2 = new Vector2();
 	private final Vector2 initialPointer1 = new Vector2();
 	private final Vector2 initialPointer2 = new Vector2();
@@ -72,9 +72,9 @@ public class ScrollableGestureDetector extends InputAdapter {
 	                        GestureListener listener) {
 		this.tapRectangleWidth = halfTapRectangleWidth;
 		this.tapRectangleHeight = halfTapRectangleHeight;
-		this.tapCountInterval = (long)(tapCountInterval * 1000000000l);
+		this.tapCountInterval = (long)(tapCountInterval * 1000000000L);
 		this.longPressSeconds = longPressDuration;
-		this.maxFlingDelay = (long)(maxFlingDelay * 1000000000l);
+		this.maxFlingDelay = (long)(maxFlingDelay * 1000000000L);
 		this.listener = listener;
 	}
 
@@ -193,7 +193,6 @@ public class ScrollableGestureDetector extends InputAdapter {
 		if (pinching) {
 			// handle pinch end
 			pinching = false;
-			listener.pinchStop();
 			panning = true;
 			// we are in pan mode again, reset velocity tracker
 			if (pointer == 0) {
@@ -243,7 +242,7 @@ public class ScrollableGestureDetector extends InputAdapter {
 	 * @return whether the user touched the screen for as much or more than the given duration. */
 	public boolean isLongPressed (float duration) {
 		if (gestureStartTime == 0) return false;
-		return TimeUtils.nanoTime() - gestureStartTime > (long)(duration * 1000000000l);
+		return TimeUtils.nanoTime() - gestureStartTime > (long)(duration * 1000000000L);
 	}
 
 	public boolean isPanning () {
@@ -277,7 +276,7 @@ public class ScrollableGestureDetector extends InputAdapter {
 
 	/** @param tapCountInterval time in seconds that must pass for two touch down/up sequences to be detected as consecutive taps. */
 	public void setTapCountInterval (float tapCountInterval) {
-		this.tapCountInterval = (long)(tapCountInterval * 1000000000l);
+		this.tapCountInterval = (long)(tapCountInterval * 1000000000L);
 	}
 
 	public void setLongPressSeconds (float longPressSeconds) {
@@ -292,36 +291,36 @@ public class ScrollableGestureDetector extends InputAdapter {
 	 * panning or pinch zooming. Each method returns a boolean indicating if the event should be handed to the next listener (false
 	 * to hand it to the next listener, true otherwise).
 	 * @author mzechner */
-	public static interface GestureListener {
-		public boolean touchDown (float x, float y, int pointer, int button);
+	public interface GestureListener {
+		boolean touchDown(float x, float y, int pointer, int button);
 
 		/** Called when a tap occured. A tap happens if a touch went down on the screen and was lifted again without moving outside
 		 * of the tap square. The tap square is a rectangular area around the initial touch position as specified on construction
 		 * time of the {@link GestureDetector}.
 		 * @param count the number of taps. */
-		public boolean tap (float x, float y, int count, int button);
+		boolean tap(float x, float y, int count, int button);
 
-		public boolean longPress (float x, float y);
+		boolean longPress(float x, float y);
 
 		/** Called when the user dragged a finger over the screen and lifted it. Reports the last known velocity of the finger in
 		 * pixels per second.
 		 * @param velocityX velocity on x in seconds
 		 * @param velocityY velocity on y in seconds */
-		public boolean fling (float velocityX, float velocityY, int button);
+		boolean fling(float velocityX, float velocityY, int button);
 
 		/** Called when the user drags a finger over the screen.
 		 * @param deltaX the difference in pixels to the last drag event on x.
 		 * @param deltaY the difference in pixels to the last drag event on y. */
-		public boolean pan (float x, float y, float deltaX, float deltaY);
+		boolean pan(float x, float y, float deltaX, float deltaY);
 
 		/** Called when no longer panning. */
-		public boolean panStop (float x, float y, int pointer, int button);
+		boolean panStop(float x, float y, int pointer, int button);
 
 		/** Called when the user performs a pinch zoom gesture. The original distance is the distance in pixels when the gesture
 		 * started.
 		 * @param initialDistance distance between fingers when the gesture started.
 		 * @param distance current distance between fingers. */
-		public boolean zoom (float initialDistance, float distance);
+		boolean zoom(float initialDistance, float distance);
 
 		/** Called when a user performs a pinch zoom gesture. Reports the initial positions of the two involved fingers and their
 		 * current positions.
@@ -329,14 +328,11 @@ public class ScrollableGestureDetector extends InputAdapter {
 		 * @param initialPointer2
 		 * @param pointer1
 		 * @param pointer2 */
-		public boolean pinch (Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2);
+		boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2);
 
-		/** Called when no longer pinching. */
-		public void pinchStop ();
+		boolean scrolled(int amount);
 
-		public boolean scrolled(int amount);
-
-		public boolean keyDown(int keyCode);
+		boolean keyDown(int keyCode);
 
 		boolean touchUp(float x, float y, int pointer, int button);
 	}
@@ -384,10 +380,6 @@ public class ScrollableGestureDetector extends InputAdapter {
 			return false;
 		}
 
-		@Override
-		public void pinchStop () {
-		}
-
 		@Override public boolean scrolled(int amount) {
 			return false;
 		}
@@ -402,14 +394,14 @@ public class ScrollableGestureDetector extends InputAdapter {
 	}
 
 	static class VelocityTracker {
-		int sampleSize = 10;
+		final int sampleSize = 10;
 		float lastX, lastY;
 		float deltaX, deltaY;
 		long lastTime;
 		int numSamples;
-		float[] meanX = new float[sampleSize];
-		float[] meanY = new float[sampleSize];
-		long[] meanTime = new long[sampleSize];
+		final float[] meanX = new float[sampleSize];
+		final float[] meanY = new float[sampleSize];
+		final long[] meanTime = new long[sampleSize];
 
 		public void start (float x, float y, long timeStamp) {
 			lastX = x;

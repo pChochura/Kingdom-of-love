@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.ShortArray;
 
 public class CustomShapeRenderer extends ShapeRenderer {
 
-	private EarClippingTriangulator ear = new EarClippingTriangulator();
+	private final EarClippingTriangulator ear = new EarClippingTriangulator();
 
 	public void polygon(float[] vertices, int offset, int count) {
 		if(getCurrentType() != ShapeType.Filled && getCurrentType() != ShapeType.Line)

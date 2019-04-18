@@ -11,9 +11,9 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class House extends Structure {
 
-	private int[] cost = {35, 80, 130, 230, 400, 750, 1200};
-	private int[] capacity = {1, 2, 3, 4, 5, 6, 7, 8};
-	private int[] moneyProduction = {3, 7, 11, 15, 19, 24, 29, 35};
+	private final int[] cost = {35, 80, 130, 230, 400, 750, 1200};
+	private final int[] capacity = {1, 2, 3, 4, 5, 6, 7, 8};
+	private final int[] moneyProduction = {3, 7, 11, 15, 19, 24, 29, 35};
 
 	public House() {
 		super(TextureManager.getInstance().getTexture(TextureManager.HOUSE));

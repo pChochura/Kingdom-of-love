@@ -14,9 +14,9 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Tree extends Plant {
 
-	private float[] love = {0.1f, 0.2f, 0.3f, 0.4f, 0.6f, 0.8f, 1.0f, 1.2f};
-	private int[] cost = {10, 25, 55, 110, 220, 350, 600, 850};
-	private int maxLife = 5;
+	private final float[] love = {0.1f, 0.2f, 0.3f, 0.4f, 0.6f, 0.8f, 1.0f, 1.2f};
+	private final int[] cost = {10, 25, 55, 110, 220, 350, 600, 850};
+	private final int maxLife = 5;
 
 	public Tree() {
 		super(null);

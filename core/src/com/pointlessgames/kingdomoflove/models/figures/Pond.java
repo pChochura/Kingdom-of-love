@@ -11,8 +11,8 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Pond extends Structure {
 
-	private int[] cost = {225, 325, 425, 550, 725, 850, 975, 1150};
-	private float love = -1.5f;
+	private final int[] cost = {225, 325, 425, 550, 725, 850, 975, 1150};
+	private final float love = -1.5f;
 
 	public Pond() {
 		super(TextureManager.getInstance().getTexture(TextureManager.POND));

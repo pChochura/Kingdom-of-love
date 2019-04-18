@@ -138,10 +138,6 @@ public abstract class Figure extends Actor {
 		return texture;
 	}
 
-	public void dispose() {
-		//Dispose useless files
-	}
-
 	public abstract void triggerAbility(Stats stats);
 
 	public String getName() {

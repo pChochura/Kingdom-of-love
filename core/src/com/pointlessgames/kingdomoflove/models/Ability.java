@@ -8,14 +8,14 @@ public class Ability {
 		LOVE(2),
 		BOTH(MONEY.number | LOVE.number);
 
-		public int number;
+		public final int number;
 
 		ProductionType(int number) {
 			this.number = number;
 		}
 	}
 
-	private ProductionType productionType;
+	private final ProductionType productionType;
 	private int moneyAmount;
 	private float loveAmount;
 
@@ -29,12 +29,6 @@ public class Ability {
 		this.productionType = productionType;
 		if(productionType == ProductionType.MONEY) moneyAmount = (int) amount;
 		else loveAmount = amount;
-	}
-
-	public Ability(int moneyAmount, float loveAmount) {
-		this.moneyAmount = moneyAmount;
-		this.loveAmount = loveAmount;
-		this.productionType = ProductionType.BOTH;
 	}
 
 	public float getAmount(ProductionType productionType) {

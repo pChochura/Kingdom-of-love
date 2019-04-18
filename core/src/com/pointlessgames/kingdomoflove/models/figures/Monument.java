@@ -11,7 +11,7 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Monument extends Structure {
 
-	public int money = 5;
+	public final int money = 5;
 
 	public Monument() {
 		super(TextureManager.getInstance().getTexture(TextureManager.MONUMENT));

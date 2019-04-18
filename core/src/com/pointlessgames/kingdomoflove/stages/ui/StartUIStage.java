@@ -24,17 +24,17 @@ public class StartUIStage extends BaseStage {
 	private final float topBarHeight = 150 * ratio;
 
 	private ButtonClickListener buttonClickListener;
-	private SpriteBatch sP;
-	private Stats stats;
+	private final SpriteBatch sP;
+	private final Stats stats;
 
-	private Button buttonNextDay;
+	private final Button buttonNextDay;
 
 	public StartUIStage(SpriteBatch sP, Stats stats) {
 		this.sP = sP;
 		this.stats = stats;
 
 		buttonNextDay = new Button(Colors.buttonColor, Colors.tile2Color);
-		buttonNextDay.setBounds(Gdx.graphics.getWidth() / 2 - 350 * ratio, 100 * ratio, 700 * ratio, 125 * ratio);
+		buttonNextDay.setBounds(Gdx.graphics.getWidth() / 2f - 350 * ratio, 100 * ratio, 700 * ratio, 125 * ratio);
 	}
 
 	private void drawStats() {
@@ -67,9 +67,9 @@ public class StartUIStage extends BaseStage {
 	private void drawPopulation() {
 		font.getData().setScale(0.4f);
 		font.setColor(Colors.textColor);
-		font.draw(sP, String.valueOf(stats.getPopulation()), Gdx.graphics.getWidth() / 2 - 25 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
+		font.draw(sP, String.valueOf(stats.getPopulation()), Gdx.graphics.getWidth() / 2f - 25 * ratio, Gdx.graphics.getHeight() - 60 * ratio, 100 * ratio, Align.left, false);
 		sP.setColor(Color.WHITE);
-		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), Gdx.graphics.getWidth() / 2 - 100 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.CAPACITY), Gdx.graphics.getWidth() / 2f - 100 * ratio, Gdx.graphics.getHeight() - 110 * ratio, 75 * ratio, 75 * ratio);
 	}
 
 	private void drawLove() {

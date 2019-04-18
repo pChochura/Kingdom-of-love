@@ -13,7 +13,7 @@ public class SoundManager {
 	public final static String UPGRADE = "sounds/upgrade.wav";
 	public final static String NEXT_DAY = "sounds/nextDay.wav";
 
-	public AssetManager am = new AssetManager();
+	public final AssetManager am = new AssetManager();
 
 	public static SoundManager getInstance() {
 		return instance == null ? instance = new SoundManager() : instance;

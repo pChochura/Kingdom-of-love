@@ -14,9 +14,9 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Granary extends Structure {
 
-	private int[] cost = {350, 650, 1050, 1350, 1650, 1950, 2400, 2750};
-	private int[] capacity = {2, 3, 4, 4, 5, 5, 6, 6};
-	private float[] loveProduction = {1, 1.2f, 1.5f, 1.8f, 2.1f, 2.5f, 2.9f, 3.5f};
+	private final int[] cost = {350, 650, 1050, 1350, 1650, 1950, 2400, 2750};
+	private final int[] capacity = {2, 3, 4, 4, 5, 5, 6, 6};
+	private final float[] loveProduction = {1, 1.2f, 1.5f, 1.8f, 2.1f, 2.5f, 2.9f, 3.5f};
 
 	public Granary() {
 		super(TextureManager.getInstance().getTexture(TextureManager.GRANARY));

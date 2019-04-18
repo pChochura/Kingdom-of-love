@@ -45,9 +45,9 @@ public class KingdomOfLove extends Game {
 
 			sR.begin(ShapeRenderer.ShapeType.Filled);
 			sR.setColor(Colors.inactiveColor);
-			sR.roundedRect(150 * ratio, Gdx.graphics.getHeight() / 2, Gdx.graphics.getWidth() - 300 * ratio, 50 * ratio, round);
+			sR.roundedRect(150 * ratio, Gdx.graphics.getHeight() / 2f, Gdx.graphics.getWidth() - 300 * ratio, 50 * ratio, round);
 			sR.setColor(Colors.loveColor);
-			sR.roundedRect(150 * ratio, Gdx.graphics.getHeight() / 2, Utils.map(progress, 0, 1f, 0, Gdx.graphics.getWidth() - 300 * ratio), 50 * ratio, round);
+			sR.roundedRect(150 * ratio, Gdx.graphics.getHeight() / 2f, Utils.map(progress, 0, 1f, 0, Gdx.graphics.getWidth() - 300 * ratio), 50 * ratio, round);
 			sR.end();
 		}
 		super.render();

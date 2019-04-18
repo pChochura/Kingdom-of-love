@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.pointlessgames.kingdomoflove.stages.ui.MenuUIStage;
 import com.pointlessgames.kingdomoflove.utils.Colors;
-import com.pointlessgames.kingdomoflove.utils.Settings;
 
 import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
@@ -17,7 +16,7 @@ public class MenuScreen extends BaseScreen {
 	private Runnable startListener;
 
 	public MenuScreen() {
-		super(Settings.screenHeight, Colors.bgColor);
+		super(Colors.bgColor);
 	}
 
 	@Override public void show() {

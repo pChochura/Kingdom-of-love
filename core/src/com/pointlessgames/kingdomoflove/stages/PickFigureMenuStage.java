@@ -25,16 +25,16 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 public class PickFigureMenuStage extends BaseStage {
 
 	private Runnable onHideListener;
-	private SpriteBatch sP;
-	private Stats stats;
+	private final SpriteBatch sP;
+	private final Stats stats;
 
 	private ClickListener clickListener;
 
 	private Figure figure;
-	private Figure[][] map;
+	private final Figure[][] map;
 
-	private Button buttonConfirm;
-	private Button buttonCancel;
+	private final Button buttonConfirm;
+	private final Button buttonCancel;
 
 	private boolean hiding;
 	private float time;

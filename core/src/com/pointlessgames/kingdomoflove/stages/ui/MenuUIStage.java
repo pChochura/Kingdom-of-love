@@ -20,11 +20,11 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.ratio;
 
 public class MenuUIStage extends BaseStage {
 
-	private SpriteBatch sP;
+	private final SpriteBatch sP;
 
 	private Runnable startListener;
-	private Button buttonStart;
-	private Button buttonSound;
+	private final Button buttonStart;
+	private final Button buttonSound;
 
 	public MenuUIStage(SpriteBatch sP) {
 		this.sP = sP;
@@ -32,7 +32,7 @@ public class MenuUIStage extends BaseStage {
 		buttonStart = new Button(Colors.buttonColor, Colors.tile2Color);
 		buttonStart.setWidth(500 * ratio);
 		buttonStart.setHeight(125 * ratio);
-		buttonStart.setX(Gdx.graphics.getWidth() / 2, Align.center);
+		buttonStart.setX(Gdx.graphics.getWidth() / 2f, Align.center);
 		buttonStart.setY(400 * ratio);
 
 		buttonSound = new Button(Colors.buttonColor, Colors.tile2Color);
@@ -52,7 +52,7 @@ public class MenuUIStage extends BaseStage {
 		font.setColor(Colors.textColor);
 		font.draw(sP, Strings.APP_NAME, 0, Gdx.graphics.getHeight() - 750 * ratio, Gdx.graphics.getWidth(), Align.center, true);
 		sP.setColor(Color.WHITE);
-		sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOGO), Gdx.graphics.getWidth() / 2 - 256 * ratio, Gdx.graphics.getHeight() - 750 * ratio, 512 * ratio, 512 * ratio);
+		sP.draw(TextureManager.getInstance().getTexture(TextureManager.LOGO), Gdx.graphics.getWidth() / 2f - 256 * ratio, Gdx.graphics.getHeight() - 750 * ratio, 512 * ratio, 512 * ratio);
 	}
 
 	private void drawButtons() {

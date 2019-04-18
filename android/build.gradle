@@ -19,7 +19,7 @@ android {
     defaultConfig {
         applicationId "com.pointlessgames.kingdomoflove"
         minSdkVersion 19
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
@@ -111,7 +111,7 @@ eclipse {
     project {
         name = appName + "-android"
         natures 'com.android.ide.eclipse.adt.AndroidNature'
-        buildCommands.clear();
+        buildCommands.clear()
         buildCommand "com.android.ide.eclipse.adt.ResourceManagerBuilder"
         buildCommand "com.android.ide.eclipse.adt.PreimplementationrBuilder"
         buildCommand "org.eclipse.jdt.core.javabuilder"

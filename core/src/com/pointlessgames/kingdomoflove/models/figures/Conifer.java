@@ -14,9 +14,9 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Conifer extends Plant {
 
-	private float[] love = {0.2f, 0.3f, 0.4f, 0.6f, 0.8f, 1.1f, 1.3f, 1.5f};
-	private int[] cost = {65, 130, 180, 275, 375, 650, 850, 1100};
-	private int maxLife = 10;
+	private final float[] love = {0.2f, 0.3f, 0.4f, 0.6f, 0.8f, 1.1f, 1.3f, 1.5f};
+	private final int[] cost = {65, 130, 180, 275, 375, 650, 850, 1100};
+	private final int maxLife = 10;
 
 	public Conifer() {
 		super(null);

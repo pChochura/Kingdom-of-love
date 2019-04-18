@@ -15,8 +15,8 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 public class FiguresStage extends BaseStage {
 
 	private OnFigureClickListener figureClickListener;
-	private SpriteBatch sP;
-	private Stats stats;
+	private final SpriteBatch sP;
+	private final Stats stats;
 
 	public FiguresStage(SpriteBatch sP, Stats stats) {
 		this.sP = sP;

@@ -40,11 +40,11 @@ public class StartScreen extends BaseScreen implements BackgroundStage.ClickList
 
 	private Runnable endListener;
 	private Stats stats;
-	private float duration = 2f;
+	private final float duration = 2f;
 	private float time;
 
 	public StartScreen() {
-		super(Settings.screenHeight, Colors.bgColor);
+		super(Colors.bgColor);
 	}
 
 	@Override public void show() {
@@ -85,12 +85,6 @@ public class StartScreen extends BaseScreen implements BackgroundStage.ClickList
 			sP.end();
 			sP.setColor(c);
 		}
-	}
-
-	@Override public void dispose() {
-		super.dispose();
-		for(int i = stats.figures.size() - 1; i >= 0; i--)
-			stats.figures.get(i).dispose();
 	}
 
 	@Override public void onTileClicked(int mapX, int mapY) {

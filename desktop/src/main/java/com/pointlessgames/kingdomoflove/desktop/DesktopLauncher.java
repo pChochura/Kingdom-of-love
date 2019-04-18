@@ -11,8 +11,8 @@ public class DesktopLauncher {
         createApplication();
     }
 
-    private static LwjglApplication createApplication() {
-        return new LwjglApplication(new KingdomOfLove(), getDefaultConfiguration());
+    private static void createApplication() {
+        new LwjglApplication(new KingdomOfLove(), getDefaultConfiguration());
     }
 
     private static LwjglApplicationConfiguration getDefaultConfiguration() {

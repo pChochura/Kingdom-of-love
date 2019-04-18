@@ -41,10 +41,6 @@ public class BaseStage extends Stage implements ScrollableGestureDetector.Gestur
 		return false;
 	}
 
-	@Override public void pinchStop() {
-
-	}
-
 	@Override public boolean scrolled(int amount) {
 		return super.scrolled(amount);
 	}

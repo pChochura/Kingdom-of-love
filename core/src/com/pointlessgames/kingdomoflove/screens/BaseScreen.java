@@ -19,17 +19,17 @@ import java.util.ArrayList;
 
 public class BaseScreen implements Screen {
 
-	private ArrayList<BaseStage> stages;
+	private final ArrayList<BaseStage> stages;
 	private StretchViewport viewport;
 
-	private ArrayList<SnapshotArray<InputProcessor>> processors;
+	private final ArrayList<SnapshotArray<InputProcessor>> processors;
 
-	private float screenHeight;
-	private Color backgroundColor;
-	private InputMultiplexer inputMultiplexer;
+	private final float screenHeight;
+	private final Color backgroundColor;
+	private final InputMultiplexer inputMultiplexer;
 
-	BaseScreen(float screenHeight, Color backgroundColor) {
-		this.screenHeight = screenHeight;
+	BaseScreen(Color backgroundColor) {
+		this.screenHeight = Settings.screenHeight;
 		this.backgroundColor = backgroundColor;
 
 		stages = new ArrayList<>();

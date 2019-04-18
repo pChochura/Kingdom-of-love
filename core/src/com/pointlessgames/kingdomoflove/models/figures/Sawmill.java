@@ -13,9 +13,9 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Sawmill extends Structure {
 
-	private int[] cost = {75, 150, 350, 650, 950, 1450, 1850, 2100};
-	private int[] capacity = {2, 4, 5, 6, 7, 8, 9, 10};
-	private int[] moneyProduction = {3, 5, 7, 10, 13, 15, 17, 20};
+	private final int[] cost = {75, 150, 350, 650, 950, 1450, 1850, 2100};
+	private final int[] capacity = {2, 4, 5, 6, 7, 8, 9, 10};
+	private final int[] moneyProduction = {3, 5, 7, 10, 13, 15, 17, 20};
 
 	public Sawmill() {
 		super(TextureManager.getInstance().getTexture(TextureManager.SAWMILL));

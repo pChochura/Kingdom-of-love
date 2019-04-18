@@ -52,14 +52,14 @@ public class PickFigureStage extends BaseStage {
 	private float time;
 	private boolean hiding;
 
-	private SpriteBatch sP;
-	private Stats stats;
+	private final SpriteBatch sP;
+	private final Stats stats;
 
 	private Runnable onHideListener;
 	private ClickListener clickListener;
-	private ArrayList<Figure> figures;
+	private final ArrayList<Figure> figures;
 
-	private Class[] categories = new Class[] {Structure.class, Plant.class};
+	private final Class[] categories = new Class[] {Structure.class, Plant.class};
 	private int itemsInCategory;
 
 	private ArrayList<Button> allTiles;

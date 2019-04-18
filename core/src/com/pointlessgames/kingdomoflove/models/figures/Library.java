@@ -11,8 +11,8 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Library extends Structure {
 
-	private int[] cost = {1500, 2500, 3750, 5500, 7500, 9500, 12000, 15000};
-	private float[] loveProduction = {0.1f, 0.2f, 0.35f, 0.5f, 0.65f, 0.8f, 1.0f, 1.25f};
+	private final int[] cost = {1500, 2500, 3750, 5500, 7500, 9500, 12000, 15000};
+	private final float[] loveProduction = {0.1f, 0.2f, 0.35f, 0.5f, 0.65f, 0.8f, 1.0f, 1.25f};
 
 	public Library() {
 		super(TextureManager.getInstance().getTexture(TextureManager.LIBRARY));

@@ -40,7 +40,7 @@ public class TextureManager {
 	private final static String FILLED_RECT = "images/filled_rect.png";
 	private final static String OUTLINE_RECT = "images/outline_rect.png";
 
-	public AssetManager am = new AssetManager();
+	public final AssetManager am = new AssetManager();
 	public TextureRegion[][] road;
 	public TextureRegion[][] tree;
 	public TextureRegion[][] conifer;

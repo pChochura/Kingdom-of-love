@@ -13,9 +13,9 @@ import static com.pointlessgames.kingdomoflove.utils.Settings.tileSize;
 
 public class Mill extends Structure {
 
-	private int[] cost = {175, 450, 950, 1250, 1750, 2250, 2850, 3100};
-	private int[] capacity = {2, 3, 4, 5, 6, 7, 8, 9};
-	private int[] moneyProduction = {8, 10, 12, 15, 18, 21, 25, 30};
+	private final int[] cost = {175, 450, 950, 1250, 1750, 2250, 2850, 3100};
+	private final int[] capacity = {2, 3, 4, 5, 6, 7, 8, 9};
+	private final int[] moneyProduction = {8, 10, 12, 15, 18, 21, 25, 30};
 
 	public Mill() {
 		super(TextureManager.getInstance().getTexture(TextureManager.MILL));

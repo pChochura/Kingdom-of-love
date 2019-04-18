@@ -30,20 +30,20 @@ public class UpgradeFigureStage extends BaseStage {
 
 	private Runnable onHideListener;
 	private ClickListener clickListener;
-	private SpriteBatch sP;
-	private Stats stats;
+	private final SpriteBatch sP;
+	private final Stats stats;
 
 	private Figure figure;
-	private Button buttonUpgrade;
-	private Actor dialog;
+	private final Button buttonUpgrade;
+	private final Actor dialog;
 
 	private float time;
 	private float alpha;
 	private boolean hiding;
 
-	private float offset;
+	private final float offset;
 	private float dividerY;
-	private float iconSize;
+	private final float iconSize;
 
 	private int prevCapacity;
 	private int capacity;
@@ -62,11 +62,11 @@ public class UpgradeFigureStage extends BaseStage {
 
 		dialog = new Actor();
 		dialog.setSize(900 * ratio, 1200 * ratio);
-		dialog.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, Align.center);
+		dialog.setPosition(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f, Align.center);
 
 		buttonUpgrade = new Button(Colors.buttonColor, Colors.tile2Color, Colors.inactiveColor);
 		buttonUpgrade.setSize(500 * ratio, 100 * ratio);
-		buttonUpgrade.setPosition(Gdx.graphics.getWidth() / 2, dialog.getY(), Align.center);
+		buttonUpgrade.setPosition(Gdx.graphics.getWidth() / 2f, dialog.getY(), Align.center);
 
 		offset = 50 * ratio;
 		iconSize = 75 * ratio;

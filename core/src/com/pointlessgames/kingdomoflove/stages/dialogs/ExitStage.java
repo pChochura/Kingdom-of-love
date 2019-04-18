@@ -24,18 +24,18 @@ public class ExitStage extends BaseStage {
 	private final float logoSize = 500 * ratio;
 	private Runnable onHideListener;
 	private ClickListener clickListener;
-	private SpriteBatch sP;
+	private final SpriteBatch sP;
 
-	private Button buttonExit;
-	private Actor dialog;
+	private final Button buttonExit;
+	private final Actor dialog;
 
 	private float time;
 	private float alpha;
 	private boolean hiding;
 
-	private float offset;
+	private final float offset;
 
-	private float warningTextHeight;
+	private final float warningTextHeight;
 
 	public ExitStage(SpriteBatch sP) {
 		this.sP = sP;
@@ -44,11 +44,11 @@ public class ExitStage extends BaseStage {
 
 		dialog = new Actor();
 		dialog.setSize(900 * ratio, 1200 * ratio);
-		dialog.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, Align.center);
+		dialog.setPosition(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f, Align.center);
 
 		buttonExit = new Button(Colors.buttonColor, Colors.tile2Color, Colors.inactiveColor);
 		buttonExit.setSize(500 * ratio, 100 * ratio);
-		buttonExit.setPosition(Gdx.graphics.getWidth() / 2, dialog.getY(), Align.center);
+		buttonExit.setPosition(Gdx.graphics.getWidth() / 2f, dialog.getY(), Align.center);
 
 		offset = 50 * ratio;
 		font.getData().setScale(0.6f);

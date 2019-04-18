@@ -27,22 +27,22 @@ public class DestroyFigureStage extends BaseStage {
 
 	private Runnable onHideListener;
 	private ClickListener clickListener;
-	private SpriteBatch sP;
+	private final SpriteBatch sP;
 
-	private Button buttonDestroy;
-	private Actor dialog;
+	private final Button buttonDestroy;
+	private final Actor dialog;
 
 	private float time;
 	private float alpha;
 	private boolean hiding;
 
-	private float offset;
-	private float iconSize;
+	private final float offset;
+	private final float iconSize;
 
 	private int money;
 	private int capacity;
 	private float love;
-	private float warningTextHeight;
+	private final float warningTextHeight;
 
 	public DestroyFigureStage(SpriteBatch sP) {
 		this.sP = sP;
@@ -51,11 +51,11 @@ public class DestroyFigureStage extends BaseStage {
 
 		dialog = new Actor();
 		dialog.setSize(900 * ratio, 1200 * ratio);
-		dialog.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, Align.center);
+		dialog.setPosition(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f, Align.center);
 
 		buttonDestroy = new Button(Colors.buttonColor, Colors.tile2Color, Colors.inactiveColor);
 		buttonDestroy.setSize(500 * ratio, 100 * ratio);
-		buttonDestroy.setPosition(Gdx.graphics.getWidth() / 2, dialog.getY(), Align.center);
+		buttonDestroy.setPosition(Gdx.graphics.getWidth() / 2f, dialog.getY(), Align.center);
 
 		offset = 50 * ratio;
 		iconSize = 75 * ratio;

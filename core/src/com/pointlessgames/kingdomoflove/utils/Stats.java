@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.pointlessgames.kingdomoflove.models.Ability;
 import com.pointlessgames.kingdomoflove.models.figures.Figure;
-import com.pointlessgames.kingdomoflove.models.figures.Monument;
 import com.pointlessgames.kingdomoflove.models.figures.Plant;
 import com.pointlessgames.kingdomoflove.models.figures.Road;
 import com.pointlessgames.kingdomoflove.models.figures.Structure;
@@ -24,9 +23,9 @@ public class Stats {
 	public int day = 1;
 	public int money = 50;
 	public float love = 50;
-	public ArrayList<Figure> figures;
+	public final ArrayList<Figure> figures;
 	public Set<Figure> selectedFigures;
-	public Vector2 mapOffset;
+	public final Vector2 mapOffset;
 	public float loveProduction;
 	public int moneyProduction;
 
